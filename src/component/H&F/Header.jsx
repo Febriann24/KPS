@@ -7,7 +7,7 @@ function Header(){
         <header className="grid grid-cols-3 bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0]">
             <img src={foto} className="mt-[20px] mb-4 ml-[24px] w-22"/>
             <nav className ="text-center ">
-                <ul className="grid grid-cols-4 text-center mt-[35px] mb-4">
+                <ul className="grid grid-cols-5 text-center mt-[35px] mb-5">
                     <li className="text-white">
                         <Link to='/' >Beranda</Link>
                     </li>
@@ -19,6 +19,9 @@ function Header(){
                     </li>
                     <li className="text-white">
                         <Link to='/HubungiKami' >Hubungi Kami</Link>
+                    </li>
+                    <li className="text-white">
+                        <Link to='/Pengurus' >Pengurus</Link>
                     </li>
                 </ul>
             </nav>
