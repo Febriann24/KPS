@@ -24,11 +24,9 @@ function Header(){
                         <Link to='/SimpanPinjam' >Simpan Pinjam</Link>
                     </li>
                     <li className="relative text-white group">
-                    {/* Pengurus Menu with Dropdown */}
-                    <button className="focus:outline-none py-1 px-2 text-sm">
+                    <button className="focus:outline-none py-1 px-2 text-md">
                         Pengurus
                     </button>
-                    {/* Dropdown Menu */}
                     <ul className="absolute left-0 hidden w-56 bg-gray-800 text-white rounded shadow-lg mt-1 group-hover:block z-50">
                         <li className="px-4 py-2 hover:bg-gray-600 text-sm">
                         <Link to="/User">Daftar User Anggota</Link>
