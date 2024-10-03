@@ -84,14 +84,6 @@ const User = () => {
       <div className="container mx-auto p-4 flex-grow">
         <SearchFilterBar />
         <DataTable />
-
-        <div className="mt-4">
-          <a href="/Pengurus">
-            <button className="p-2 bg-teal-500 text-white rounded-md">
-              Go back to Pengurus
-            </button>
-          </a>
-        </div>
       </div>
 
       <div className="w-full">
