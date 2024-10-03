@@ -34,17 +34,11 @@ function FormPengajuan() {
 
   return (
     <div>
-      {/* Header Component */}
       <H />
-
-      {/* Main Container */}
       <div className="flex justify-center space-x-8 mt-10">
-        {/* Left Column: Form Container with Left Padding */}
-        <div className="w-2/3 pl-10"> {/* Added padding-left here */}
-          {/* Title for the Form */}
+        <div className="w-2/3 pl-10"> 
           <h2 className="text-2xl font-semibold text-center mb-6">Formulir Pengajuan Pinjaman</h2>
 
-          {/* Form Card */}
           <div className="bg-gray-200 p-10 rounded-lg shadow-md">
             <form onSubmit={handleSubmit} id="form-pengajuan" className="grid grid-cols-1 gap-6">
               <div>
@@ -92,7 +86,6 @@ function FormPengajuan() {
                 />
               </div>
 
-              {/* Two Column Layout for Pinjaman Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block mb-1">Maksimal Nominal Pinjaman</label>
@@ -116,7 +109,6 @@ function FormPengajuan() {
                 </div>
               </div>
 
-              {/* Two Column Layout for Rekening Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div>
                   <label className="block mb-1">Nomor Rekening</label>
@@ -145,7 +137,6 @@ function FormPengajuan() {
                 </div>
               </div>
 
-              {/* Two Column Layout for Payment Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div>
                   <label className="block mb-1">Angsuran (Bulan)</label>
@@ -171,7 +162,6 @@ function FormPengajuan() {
                 </div>
               </div>
 
-              {/* Keperluan Pinjaman */}
               <div>
                 <label className="block mb-1">Keperluan Pinjaman</label>
                 <textarea
@@ -183,16 +173,13 @@ function FormPengajuan() {
                 />
               </div>
 
-              {/* Hidden Submit Button */}
               <button type="submit" className="hidden">Submit</button>
             </form>
           </div>
         </div>
 
-        {/* Right Column: Outside the Form Container */}
-        <div className="w-1/3 flex flex-col space-y-6"> {/* Removed margin-top here */}
-          {/* Lowered Checkbox */}
-          <div className="flex justify-start mt-10"> {/* Additional space can be adjusted here if needed */}
+        <div className="w-1/3 flex flex-col space-y-6"> 
+          <div className="flex justify-start mt-10"> 
             <label className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -205,8 +192,7 @@ function FormPengajuan() {
             </label>
           </div>
 
-          {/* Buttons */}
-          <div className="mt-6"> {/* Added margin-top here */}
+          <div className="mt-6"> 
             <button
               type="button"
               onClick={() => document.getElementById('form-pengajuan').submit()}
@@ -219,18 +205,15 @@ function FormPengajuan() {
             </button>
           </div>
 
-          {/* Perhatian Section */}
           <div className="border p-4 rounded-lg text-center text-gray-700">
             <strong>PERHATIAN</strong>
             <p>Mohon mengisi formulir pengajuan dengan baik dan tepat.</p>
           </div>
 
-          {/* Larger Image */}
           <img src={foto} alt="Koperasi" className="mt-4 mb-4 ml-[24px] w-full h-auto" /> {/* Made the image larger */}
         </div>
       </div>
 
-      {/* Footer Component */}
       <F />
     </div>
   );
