@@ -6,7 +6,7 @@ import Prdk from './component/Produk'
 import HubKam from './component/HubungiKami'
 import User from './component/User'
 import Pengajuan from './component/Pengajuan'
-import Pengurus from './component/Pengurus'
+import SimpanPinjam from './component/SimpanPinjam'
 import { useNavigate } from "react-router-dom";
 
 
@@ -21,7 +21,7 @@ function App() {
           <Route exact path="/HubungiKami" element = {<HubKam/>} /> 
           <Route exact path="/User" element = {<User/>} /> 
           <Route exact path="/Pengajuan" element = {<Pengajuan/>} /> 
-          <Route exact path="/Pengurus" element = {<Pengurus/>} /> 
+          <Route exact path="/SimpanPinjam" element = {<SimpanPinjam/>} /> 
         </Routes>
       </Router>
     </>

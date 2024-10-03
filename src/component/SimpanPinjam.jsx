@@ -4,7 +4,7 @@ import { faCheckCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import H from "./H&F/Header";
 import F from "./H&F/Footer";
 
-const Pengurus = () => {
+const SimpanPinjam = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="w-full">
@@ -110,14 +110,14 @@ const Pengurus = () => {
             </div>
 
           <div className="flex justify-between gap-4">
-            <a href="/User" className="w-full">
+            <a href="#" className="w-full">
             <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-bold">
-                Daftar User Anggota
+                Ajukan Pinjaman
             </button>
             </a>
-            <a href="/Pengajuan" className="w-full">
+            <a href="#" className="w-full">
             <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-bold">
-                Lihat Pengajuan User
+                Lihat Pengajuan Saya
             </button>
             </a>
           </div>
@@ -134,4 +134,4 @@ const Pengurus = () => {
   );
 };
 
-export default Pengurus;
+export default SimpanPinjam;
