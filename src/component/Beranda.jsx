@@ -6,7 +6,11 @@ import gmbr3 from "./Foto/Foto_Beranda/People2.png"
 import gmbr4 from './Foto/Foto_Beranda/image4.png';
 import gmbr5 from './Foto/Foto_Beranda/ttg_foto.jpg';
 import gmbr6 from './Foto/Foto_Beranda/img_prdkL.png';
-import gmbr7 from './Foto/Foto_Beranda/gmbr_SP.png';
+import gmbrSP from './Foto/Foto_Beranda/gmbr_SP.png';
+import gmbrSS from './Foto/Foto_Beranda/gmbr_SS.png';
+import gmbrSHR from './Foto/Foto_Beranda/gmbr_SHR.png';
+import gmbrSW from './Foto/Foto_Beranda/gmbr_SW.png';
+import gmbrSSP from './Foto/Foto_Beranda/gmbrSimpan.png';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -86,10 +90,10 @@ function Beranda() {
                 </div>
                 <div className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] w-[1357px] ml-[-409px] ">
                     {/* Simpanan Pokok */}
-                    <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                        <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
-                               src={gmbr7}
+                               src={gmbrSP}
                                alt="card-image"
                                class=" w-full rounded-md md:rounded-lg object-cover"
                            />
@@ -104,7 +108,7 @@ function Beranda() {
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
@@ -113,7 +117,7 @@ function Beranda() {
                 {/* Simpanan Pokok End */}
 
                 {/* Simpanan Wajib */}
-                    <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        
                        <div class="p-6">
                         <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
@@ -125,14 +129,14 @@ function Beranda() {
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
                         </div>
                         <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
-                               src={gmbr7}
+                               src={gmbrSW}
                                alt="card-image"
                                class=" w-full rounded-md md:rounded-lg object-cover"
                            />
@@ -141,10 +145,10 @@ function Beranda() {
                 {/* Simpanan Wajib End */}
 
                 {/* Simpanan Suka Rela Start */}
-                    <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
-                               src={gmbr7}
+                               src={gmbrSS}
                                alt="card-image"
                                class=" w-full rounded-md md:rounded-lg object-cover"
                            />
@@ -159,7 +163,7 @@ function Beranda() {
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
@@ -168,7 +172,7 @@ function Beranda() {
                 {/* Simpanan Suka Rela End */}
 
                 {/* Simpanan Hari Raya Start */}
-                    <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        
                        <div class="p-6">
                         <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
@@ -180,26 +184,26 @@ function Beranda() {
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
                         </div>
                         <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
-                               src={gmbr7}
+                               src={gmbrSHR}
                                alt="card-image"
-                               class=" w-full rounded-md md:rounded-lg object-cover"
+                               class=" w-full rounded-[24px] object-cover"
                            />
                        </div>
                     </div> 
                 {/* Simpanan Hari Raya End */}
 
                 {/* Simpan Pinjam ( KSP) Start */}
-                    <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
-                               src={gmbr7}
+                               src={gmbrSSP}
                                alt="card-image"
                                class=" w-full rounded-md md:rounded-lg object-cover"
                            />
@@ -214,7 +218,7 @@ function Beranda() {
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
