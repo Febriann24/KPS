@@ -210,7 +210,7 @@ function FormPengajuan() {
             <p>Mohon mengisi formulir pengajuan dengan baik dan tepat.</p>
           </div>
 
-          <img src={foto} alt="Koperasi" className="mt-4 mb-4 ml-[24px] w-full h-auto" /> {/* Made the image larger */}
+          <img src={foto} alt="Koperasi" className="mt-4 mb-4 ml-[24px] w-full h-auto" /> 
         </div>
       </div>
 

@@ -8,6 +8,7 @@ import User from './component/User'
 import Pengajuan from './component/Pengajuan'
 import SimpanPinjam from './component/SimpanPinjam'
 import FormPengajuan from './component/FormPengajuan'
+import FormBerita from './component/FormBerita'
 import { useNavigate } from "react-router-dom";
 
 
@@ -24,6 +25,7 @@ function App() {
           <Route exact path="/Pengajuan" element = {<Pengajuan/>} /> 
           <Route exact path="/SimpanPinjam" element = {<SimpanPinjam/>} /> 
           <Route exact path="/FormPengajuan" element = {<FormPengajuan/>} /> 
+          <Route exact path="/FormBerita" element = {<FormBerita/>} /> 
         </Routes>
       </Router>
     </>
