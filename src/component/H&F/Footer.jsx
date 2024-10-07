@@ -12,13 +12,16 @@ function Footer(){
                         </a>
                         <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-white sm:mb-0">
                             <li>
-                                <a href="#" class="hover:underline me-4 md:me-6">Tentang Kami</a>
+                                <a href="/TentangKami" class="hover:underline me-4 md:me-6">Tentang Kami</a>
                             </li>
                             <li>
-                                <a href="#" class="hover:underline me-4 md:me-6">Produk</a>
+                                <a href="/Produk" class="hover:underline me-4 md:me-6">Produk</a>
                             </li>
                             <li>
-                                <a href="#" class="hover:underline me-4 md:me-6">Hubungi Kami</a>
+                                <a href="/HubungiKami" class="hover:underline me-4 md:me-6">Hubungi Kami</a>
+                            </li>
+                            <li>
+                                <a href="/SimpanPinjam" class="hover:underline me-4 md:me-6">Simpan Pinjam</a>
                             </li>
                             <li>
                                 <a href="#" class="hover:underline me-4 md:me-6">Pengurus</a>
