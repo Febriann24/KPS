@@ -49,10 +49,11 @@ function Header() {
   </nav>
 
         <nav className="text-end ">
-                <button className="border-2 border-white inline-block rounded-[8px] px-2 py-1 mt-[30px] mb-4 mr-[24px] d-flex align-items-center">
-                    <PersonIcon className="inline-block align-middle mr-2 mb-[4px]" /> 
-                    Masuk
-                </button>
+        <Link to="/Profile">
+        <button className="border-2 border-white inline-block rounded-[8px] px-2 py-1 mt-[30px] mb-4 mr-[24px] d-flex align-items-center">
+          <PersonIcon className="inline-block align-middle mb-[4px]" /> 
+        </button>
+      </Link>
             </nav>
       </header>
     </>

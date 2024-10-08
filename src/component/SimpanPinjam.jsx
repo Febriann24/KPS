@@ -117,7 +117,7 @@ const SimpanPinjam = () => {
             </a>
             <a href="/PengajuanUser" className="w-full">
             <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-bold">
-                Lihat Pengajuan User
+                Lihat Pengajuan pengurus
             </button>
             </a>
           </div>
