@@ -24,7 +24,6 @@ function Beranda() {
 
         <H/>
         <div>
-            {/* Slider Start */}
             <Swiper
             slidesPerView={2}
             loop={true}
@@ -61,11 +60,6 @@ function Beranda() {
                 </SwiperSlide>
 
             </Swiper>
-            {/* Slider End */}
-
-            {/* --------------- */}
-
-            {/* Tentang Kami */}
             <div style={{ backgroundImage: `url(${gmbr4})` }} className="mt-[10px]  bg-center bg-no-repeat bg-cover h-[480px] ">
                 <span className="grid grid-cols-2">
                     <div className="grid justify-start grid-rows-2">
@@ -79,17 +73,12 @@ function Beranda() {
                     <img src={gmbr5} className="grid justify-end w-[600px] h-[300px] mt-[90px] ml-[165px] shadow-lg rounded-2xl"/>
                 </span>
             </div>
-            {/* Tentang Kami End */}
-
-            {/* --------------- */}
-
-            {/* Produk Start */}
             <div className="grid grid-cols-2 mt-[10px]">
                 <div style={{ backgroundImage: `url(${gmbr6})` }} className="w-[520px] bg-no-repeat bg-cover h-[1439px] ml-[10px]">
                     <h1 className="ml-[150px] mt-[525px] text-4xl">Produk Kami</h1>
                 </div>
                 <div className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] w-[1357px] ml-[-409px] ">
-                    {/* Simpanan Pokok */}
+
                         <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
@@ -114,9 +103,7 @@ function Beranda() {
                             </div>
                         </div>
                     </div> 
-                {/* Simpanan Pokok End */}
 
-                {/* Simpanan Wajib */}
                 <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        
                        <div class="p-6">
@@ -142,9 +129,7 @@ function Beranda() {
                            />
                        </div>
                     </div> 
-                {/* Simpanan Wajib End */}
 
-                {/* Simpanan Suka Rela Start */}
                 <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
@@ -169,9 +154,7 @@ function Beranda() {
                             </div>
                         </div>
                     </div> 
-                {/* Simpanan Suka Rela End */}
 
-                {/* Simpanan Hari Raya Start */}
                 <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        
                        <div class="p-6">
@@ -197,9 +180,7 @@ function Beranda() {
                            />
                        </div>
                     </div> 
-                {/* Simpanan Hari Raya End */}
 
-                {/* Simpan Pinjam ( KSP) Start */}
                 <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
@@ -223,12 +204,10 @@ function Beranda() {
                                 </a>
                             </div>
                         </div>
-                    </div> 
-                {/* Simpan Pinjam (KSP End */}
-                    
+                    </div>       
                 </div> 
             </div>
-            {/* Produk End */}
+
         </div>
         <F/>
         </>
