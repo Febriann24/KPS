@@ -1,16 +1,25 @@
-GET http://localhost:5000/users
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN
 
 ###
 GET http://localhost:5000/users/1
 
 ###
-POST http://localhost:5000/users
+POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN
 Content-Type: application/json
 
 {
-    "name": "Owen",
-    "email": "owen@gmail.com",
-    "gender": "Male"
+    "statusData": {
+        "IS_ACTIVE": 1,
+        "IS_DELETED": 0,
+        "USR_CRT": "admin",
+        "STATUS_CODE": "ACTIVE",
+        "STATUS_NAME": "Active Status",
+        "STATUS_DESC": "The status is currently active."
+    },
+    "pengajuanData": {
+        "USR_CRT": "admin"
+        // Include other necessary fields for TR_PENGAJUAN_PINJAMAN
+    }
 }
 
 ###
