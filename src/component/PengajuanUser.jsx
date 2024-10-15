@@ -23,10 +23,11 @@ const PengajuanUser = () => {
 
         <div className="relative flex justify-between items-center px-16 py-8">
           <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 h-2 bg-gray-200 rounded-full" style={{ left: '150px', right: '80px' }}></div>
+          
           <div className="absolute top-1/2 transform -translate-y-1/2 h-2 rounded-full" 
               style={{ 
-                left: '140px', 
-                width: 'calc(42%)', 
+                left: '135px', 
+                width: 'calc(43%)', 
                 background: 'linear-gradient(to right, #10B981, #FBBF24)' 
               }}></div>
 
@@ -34,7 +35,7 @@ const PengajuanUser = () => {
             <div className="mb-2" style={{ marginBottom: '60px' }}>
               <img src={foto} className="mt-5 mb-2 w-16 h-auto" alt="Koperasi Logo" />
             </div>
-            <div className="relative" style={{ top: '-35px' }}>
+            <div className="relative" style={{ top: '-46px' }}>
               <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold z-10">
                 ✔️
               </div>
@@ -51,7 +52,7 @@ const PengajuanUser = () => {
             </div>
             <div className="relative" style={{ top: '-35px' }}>
               <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold z-10">
-                ✔️
+              ⏳
               </div>
             </div>
             <span className="mt-2 text-yellow-500 font-semibold">Disetujui</span>

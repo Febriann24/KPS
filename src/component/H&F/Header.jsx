@@ -49,7 +49,7 @@ function Header() {
                                 <Link to='/'>Beranda</Link>
                             </div>
                         </li>
-                        <li className="mx-[10px]">
+                        <li className="">
                             <div className={`text-white ${location.pathname === '/TentangKami' ? 'border-b-2 border-white' : ''} whitespace-nowrap`}>
                                 <Link to='/TentangKami'>Tentang Kami</Link>
                             </div>
