@@ -29,7 +29,7 @@ function Footer(){
                         </ul>
                     </div>
                     <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-                    <span class="block text-sm text-white sm:text-center">© 2023 <a href="https://flowbite.com/" class="hover:underline mr-[5px]">Ketoprak Developer</a>Universitas Multimedia Nusantara</span>
+                    <span class="block text-sm text-white sm:text-center">© 2024 <a href="https://flowbite.com/" class="hover:underline mr-[5px]">Ketoprak Developer</a>Universitas Multimedia Nusantara</span>
                 </div>
             </footer>
         </>

@@ -1,9 +1,16 @@
 import React from 'react';
 import H from "./H&F/Header";  
 import F from "./H&F/Footer";  
-import foto from './Foto/Koperasi_2.jpg';
+import foto from './Foto/Koperasi_Logo.png';
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('user'); 
+        navigate('/'); 
+    };
   return (
     <div className="min-h-screen flex flex-col">
       <H />
@@ -70,9 +77,16 @@ export default function Profile() {
             </div>
 
             <div className="mt-6 text-center">
-              <button className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition">
+                <button className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition">
                 EDIT
-              </button>
+                </button>
+
+                <button
+                onClick={handleLogout}
+                className="bg-white text-black rounded px-4 py-2 mt-4"
+                >
+                Logout
+                </button>
             </div>
           </div>
         </div>
