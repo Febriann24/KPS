@@ -1,7 +1,7 @@
 GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN
 
 ###
-GET http://localhost:5000/users/1
+GET http://localhost:5000/MS_STATUS_PINJAMAN/1
 
 ###
 POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN

@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router.get("/TR_PENGAJUAN_PINJAMAN", getPengajuanPinjaman);
-router.get("/MS_PENGAJUAN_PINJAMAN", getStatusPinjaman);
+router.get("/MS_STATUS_PINJAMAN/:id", getStatusPinjaman);
 router.post("/TR_PENGAJUAN_PINJAMAN", createPengajuanPinjaman);
 
 export default router;

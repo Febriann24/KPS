@@ -3,15 +3,7 @@ import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
 
 export const getPengajuanPinjaman = async (req, res) => {
     try {
-        const response = await PengajuanPinjaman.findAll({
-            include: [
-                {
-                    model: StatusPinjaman, // Include the StatusPinjaman model
-                    as: 'status', // Specify the alias (if defined in the model association)
-                }
-            ]
-        });
-
+        const response = await PengajuanPinjaman.findAll();
         res.status(200).json(response);
     } catch (error) {
         console.log(error.message);
@@ -22,11 +14,15 @@ export const getPengajuanPinjaman = async (req, res) => {
 
 export const getStatusPinjaman = async(req, res) => {
     try{
-        const response = await StatusPinjaman.findAll();
+        const response = await StatusPinjaman.findAll({
+            where:{
+                UUID_STATUS_PINJAMAN: req.params.id
+            }
+        });;
         res.status(200).json(response);
     }
     catch(error) {
-        console.log(error.message);
+        res.status(500).json({ message: "Error fetching data", error: error.message });
     }
 }
 
