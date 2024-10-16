@@ -1,16 +1,34 @@
-GET http://localhost:5000/users
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN
 
 ###
-GET http://localhost:5000/users/1
+GET http://localhost:5000/MS_STATUS_PINJAMAN/1
 
 ###
-POST http://localhost:5000/users
+POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN
 Content-Type: application/json
 
 {
-    "name": "Owen",
-    "email": "owen@gmail.com",
-    "gender": "Male"
+    "statusData": {
+        "IS_ACTIVE": 1,
+        "IS_DELETED": 0,
+        "USR_CRT": "admin",
+        "STATUS_CODE": "ACTIVE",
+        "STATUS_NAME": "Active Status",
+        "STATUS_DESC": "The status is currently active."
+    },
+    "pengajuanData": {
+        "USR_CRT": "admin",
+        "NAMA_LENGKAP": "John Doe",
+        "ALAMAT": "123 Main St, City, Country",
+        "NOMOR_TELEPON": 1234567890,
+        "NOMOR_ANGGOTA": "A123456",
+        "NOMINAL_UANG": 5000000,
+        "NOMOR_REKENING": 987654321,
+        "BANK": "Bank Example",
+        "ANGSURAN": 12,
+        "DESKRIPSI": "Pinjaman untuk kebutuhan pribadi"
+        // Include any other necessary fields
+    }
 }
 
 ###

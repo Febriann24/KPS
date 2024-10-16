@@ -3,21 +3,22 @@ import H from "./H&F/Header";
 import F from "./H&F/Footer";
 import foto from './Foto/Koperasi.jpg';
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import axios from "axios";
 
 function FormPengajuan() {
   const navigate = useNavigate(); // Create navigate function for navigation
   const [formData, setFormData] = useState({
-    namaLengkap: '',
-    alamat: '',
-    nomorTelepon: '',
-    nomorAnggota: '',
+    NAMA_LENGKAP: '',
+    ALAMAT: '',
+    NOMOR_TELEPON: '',
+    NOMOR_ANGGOTA: '',
     maksimalPinjaman: 'Rp 599.958.050,00',
-    nominalPinjaman: 'Rp 530.000,00',
-    nomorRekening: '',
-    bank: '',
-    angsuran: '12',
+    NOMINAL_UANG: 'Rp 530.000,00',
+    NOMOR_REKENING: '',
+    BANK: '',
+    ANGSURAN: '12',
     tagihanBulanan: 'Rp 100.000',
-    keperluanPinjaman: '',
+    DESKRIPSI: '',
     setuju: false,
   });
 
@@ -29,11 +30,56 @@ function FormPengajuan() {
     });
   };
 
-  const handleSubmit = (e) => {
+  //Submit data to database
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-    console.log('Form Submitted:', formData);
-    navigate('/PengajuanUser'); // Navigate to PengajuanUser after form submission
+    //Default sending structure
+    const dataSubmit = {
+      "statusData": {
+        "IS_ACTIVE": 1,
+        "IS_DELETED": 0,
+        "USR_CRT": "admin",
+        "STATUS_CODE": "ACTIVE",
+        "STATUS_NAME": "Active Status",
+        "STATUS_DESC": "The status is currently active."
+      },
+      "pengajuanData": {
+          "USR_CRT": "get current user",
+          "NAMA_LENGKAP": formData.NAMA_LENGKAP,
+          "ALAMAT": formData.ALAMAT,
+          "NOMOR_TELEPON": formData.NOMOR_TELEPON,
+          "NOMOR_ANGGOTA": formData.NOMOR_ANGGOTA,
+          "NOMINAL_UANG": formData.NOMINAL_UANG,
+          "NOMOR_REKENING": formData.NOMOR_REKENING,
+          "BANK": formData.BANK,
+          "ANGSURAN": formData.ANGSURAN,
+          "DESKRIPSI": formData.DESKRIPSI
+      }
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/TR_PENGAJUAN_PINJAMAN', dataSubmit);
+      console.log('Form Submitted:', dataSubmit);
+      navigate('/PengajuanUser'); // Navigate to PengajuanUser after form submission
+    } catch (error) {
+        console.log('Error submitting form:', error);
+    }
   };
+
+  //Submit data to database
+  const savePengajuanPinjaman = async (e) => {
+    e.preventDefault();
+    try {
+        await axios.post('http://localhost:5000/users', {
+            name,
+            email,
+            gender
+        })
+        navigate("/userList")
+    } catch (error) {
+        console.log(error);
+    }
+}
 
   return (
     <div>
@@ -48,8 +94,8 @@ function FormPengajuan() {
                 <label className="block mb-1">Nama Lengkap</label>
                 <input
                   type="text"
-                  name="namaLengkap"
-                  value={formData.namaLengkap}
+                  name="NAMA_LENGKAP"
+                  value={formData.NAMA_LENGKAP}
                   onChange={handleChange}
                   placeholder="Nama Lengkap"
                   className="w-full p-2 border rounded bg-white"
@@ -59,8 +105,8 @@ function FormPengajuan() {
                 <label className="block mb-1">Alamat</label>
                 <input
                   type="text"
-                  name="alamat"
-                  value={formData.alamat}
+                  name="ALAMAT"
+                  value={formData.ALAMAT}
                   onChange={handleChange}
                   placeholder="Alamat"
                   className="w-full p-2 border rounded bg-white"
@@ -70,8 +116,8 @@ function FormPengajuan() {
                 <label className="block mb-1">Nomor Telepon</label>
                 <input
                   type="text"
-                  name="nomorTelepon"
-                  value={formData.nomorTelepon}
+                  name="NOMOR_TELEPON"
+                  value={formData.NOMOR_TELEPON}
                   onChange={handleChange}
                   placeholder="Nomor Telepon"
                   className="w-full p-2 border rounded bg-white"
@@ -81,8 +127,8 @@ function FormPengajuan() {
                 <label className="block mb-1">Nomor Anggota</label>
                 <input
                   type="text"
-                  name="nomorAnggota"
-                  value={formData.nomorAnggota}
+                  name="NOMOR_ANGGOTA"
+                  value={formData.NOMOR_ANGGOTA}
                   onChange={handleChange}
                   placeholder="Nomor Anggota"
                   className="w-full p-2 border rounded bg-white"
@@ -103,8 +149,8 @@ function FormPengajuan() {
                   <label className="block mb-1">Nominal Uang Pinjaman</label>
                   <input
                     type="text"
-                    name="nominalPinjaman"
-                    value={formData.nominalPinjaman}
+                    name="NOMINAL_UANG"
+                    value={formData.NOMINAL_UANG}
                     onChange={handleChange}
                     placeholder="Nominal Uang Pinjaman"
                     className="w-full p-2 border rounded bg-white"
@@ -117,8 +163,8 @@ function FormPengajuan() {
                   <label className="block mb-1">Nomor Rekening</label>
                   <input
                     type="text"
-                    name="nomorRekening"
-                    value={formData.nomorRekening}
+                    name="NOMOR_REKENING"
+                    value={formData.NOMOR_REKENING}
                     onChange={handleChange}
                     placeholder="Nomor Rekening"
                     className="w-full p-2 border rounded bg-white"
@@ -127,8 +173,8 @@ function FormPengajuan() {
                 <div>
                   <label className="block mb-1">Pilih Bank</label>
                   <select
-                    name="bank"
-                    value={formData.bank}
+                    name="BANK"
+                    value={formData.BANK}
                     onChange={handleChange}
                     className="w-full p-2 border rounded bg-white"
                   >
@@ -145,8 +191,8 @@ function FormPengajuan() {
                   <label className="block mb-1">Angsuran (Bulan)</label>
                   <input
                     type="number"
-                    name="angsuran"
-                    value={formData.angsuran}
+                    name="ANGSURAN"
+                    value={formData.ANGSURAN}
                     onChange={handleChange}
                     placeholder="Angsuran (Bulan)"
                     className="w-full p-2 border rounded bg-white"
@@ -168,8 +214,8 @@ function FormPengajuan() {
               <div>
                 <label className="block mb-1">Keperluan Pinjaman</label>
                 <textarea
-                  name="keperluanPinjaman"
-                  value={formData.keperluanPinjaman}
+                  name="DESKRIPSI"
+                  value={formData.DESKRIPSI}
                   onChange={handleChange}
                   placeholder="Keperluan Pinjaman"
                   className="w-full p-2 border rounded bg-white h-24 mt-4"
@@ -197,7 +243,7 @@ function FormPengajuan() {
 
           <div className="mt-6"> 
             <button
-              type="button"
+              type="submit"
               onClick={handleSubmit} // Call handleSubmit to submit form
               className="bg-blue-500 text-white w-full px-6 py-2 rounded shadow hover:bg-blue-600"
             >
