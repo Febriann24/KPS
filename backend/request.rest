@@ -17,8 +17,17 @@ Content-Type: application/json
         "STATUS_DESC": "The status is currently active."
     },
     "pengajuanData": {
-        "USR_CRT": "admin"
-        // Include other necessary fields for TR_PENGAJUAN_PINJAMAN
+        "USR_CRT": "admin",
+        "NAMA_LENGKAP": "John Doe",
+        "ALAMAT": "123 Main St, City, Country",
+        "NOMOR_TELEPON": 1234567890,
+        "NOMOR_ANGGOTA": "A123456",
+        "NOMINAL_UANG": 5000000,
+        "NOMOR_REKENING": 987654321,
+        "BANK": "Bank Example",
+        "ANGSURAN": 12,
+        "DESKRIPSI": "Pinjaman untuk kebutuhan pribadi"
+        // Include any other necessary fields
     }
 }
 

@@ -33,6 +33,33 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
             model: "MS_STATUS_PINJAMAN",
             key: "UUID_STATUS_PINJAMAN"
         }
+    },
+    NAMA_LENGKAP: {
+        type: DataTypes.STRING(100),
+    },
+    ALAMAT: {
+        type: DataTypes.STRING(255),
+    },
+    NOMOR_TELEPON: {
+        type: DataTypes.BIGINT,
+    },
+    NOMOR_ANGGOTA: {
+        type: DataTypes.STRING(50),
+    },
+    NOMINAL_UANG: {
+        type: DataTypes.BIGINT,
+    },
+    NOMOR_REKENING: {
+        type: DataTypes.BIGINT,
+    },
+    BANK: {
+        type: DataTypes.STRING(100),
+    },
+    ANGSURAN: {
+        type: DataTypes.INTEGER,
+    },
+    DESKRIPSI: {
+        type: DataTypes.TEXT,
     }
 }, {
     freezeTableName: true // Prevent Sequelize from pluralizing the table name
