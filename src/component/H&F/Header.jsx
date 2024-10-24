@@ -88,10 +88,10 @@ function Header() {
                                             <Link to="/ListUser" className="block px-4 py-2 hover:bg-gray-200">Daftar User Anggota</Link>
                                         </li>
                                         <li className="whitespace-nowrap">
-                                            <Link to="/ListPengajuanUser" className="block px-4 py-2 hover:bg-gray-200">Lihat Pengajuan User</Link>
+                                            <Link to="/FormBuatBerita" className="block px-4 py-2 hover:bg-gray-200">Formulir Tambahan Berita</Link>
                                         </li>
                                         <li className="whitespace-nowrap">
-                                            <Link to="/FormBuatBerita" className="block px-4 py-2 hover:bg-gray-200">Formulir Tambahan Berita</Link>
+                                            <Link to="/#" className="block px-4 py-2 hover:bg-gray-200">Laporan Keuangan</Link>
                                         </li>
                                     </ul>
                                 )}
