@@ -45,10 +45,15 @@ const Berita = db.define("TR_BERITA", {
     ISI_BERITA: {
         type: DataTypes.STRING(2000),
         allowNull: true
+    },
+    FOTO_BERITA: {
+        type: DataTypes.STRING(255),
+        allowNull: true
     }
 }, {
     freezeTableName: true
 });
+
 
 export default Berita;
 

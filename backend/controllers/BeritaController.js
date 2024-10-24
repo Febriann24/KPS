@@ -29,14 +29,29 @@ export const getBeritaById = async (req, res) => {
 };
 
 export const createBerita = async (req, res) => {
+    console.log(req.body);
+    const { judulBerita, kontenBerita, penulis } = req.body;
+
+    if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded or file is not a PNG or JPG!" });
+    }
+
     try {
-        await Berita.create(req.body);
-        res.status(201).json({ msg: "Berita Created Successfully" });
+        const newBerita = await Berita.create({
+            JUDUL_BERITA: judulBerita, 
+            ISI_BERITA: kontenBerita,
+            FOTO_BERITA: req.file.filename,
+            USER_UPD: penulis, 
+            DTM_CRT: new Date(),
+            USER_CRT: req.user ? req.user.id : null,
+        });
+        return res.status(201).json(newBerita);
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ message: "Error creating Berita", error: error.message });
+        console.error("Error creating berita:", error);
+        return res.status(500).json({ message: "Failed to create berita.", error: error.message });
     }
 };
+
 
 export const updateBerita = async (req, res) => {
     try {

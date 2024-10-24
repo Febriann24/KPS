@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios'; 
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 
@@ -17,11 +18,41 @@ function FormBuatBerita() {
       [name]: type === 'file' ? files[0] : value,
     });
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Submitted:', formData);
-  };
+
+    const beritaData = new FormData();
+    beritaData.append('judulBerita', formData.judulBerita);
+    beritaData.append('penulis', formData.penulis);
+    beritaData.append('kontenBerita', formData.kontenBerita);
+    beritaData.append('fotoBerita', formData.fotoBerita);
+
+    // Log the data before sending
+    console.log('Form Data Being Sent:', Array.from(beritaData.entries()));
+
+    try {
+        const response = await axios.post('http://localhost:5000/berita', beritaData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log('Berita Created:', response.data);
+        alert('Berita Created Successfully');
+
+        // Reset form data
+        setFormData({
+            judulBerita: '',
+            penulis: '',
+            kontenBerita: '',
+            fotoBerita: null,
+        });
+    } catch (error) {
+        console.error('Error creating berita:', error);
+        alert('Failed to create Berita');
+    }
+};
+
+
 
   return (
     <div>
@@ -76,8 +107,7 @@ function FormBuatBerita() {
 
               <div className="flex space-x-4 mt-6">
                 <button
-                  type="button"
-                  onClick={() => document.getElementById('form-tambah-berita').submit()}
+                  type="submit"
                   className="bg-teal-500 text-white w-full px-6 py-2 rounded shadow hover:bg-teal-600"
                 >
                   Tambah Berita
