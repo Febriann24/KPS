@@ -18,7 +18,7 @@ export const getStatusPinjaman = async(req, res) => {
             where:{
                 UUID_STATUS_PINJAMAN: req.params.id
             }
-        });;
+        });
         res.status(200).json(response);
     }
     catch(error) {
