@@ -34,29 +34,36 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
             key: "UUID_STATUS_PINJAMAN"
         }
     },
+    // UUID_TYPE_PINJAMAN: {
+    //     type: DataTypes.BIGINT,
+    //     allowNull:false,
+    //     references: {
+    //         model: "MS_TYPE_PINJAMAN",
+    //         key: "UUID_TYPE_PINJAMAN"
+    //     }
+    // },
     NAMA_LENGKAP: {
+        allowNull:false,
         type: DataTypes.STRING(100),
     },
     ALAMAT: {
         type: DataTypes.STRING(255),
     },
     NOMOR_TELEPON: {
+        allowNull:false,
         type: DataTypes.BIGINT,
     },
+    UNIT_KERJA: {
+        allowNull:false,
+        type: DataTypes.STRING(50),
+    },
     NOMOR_ANGGOTA: {
+        allowNull:false,
         type: DataTypes.STRING(50),
     },
     NOMINAL_UANG: {
+        allowNull:false,
         type: DataTypes.BIGINT,
-    },
-    NOMOR_REKENING: {
-        type: DataTypes.BIGINT,
-    },
-    BANK: {
-        type: DataTypes.STRING(100),
-    },
-    ANGSURAN: {
-        type: DataTypes.INTEGER,
     },
     DESKRIPSI: {
         type: DataTypes.TEXT,

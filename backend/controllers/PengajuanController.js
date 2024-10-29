@@ -13,38 +13,22 @@ export const getPengajuanPinjaman = async (req, res) => {
 
 
 export const getStatusPinjaman = async(req, res) => {
-    try{
-        const response = await StatusPinjaman.findAll({
-            where:{
-                UUID_STATUS_PINJAMAN: req.params.id
-            }
-        });
+    try {
+        const response = await StatusPinjaman.findAll();
         res.status(200).json(response);
-    }
-    catch(error) {
+    } catch (error) {
+        console.log(error.message);
         res.status(500).json({ message: "Error fetching data", error: error.message });
     }
 }
 
-export const createPengajuanPinjaman = async(req, res) => {
-    const {pengajuanData, statusData} = req.body;
+export const createStatusPinjaman = async (req, res) => {
     try {
-        const newStatus = await StatusPinjaman.create(statusData);
-      
-        const newPengajuan = {
-            UUID_MS_STATUS_PINJAMAN: newStatus.UUID_STATUS_PINJAMAN,
-            ...pengajuanData
-        };
-        await PengajuanPinjaman.create(newPengajuan);
-
-        res.status(201).json({ 
-            message: "Records created successfully", 
-            pengajuan: newPengajuan, 
-            status: newStatus 
-        });
-
+        const statuses = req.body; // Get the array of status objects
+        const createdStatuses = await StatusPinjaman.bulkCreate(statuses); // Use bulkCreate to create multiple records
+        res.status(201).json({ msg: "Status Pinjaman Created Successfully", data: createdStatuses });
     } catch (error) {
-        console.error("Error creating records:", error);
-        res.status(500).json({ message: "Error creating records", error: error.message });
+        console.log(error.message);
+        res.status(500).json({ message: "Error creating data", error: error.message });
     }
 }
