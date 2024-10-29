@@ -35,9 +35,8 @@ export const createPengajuanPinjaman = async(req, res) => {
             UUID_MS_STATUS_PINJAMAN: newStatus.UUID_STATUS_PINJAMAN,
             ...pengajuanData
         };
-        await PengajuanPinjaman.create(newPengajuan); // Create record on TR_PENGAJUAN_PINJAMAN
+        await PengajuanPinjaman.create(newPengajuan);
 
-        // Respond with the created records
         res.status(201).json({ 
             message: "Records created successfully", 
             pengajuan: newPengajuan, 

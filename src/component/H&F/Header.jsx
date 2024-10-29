@@ -88,7 +88,7 @@ function Header() {
                                             <Link to="/ListUser" className="block px-4 py-2 hover:bg-gray-200">Daftar User Anggota</Link>
                                         </li>
                                         <li className="whitespace-nowrap">
-                                            <Link to="/FormBuatBerita" className="block px-4 py-2 hover:bg-gray-200">Formulir Tambahan Berita</Link>
+                                            <Link to="/BeritaMenu" className="block px-4 py-2 hover:bg-gray-200">Menu Berita</Link>
                                         </li>
                                         <li className="whitespace-nowrap">
                                             <Link to="/#" className="block px-4 py-2 hover:bg-gray-200">Laporan Keuangan</Link>

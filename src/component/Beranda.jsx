@@ -79,49 +79,49 @@ function Beranda() {
                 </div>
                 <div className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] w-[1357px] ml-[-409px] ">
 
-                        <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
-                       <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                        <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                       <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
                                src={gmbrSP}
                                alt="card-image"
-                               class=" w-full rounded-md md:rounded-lg object-cover"
+                               className=" w-full rounded-md md:rounded-lg object-cover"
                            />
                        </div>
-                       <div class="p-6">
-                        <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
-                            <h4 class="mb-2 text-slate-800 text-2xl font-semibold">
+                       <div className="p-6">
+                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan Pokok
                             </h4>
-                            <p class="mb-8 text-slate-600 leading-normal font-light">
+                            <p className="mb-8 text-slate-600 leading-normal font-light">
                                  Sejumlah uang yang wajib dibayarkan oleh anggota koperasi saat pertama kali menjadi anggota. 
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" className="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
                         </div>
                     </div> 
 
-                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        
-                       <div class="p-6">
-                        <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
-                            <h4 class="mb-2 text-slate-800 text-2xl font-semibold">
+                       <div className="p-6">
+                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan Wajib
                             </h4>
-                            <p class="mb-8 text-slate-600 leading-normal font-light">
+                            <p className="mb-8 text-slate-600 leading-normal font-light">
                                  Sejumlah uang yang wajib dibayarkan oleh anggota koperasi saat pertama kali menjadi anggota. 
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" className="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
                         </div>
-                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                        <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
                                src={gmbrSW}
                                alt="card-image"
@@ -130,76 +130,76 @@ function Beranda() {
                        </div>
                     </div> 
 
-                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
-                       <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                       <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
                                src={gmbrSS}
                                alt="card-image"
-                               class=" w-full rounded-md md:rounded-lg object-cover"
+                               className=" w-full rounded-md md:rounded-lg object-cover"
                            />
                        </div>
-                       <div class="p-6">
-                        <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
-                            <h4 class="mb-2 text-slate-800 text-2xl font-semibold">
+                       <div className="p-6">
+                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan Suka Rela
                             </h4>
-                            <p class="mb-8 text-slate-600 leading-normal font-light">
+                            <p className="mb-8 text-slate-600 leading-normal font-light">
                                  Sejumlah uang yang wajib dibayarkan oleh anggota koperasi saat pertama kali menjadi anggota. 
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" className="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
                         </div>
                     </div> 
 
-                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        
-                       <div class="p-6">
-                        <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
-                            <h4 class="mb-2 text-slate-800 text-2xl font-semibold">
+                       <div className="p-6">
+                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan Hari raya
                             </h4>
-                            <p class="mb-8 text-slate-600 leading-normal font-light">
+                            <p className="mb-8 text-slate-600 leading-normal font-light">
                                  Sejumlah uang yang wajib dibayarkan oleh anggota koperasi saat pertama kali menjadi anggota. 
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" className="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
                         </div>
-                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                        <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
                                src={gmbrSHR}
                                alt="card-image"
-                               class=" w-full rounded-[24px] object-cover"
+                               className=" w-full rounded-[24px] object-cover"
                            />
                        </div>
                     </div> 
 
-                <div class="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
-                       <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                       <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
                                src={gmbrSSP}
                                alt="card-image"
-                               class=" w-full rounded-md md:rounded-lg object-cover"
+                               className=" w-full rounded-md md:rounded-lg object-cover"
                            />
                        </div>
-                       <div class="p-6">
-                        <div class="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
-                            <h4 class="mb-2 text-slate-800 text-2xl font-semibold">
+                       <div className="p-6">
+                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan dan Pinjam
                             </h4>
-                            <p class="mb-8 text-slate-600 leading-normal font-light">
+                            <p className="mb-8 text-slate-600 leading-normal font-light">
                                  Sejumlah uang yang wajib dibayarkan oleh anggota koperasi saat pertama kali menjadi anggota. 
                                  Simpanan pokok tidak dapat diambil kembali selama anggota masih tergabung dalam koperasi
                             </p>
                             <div>
-                                <a href="/Produk" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                <a href="/Produk" className="text-slate-800 font-semibold text-sm hover:underline flex items-center">
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>

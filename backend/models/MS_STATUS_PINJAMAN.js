@@ -20,7 +20,7 @@ const StatusPinjaman = db.define("MS_STATUS_PINJAMAN", {
     DTM_CRT: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: DataTypes.NOW // Default to current date and time
+        defaultValue: DataTypes.NOW
     },
     USR_CRT: {
         type: DataTypes.STRING(50),
@@ -47,12 +47,11 @@ const StatusPinjaman = db.define("MS_STATUS_PINJAMAN", {
         allowNull: true
     }
 }, {
-    freezeTableName: true // Prevent Sequelize from pluralizing the table name
+    freezeTableName: true
 })
 
 export default StatusPinjaman;
 
-// Sync the model with the database (use cautiously in production)
 console.log("Creating MS_STATUS_PINJAMAN");
 (async () => {
     await db.sync();    

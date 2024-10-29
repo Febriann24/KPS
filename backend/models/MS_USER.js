@@ -20,7 +20,7 @@ const MS_USER = db.define("MS_USER", {
     DTM_CRT: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: DataTypes.NOW // Default to current date and time
+        defaultValue: DataTypes.NOW
     },
     USR_CRT: {
         type: DataTypes.STRING(50),
@@ -43,7 +43,7 @@ const MS_USER = db.define("MS_USER", {
         allowNull: false
     },
     PASSWORD: {
-        type: DataTypes.STRING(255), // Password akan di-hash
+        type: DataTypes.STRING(255),
         allowNull: false
     },
     NAMA_LENGKAP: {
@@ -72,7 +72,6 @@ const MS_USER = db.define("MS_USER", {
     freezeTableName: true 
 });
 
-// Sync the model with the database (use cautiously in production)
 console.log("Creating MS_USER");
 (async () => {  
     await db.sync(); 

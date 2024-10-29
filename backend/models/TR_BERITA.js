@@ -13,7 +13,7 @@ const Berita = db.define("TR_BERITA", {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    IS_DELETED_: {
+    IS_DELETED: {
         type: DataTypes.INTEGER,
         allowNull: true
     },

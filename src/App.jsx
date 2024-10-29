@@ -13,6 +13,9 @@ import ListUser from './component/UserPengurus/ListUser';
 import ListPengajuanUser from './component/UserPengurus/ListPengajuanUser';
 import FormBuatBerita from './component/UserPengurus/FormBuatBerita';
 import Profile from './component/Profile';
+import BeritaMenu from './component/UserPengurus/BeritaMenu';
+import ShowBerita from './component/UserPengurus/ShowBerita';
+import EditBerita from './component/UserPengurus/EditBerita';
 
 function App() {
   return (
@@ -31,8 +34,11 @@ function App() {
         <Route exact path='/PengajuanPinjaman' element = {<PengajuanPinjaman/>} />
         <Route exact path='/ListUser' element = {<ListUser/>} />
         <Route exact path='/ListPengajuanUser' element = {<ListPengajuanUser/>} />
+        <Route exact path='/BeritaMenu' element ={<BeritaMenu/>} />
         <Route exact path='/FormBuatBerita' element ={<FormBuatBerita/>} />
         <Route exact path='/Profile' element = {<Profile/>} />
+        <Route exact path='/showBerita/:id' element ={<ShowBerita/>} />
+        <Route exact path='/editBerita/:id' element ={<EditBerita/>} />
         </Routes>
       </Router>
     </>

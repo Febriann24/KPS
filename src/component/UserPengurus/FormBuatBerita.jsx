@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios'; 
+import { useNavigate } from 'react-router-dom';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 
@@ -11,6 +12,8 @@ function FormBuatBerita() {
     fotoBerita: null,
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     setFormData({
@@ -18,6 +21,7 @@ function FormBuatBerita() {
       [name]: type === 'file' ? files[0] : value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,32 +31,28 @@ function FormBuatBerita() {
     beritaData.append('kontenBerita', formData.kontenBerita);
     beritaData.append('fotoBerita', formData.fotoBerita);
 
-    // Log the data before sending
     console.log('Form Data Being Sent:', Array.from(beritaData.entries()));
 
     try {
-        const response = await axios.post('http://localhost:5000/berita', beritaData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        console.log('Berita Created:', response.data);
-        alert('Berita Created Successfully');
-
-        // Reset form data
-        setFormData({
-            judulBerita: '',
-            penulis: '',
-            kontenBerita: '',
-            fotoBerita: null,
-        });
+      const response = await axios.post('http://localhost:5000/berita', beritaData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+      });
+      console.log('Berita Created:', response.data);
+      alert('Berita Created Successfully');
+      navigate('/BeritaMenu'); 
+      setFormData({
+          judulBerita: '',
+          penulis: '',
+          kontenBerita: '',
+          fotoBerita: null,
+      });
     } catch (error) {
-        console.error('Error creating berita:', error);
-        alert('Failed to create Berita');
+      console.error('Error creating berita:', error);
+      alert('Failed to create Berita');
     }
-};
-
-
+  };
 
   return (
     <div>

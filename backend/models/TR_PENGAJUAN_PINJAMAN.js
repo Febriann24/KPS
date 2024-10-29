@@ -62,13 +62,12 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
         type: DataTypes.TEXT,
     }
 }, {
-    freezeTableName: true // Prevent Sequelize from pluralizing the table name
+    freezeTableName: true
 });
 
 export default PengajuanPinjaman;
 
-// Sync the model with the database (use cautiously in production)
 console.log("Creating TR_PENGAJUAN_PINJAMAN");
 (async () => {  
-    await db.sync(); // Use { force: true } to drop and recreate
+    await db.sync();
 })();

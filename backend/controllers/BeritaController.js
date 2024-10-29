@@ -2,8 +2,8 @@ import Berita from "../models/TR_BERITA.js";
 
 export const getAllBerita = async (req, res) => {
     try {
-        const response = await Berita.findAll();
-        res.status(200).json(response);
+        const response = await Berita.findAll({ where: {IS_DELETED: 0 } });
+        res.json(response);
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: "Error fetching data", error: error.message });
@@ -29,7 +29,6 @@ export const getBeritaById = async (req, res) => {
 };
 
 export const createBerita = async (req, res) => {
-    console.log(req.body);
     const { judulBerita, kontenBerita, penulis } = req.body;
 
     if (!req.file) {
@@ -42,6 +41,7 @@ export const createBerita = async (req, res) => {
             ISI_BERITA: kontenBerita,
             FOTO_BERITA: req.file.filename,
             USER_UPD: penulis, 
+            IS_DELETED: 0,
             DTM_CRT: new Date(),
             USER_CRT: req.user ? req.user.id : null,
         });
@@ -52,23 +52,37 @@ export const createBerita = async (req, res) => {
     }
 };
 
-
 export const updateBerita = async (req, res) => {
     try {
-        const berita = await Berita.findOne({ where: { UUID_BERITA: req.params.id } });
-        if (berita) {
-            await Berita.update(req.body, {
-                where: {
-                    UUID_BERITA: req.params.id
-                }
-            });
-            res.status(200).json({ msg: "Berita Updated Successfully" });
-        } else {
-            res.status(404).json({ message: "Berita not found" });
+        const beritaId = req.params.id;
+        const berita = await Berita.findOne({ where: { UUID_BERITA: beritaId } });
+
+        if (!berita) {
+            return res.status(404).json({ message: "Berita not found" });
         }
+        console.log('Existing berita:', berita);
+
+        const updatedData = {
+            JUDUL_BERITA: req.body.judulBerita || berita.JUDUL_BERITA,
+            ISI_BERITA: req.body.kontenBerita || berita.ISI_BERITA,
+            USER_UPD: req.body.penulis || berita.USER_UPD,
+            FOTO_BERITA: req.file ? `upload/${req.file.filename}` : berita.FOTO_BERITA,
+            IS_DELETED: 0
+        };
+
+        console.log('Updating with data:', updatedData);
+
+        const result = await Berita.update(updatedData, { where: { UUID_BERITA: beritaId } });
+        console.log('Update result:', result);
+
+        if (result[0] === 0) {
+            return res.status(404).json({ message: 'No rows updated. Berita may not exist or no changes made.' });
+        }
+
+        res.status(200).json({ msg: 'Berita Updated Successfully' });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ message: "Error updating Berita", error: error.message });
+        console.error('Error updating berita:', error);
+        res.status(500).json({ message: 'Error updating Berita', error: error.message });
     }
 };
 
@@ -79,7 +93,7 @@ export const deleteBerita = async (req, res) => {
         });
         if (berita) {
             await Berita.update(
-                { IS_DELETED_: 1 },
+                { IS_DELETED: 1 },
                 { where: { UUID_BERITA: req.params.id } }
             );
             res.status(200).json({ msg: "Berita Deleted Successfully (Soft Delete)" });

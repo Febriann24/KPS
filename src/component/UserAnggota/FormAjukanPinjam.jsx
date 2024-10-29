@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import foto from '../Foto/Koperasi_Logo.png';
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 
 function FormAjukanPinjam() {
-    const navigate = useNavigate(); // Create navigate function for navigation
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
       namaLengkap: '',
       alamat: '',
@@ -30,9 +30,9 @@ function FormAjukanPinjam() {
     };
   
     const handleSubmit = (e) => {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault();
       console.log('Form Submitted:', formData);
-      navigate('/PengajuanPinjaman'); // Navigate to PengajuanUser after form submission
+      navigate('/PengajuanPinjaman');
     };
     return (
         <>
@@ -198,14 +198,14 @@ function FormAjukanPinjam() {
           <div className="mt-6"> 
             <button
               type="button"
-              onClick={handleSubmit} // Call handleSubmit to submit form
+              onClick={handleSubmit}
               className="bg-blue-500 text-white w-full px-6 py-2 rounded shadow hover:bg-blue-600"
             >
               Ajukan
             </button>
             <button
               type="button"
-              onClick={() => navigate('/SimpanPinjam')} // Navigate back to SimpanPinjam
+              onClick={() => navigate('/SimpanPinjam')}
               className="bg-gray-300 text-black w-full px-6 py-2 rounded shadow hover:bg-gray-400 mt-2"
             >
               Kembali
