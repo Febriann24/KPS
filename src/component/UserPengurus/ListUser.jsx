@@ -1,24 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import { Link } from 'react-router-dom';
-
-const data = [
-  {
-    name: 'April Gunadi',
-    joinDate: '21/09/2023',
-    loan: 'Rp 300.500,00',
-    savings: 'Rp 12.000.000,00',
-    principalSavings: 'Memenuhi',
-  },
-  {
-    name: 'Benyamin Simanjuntak',
-    joinDate: '07/08/2024',
-    loan: 'Rp 12.435.600,00',
-    savings: 'Rp 12.435.600,00',
-    principalSavings: 'Memenuhi',
-  },
-];
 
 const SearchFilterBar = () => {
   return (
@@ -41,7 +25,7 @@ const SearchFilterBar = () => {
   );
 };
 
-const DataTable = () => {
+const DataTable = ({ data }) => {
   return (
     <table className="min-w-full bg-white border rounded-md mt-4">
       <thead>
@@ -57,13 +41,12 @@ const DataTable = () => {
       <tbody>
         {data.map((row, index) => (
           <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-            <td className="border p-2">{row.name}</td>
-            <td className="border p-2 text-center">{row.joinDate}</td>
-            <td className="border p-2 text-center">{row.loan}</td>
-            <td className="border p-2 text-center">{row.savings}</td>
-            <td className="border p-2 text-center">{row.principalSavings}</td>
+            <td className="border p-2">{row.NAMA_LENGKAP}</td>
+            <td className="border p-2 text-center">{new Date(row.TANGGAL_LAHIR).toLocaleDateString()}</td>
+            <td className="border p-2 text-center">{row.loan || 'N/A'}</td>
+            <td className="border p-2 text-center">{row.savings || 'N/A'}</td>
+            <td className="border p-2 text-center">{row.principalSavings || 'N/A'}</td>
             <td className="border p-2 text-center">
-              {}
               <Link to="/ListPengajuanUser" className="text-blue-500 hover:underline">
                 Buka
               </Link>
@@ -71,11 +54,26 @@ const DataTable = () => {
           </tr>
         ))}
       </tbody>
-      </table>
+    </table>
   );
 };
 
 const ListUser = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/users");
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="w-full">
@@ -84,7 +82,7 @@ const ListUser = () => {
 
       <div className="container mx-auto p-4 flex-grow">
         <SearchFilterBar />
-        <DataTable />
+        <DataTable data={data} />
       </div>
 
       <div className="w-full">

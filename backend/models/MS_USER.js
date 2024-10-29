@@ -72,9 +72,9 @@ const MS_USER = db.define("MS_USER", {
     freezeTableName: true 
 });
 
+export default MS_USER;
+
 console.log("Creating MS_USER");
 (async () => {  
     await db.sync(); 
 })();
-
-export default MS_USER;

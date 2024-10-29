@@ -13,7 +13,6 @@ const User = db.define("users", {
 
 export default User;
 
-//creates a new table "users" if "users" have not yet existed in database
 console.log("Creating User Table");
 (async()=>{
     await db.sync();
