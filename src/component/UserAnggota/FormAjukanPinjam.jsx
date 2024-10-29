@@ -3,6 +3,7 @@ import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import foto from '../Foto/Koperasi_Logo.png';
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { formatRupiah } from "../../utils/utils"
 
 function FormAjukanPinjam() {
  const navigate = useNavigate(); // Create navigate function for navigation
@@ -12,42 +13,31 @@ function FormAjukanPinjam() {
   nomorTelepon: '0819744637',
   unitKerja:'Sekolah',
   nomorAnggota: 'A1234',
-  maksimalPinjaman: '1000000',
-  minimalPinjaman: '500000',
-  nominalPinjaman: '',
-  angsuran: '3',
+  maksimalPinjaman: '0',
+  minimalPinjaman: '0',
+  nominalPinjaman: '0',
+  angsuran: '0',
   tagihanBulanan: '100000',
+  deduksiBulanan: '0',
   keperluanPinjaman: '',
   setuju: false,
  });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (name === 'nominalPinjaman') {
+    if (name === 'nominalPinjaman' || name === 'minimalPinjaman' || name == 'maksimalPinjaman') {
       const numericValue = value.replace(/\D/g, ''); // Remove non-numeric characters
       const formattedValue = formatRupiah(numericValue);
-      setFormData({ ...formData, [name]: formattedValue });
+      setFormData({
+         ...formData, 
+         [name]: formattedValue 
+        });
     } else {
       setFormData({
         ...formData,
         [name]: type === 'checkbox' ? checked : value,
       });
     }
-  };
-
-  const formatRupiah = (angka) => {
-    // Ensure angka is a string and remove leading zeros
-    angka = angka.replace(/^0+/, '');
-    let number_string = angka.toString(),
-        sisa = number_string.length % 3,
-        rupiah = number_string.substr(0, sisa),
-        ribuan = number_string.substr(sisa).match(/\d{3}/g);
-
-    if (ribuan) {
-      let separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
-    }
-    return rupiah || '0';
   };
 
  const handleSubmit = (e) => {
@@ -61,7 +51,7 @@ function FormAjukanPinjam() {
   <div>
   <H />
   <div className="flex justify-center space-x-8 mt-10">
-    <div className="w-2/3 pl-10">
+    <div className="w-2/3">
     <h2 className="text-2xl font-semibold text-center mb-6">Formulir Pengajuan Pinjaman</h2>
 
     <div className="bg-gray-200 p-10 rounded-lg shadow-md">
@@ -105,7 +95,7 @@ function FormAjukanPinjam() {
         onChange={handleChange}
         placeholder="Masukkan alamat lengkap"
         className="w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300"
-        style={{height:"135px"}}
+        style={{height:"140px"}}
         required
         />
       </div>
@@ -208,6 +198,8 @@ function FormAjukanPinjam() {
 
       <div>
         <label className="block mb-1 font-medium">Deduksi Bulanan</label>
+        <div className='flex items-center'>
+        <span className="mr-2">Rp</span>
         <input
         type="text"
         name="deduksiBulanan"
@@ -217,6 +209,7 @@ function FormAjukanPinjam() {
         readOnly
         required
         />
+        </div>
       </div>
 
       <div className="col-span-2">
@@ -226,7 +219,7 @@ function FormAjukanPinjam() {
         value={formData.keperluanPinjaman}
         onChange={handleChange}
         placeholder="Keperluan Pinjaman"
-        className="w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 h-24 mt-4"
+        className="w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 h-24"
         required
         />
       </div>
@@ -236,8 +229,8 @@ function FormAjukanPinjam() {
     </div>
     </div>
 
-    <div className="w-1/3 flex flex-col space-y-6">
-      <div className="flex justify-start mt-10">
+    <div className=" flex flex-col space-y-6">
+      <div className="justify-start mt-10">
         <label className="flex items-center space-x-2">
         <input
           type="checkbox"
@@ -271,6 +264,8 @@ function FormAjukanPinjam() {
       <div className="border p-4 rounded-lg text-center text-gray-700 bg-gray-100">
         <strong>PERHATIAN</strong>
         <p>Mohon mengisi formulir pengajuan dengan baik dan tepat.</p>
+        <p>Jika ada kesulitan, mohon baca syarat & ketentuan</p>
+        <p>Untuk melaporkan kesalahan mohon kontak : 0812299378</p>
       </div>
     </div>
   </div>
