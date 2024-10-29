@@ -7,8 +7,12 @@ export const formatRupiah = (angka) => {
         ribuan = number_string.substr(sisa).match(/\d{3}/g);
 
     if (ribuan) {
-      let separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
     }
     return rupiah || '0';
-  };
+};
+
+export const deformatRupiah = (angka) => {
+    return parseInt(angka.replace(/\./g, ''), 10)
+};
