@@ -1,14 +1,22 @@
 import User from "../models/MS_USER.js";
+import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
+import { Op } from "sequelize";
 
-export const getUsers = async(req, res) => {
-    try{
-        const response = await User.findAll();
+export const getUsers = async (req, res) => {
+    try {
+        const response = await User.findAll({
+            include: [{
+                model: PengajuanPinjaman,
+                attributes: ['NOMINAL_UANG'],
+                required: false
+            }],
+        });
         res.status(200).json(response);
-    }
-    catch(error) {
+    } catch (error) {
         console.log(error.message);
+        res.status(500).json({ message: "Error fetching users", error: error.message });
     }
-}
+};
 
 export const getUserById = async(req, res) => {
     try{

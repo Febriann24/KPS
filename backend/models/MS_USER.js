@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
-
+import PengajuanPinjaman from './TR_PENGAJUAN_PINJAMAN.js';
 const { DataTypes } = Sequelize;
 
 const MS_USER = db.define("MS_USER", { 
@@ -72,9 +72,21 @@ const MS_USER = db.define("MS_USER", {
     freezeTableName: true 
 });
 
+MS_USER.hasMany(PengajuanPinjaman, {
+    foreignKey: 'UUID_MS_USER',
+    sourceKey: 'UUID_MS_USER',
+});
+
+// Sync the database
+(async () => {  
+    try {
+        await db.sync(); 
+        console.log("Database synchronized successfully.");
+    } catch (error) {
+        console.error("Error synchronizing the database:", error);
+    }
+})();
+
 export default MS_USER;
 
 console.log("Creating MS_USER");
-(async () => {  
-    await db.sync(); 
-})();

@@ -33,14 +33,14 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
 
 const FilterButton = ({ handleFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [sortOrder, setSortOrder] = useState('asc'); // State to track sort order
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleSort = (order) => {
     setSortOrder(order);
-    handleFilter(order); // Pass the order to the parent function
-    setIsOpen(false); // Close the menu after selecting an option
+    handleFilter(order);
+    setIsOpen(false); 
   };
 
   return (
@@ -63,7 +63,7 @@ const DataTable = ({ data, onSort }) => {
         <tr>
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('NAMA_LENGKAP')}>Nama</th>
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('createdAt')}>Waktu Bergabung</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('loan')}>Pinjaman</th>
+          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('TR_PENGAJUAN_PINJAMANs')}>Pinjaman</th>
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('savings')}>Tabungan</th>
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('principalSavings')}>Simpanan Pokok</th>
           <th className="border p-2 text-center"></th>
@@ -74,7 +74,9 @@ const DataTable = ({ data, onSort }) => {
           <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
             <td className="border p-2">{row.NAMA_LENGKAP}</td>
             <td className="border p-2 text-center">{new Date(row.createdAt).toLocaleDateString()}</td>
-            <td className="border p-2 text-center">{row.loan || 'N/A'}</td>
+            <td className="border p-2 text-center">
+              {row.TR_PENGAJUAN_PINJAMANs.length > 0 ? row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 'N/A'}
+            </td>
             <td className="border p-2 text-center">{row.savings || 'N/A'}</td>
             <td className="border p-2 text-center">{row.principalSavings || 'N/A'}</td>
             <td className="border p-2 text-center">
@@ -89,21 +91,21 @@ const DataTable = ({ data, onSort }) => {
 
 const ListUser = () => {
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]); // New state for original data
+  const [originalData, setOriginalData] = useState([]);
   const [filterCriteria, setFilterCriteria] = useState({ selectedOption: '', searchTerm: '' });
-  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' }); // New state for sorting
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/users");
-        setData(response.data);
-        setOriginalData(response.data); // Store the original data
+          const response = await axios.get("http://localhost:5000/users");
+          console.log(response.data);
+          setData(response.data);
+          setOriginalData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+          console.error("Error fetching data:", error);
       }
-    };
-
+  };
     fetchData();
   }, []);
 
@@ -117,30 +119,38 @@ const ListUser = () => {
     setData(filteredData);
   };
 
-  // Function to handle sorting data by column
   const handleSort = (column) => {
     let direction = 'asc';
     if (sortConfig.key === column && sortConfig.direction === 'asc') {
-      direction = 'desc'; // Toggle direction
+      direction = 'desc';
     }
     setSortConfig({ key: column, direction });
     
     const sortedData = [...data].sort((a, b) => {
-      if (a[column] < b[column]) {
+      let aValue, bValue;
+  
+      if (column === 'TR_PENGAJUAN_PINJAMANs') {
+        aValue = a.TR_PENGAJUAN_PINJAMANs.length > 0 ? a.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 0;
+        bValue = b.TR_PENGAJUAN_PINJAMANs.length > 0 ? b.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 0;
+      } else {
+        aValue = a[column];
+        bValue = b[column];
+      }
+  
+      if (aValue < bValue) {
         return direction === 'asc' ? -1 : 1;
       }
-      if (a[column] > b[column]) {
+      if (aValue > bValue) {
         return direction === 'asc' ? 1 : -1;
       }
       return 0;
     });
-
+  
     setData(sortedData);
   };
 
-  // Function to handle sorting for all data on Filter button click
   const handleFilter = (order) => {
-    const columnToSort = 'createdAt'; // Replace with your desired column for filtering
+    const columnToSort = 'createdAt'; 
 
     const sortedData = [...originalData].sort((a, b) => {
       if (a[columnToSort] < b[columnToSort]) {
