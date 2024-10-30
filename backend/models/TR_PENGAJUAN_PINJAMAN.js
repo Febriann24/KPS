@@ -28,7 +28,7 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
     },
     UUID_MS_STATUS_PINJAMAN: {
         type: DataTypes.BIGINT,
-        allowNull:false,
+        allowNull: false,
         references: {
             model: "MS_STATUS_PINJAMAN",
             key: "UUID_STATUS_PINJAMAN"
@@ -61,6 +61,14 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
         allowNull:false,
         type: DataTypes.STRING(50),
     },
+    UUID_MS_USER: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        references: {
+            model: "MS_USER",
+            key: "UUID_MS_USER"
+        }
+    },
     NOMINAL_UANG: {
         allowNull:false,
         type: DataTypes.BIGINT,
@@ -72,9 +80,32 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
     freezeTableName: true
 });
 
+(async () => {
+    const { default: MS_USER } = await import('./MS_USER.js');
+    const { default: MS_STATUS_PINJAMAN } = await import('./MS_STATUS_PINJAMAN.js');
+
+    PengajuanPinjaman.belongsTo(MS_USER, {
+        foreignKey: 'UUID_MS_USER',
+        targetKey: 'UUID_MS_USER',
+        as: 'user'
+    });
+
+    PengajuanPinjaman.belongsTo(MS_STATUS_PINJAMAN, {
+        foreignKey: 'UUID_MS_STATUS_PINJAMAN',
+        targetKey: 'UUID_STATUS_PINJAMAN',
+        as: 'status'
+    });
+})();
+
+(async () => {  
+    try {
+        await db.sync();
+        console.log("Database synchronized successfully.");
+    } catch (error) {
+        console.error("Error synchronizing the database:", error);
+    }
+})();
+
 export default PengajuanPinjaman;
 
 console.log("Creating TR_PENGAJUAN_PINJAMAN");
-(async () => {  
-    await db.sync();
-})();
