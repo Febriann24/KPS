@@ -34,14 +34,14 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
             key: "UUID_STATUS_PINJAMAN"
         }
     },
-    // UUID_TYPE_PINJAMAN: {
-    //     type: DataTypes.BIGINT,
-    //     allowNull:false,
-    //     references: {
-    //         model: "MS_TYPE_PINJAMAN",
-    //         key: "UUID_TYPE_PINJAMAN"
-    //     }
-    // },
+    UUID_TYPE_PINJAMAN: {
+        type: DataTypes.BIGINT,
+        allowNull:false,
+        references: {
+            model: "MS_TYPE_PINJAMAN",
+            key: "UUID_TYPE_PINJAMAN"
+        }
+    },
     NAMA_LENGKAP: {
         allowNull:false,
         type: DataTypes.STRING(100),

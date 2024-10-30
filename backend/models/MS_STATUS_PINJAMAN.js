@@ -54,5 +54,5 @@ export default StatusPinjaman;
 
 console.log("Creating MS_STATUS_PINJAMAN");
 (async () => {
-    await db.sync();    
+    await db.sync();
 })();

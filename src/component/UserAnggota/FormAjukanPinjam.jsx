@@ -3,7 +3,11 @@ import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import foto from '../Foto/Koperasi_Logo.png';
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import { formatRupiah } from "../../utils/utils"
+import { 
+  formatRupiah,
+  deformatRupiah
+ } from "../../utils/utils"
+import axios from "axios";
 
 function FormAjukanPinjam() {
  const navigate = useNavigate(); // Create navigate function for navigation
@@ -23,27 +27,50 @@ function FormAjukanPinjam() {
   setuju: false,
  });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (name === 'nominalPinjaman' || name === 'minimalPinjaman' || name == 'maksimalPinjaman') {
-      const numericValue = value.replace(/\D/g, ''); // Remove non-numeric characters
-      const formattedValue = formatRupiah(numericValue);
-      setFormData({
-         ...formData, 
-         [name]: formattedValue 
-        });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: type === 'checkbox' ? checked : value,
-      });
-    }
+ const handleChange = (e) => {
+  const { name, value, type, checked } = e.target;
+
+  const handlers = {
+    nominalPinjaman: () => {
+      const numericValue = value.replace(/\D/g, ''); // Only accepts digit 0-9 inputs
+      return formatRupiah(numericValue);
+    },
+    checkbox: () => checked,
+    default: () => value,
   };
 
- const handleSubmit = (e) => {
+  const formattedValue = handlers[name] ? handlers[name]() : (type === 'checkbox' ? checked : value);
+  
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: formattedValue,
+  }));
+};
+
+
+ const handleSubmit = async (e) => {
   e.preventDefault(); // Prevent default form submission
-  console.log('Form Submitted:', formData);
-  navigate('/PengajuanPinjaman'); // Navigate to PengajuanUser after form submission
+  const dataSubmit = 
+  {
+    "UUID_MS_STATUS_PINJAMAN": 1,
+    "UUID_TYPE_PINJAMAN": 1,
+    "USR_CRT": "currentuser@gmail.com",
+    "NAMA_LENGKAP": formData.namaLengkap,
+    "ALAMAT": formData.alamat,
+    "NOMOR_TELEPON": formData.nomorTelepon,
+    "UNIT_KERJA": formData.unitKerja,
+    "NOMOR_ANGGOTA": formData.nomorAnggota,
+    "NOMINAL_UANG": deformatRupiah(formData.nominalPinjaman),
+    "DESKRIPSI": formData.keperluanPinjaman
+  }
+  try {
+    const response = await axios.post('http://localhost:5000/TR_PENGAJUAN_PINJAMAN', dataSubmit);
+      console.log('Form Submitted:', dataSubmit);
+      navigate('/PengajuanPinjaman');
+    } catch (error) {
+        console.log('Error submitting form:', error);
+        alert(error.response ? error.response.data.message : 'An unexpected error occurred.');
+    }
  };
 
  return (
