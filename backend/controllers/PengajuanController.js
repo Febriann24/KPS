@@ -1,3 +1,4 @@
+import db from "../config/database.js"
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
 import TypePinjaman from "../models/MS_TYPE-PINJAMAN.js";
@@ -27,6 +28,40 @@ export const getTypePinjaman = async(req, res) => {
     try {
         const response = await TypePinjaman.findAll();
         res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: "Error fetching data", error: error.message });
+    }
+}
+
+export const getDetailPengajuanPinjaman = async(req, res) => {
+    try {
+        const query = `
+            SELECT 
+                p."UUID_PENGAJUAN_PINJAMAN",
+                p."NAMA_LENGKAP",
+                p."ALAMAT",
+                p."NOMOR_TELEPON",
+                p."UNIT_KERJA",
+                p."NOMOR_ANGGOTA",
+                p."NOMINAL_UANG",
+                p."DESKRIPSI",
+                s."UUID_STATUS_PINJAMAN",
+                s."STATUS_CODE",
+                t."UUID_TYPE_PINJAMAN",
+                t."TYPE_NAME",
+                t."MINIMUM_PINJAMAN",
+                t."MAXIMUM_PINJAMAN"
+            FROM 
+                "TR_PENGAJUAN_PINJAMAN" p
+            LEFT JOIN 
+                "MS_STATUS_PINJAMAN" s ON p."UUID_MS_STATUS_PINJAMAN" = s."UUID_STATUS_PINJAMAN"
+            LEFT JOIN 
+                "MS_TYPE_PINJAMAN" t ON p."UUID_TYPE_PINJAMAN" = t."UUID_TYPE_PINJAMAN"
+        `;
+
+        const [results] = await db.query(query);
+        res.status(200).json(results);
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: "Error fetching data", error: error.message });
