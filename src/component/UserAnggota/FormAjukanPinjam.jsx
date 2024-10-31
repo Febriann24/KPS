@@ -37,7 +37,7 @@ function FormAjukanPinjam() {
  useEffect(() => {
   const fetchTypePinjaman = async () => {
       try {
-          const response = await axios.get('http://localhost:5000/MS_TYPE_PINJAMAN'); // Update with your actual endpoint
+          const response = await axios.get('http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman'); // Update with your actual endpoint
           setTypePinjaman(response.data);
       } catch (error) {
           console.error('Error fetching type pinjaman:', error);
@@ -85,19 +85,15 @@ function FormAjukanPinjam() {
   e.preventDefault(); // Prevent default form submission
   const dataSubmit = 
   {
+    "UUID_MS_USER": 1,
     "UUID_MS_STATUS_PINJAMAN": 1,
-    "UUID_TYPE_PINJAMAN": 1,
+    "UUID_MS_TYPE_PINJAMAN": 1,
     "USR_CRT": "currentuser@gmail.com",
-    "NAMA_LENGKAP": formData.namaLengkap,
-    "ALAMAT": formData.alamat,
-    "NOMOR_TELEPON": formData.nomorTelepon,
-    "UNIT_KERJA": formData.unitKerja,
-    "NOMOR_ANGGOTA": formData.nomorAnggota,
     "NOMINAL_UANG": deformatRupiah(formData.nominalPinjaman),
     "DESKRIPSI": formData.keperluanPinjaman
   }
   try {
-    const response = await axios.post('http://localhost:5000/TR_PENGAJUAN_PINJAMAN', dataSubmit);
+    const response = await axios.post('http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman', dataSubmit);
       console.log('Form Submitted:', dataSubmit);
       navigate('/PengajuanPinjaman');
     } catch (error) {

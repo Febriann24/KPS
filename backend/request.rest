@@ -1,16 +1,16 @@
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/general
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman
 
 ### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/detail
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman
 
 ###
-GET http://localhost:5000/MS_STATUS_PINJAMAN
+GET http://localhost:5000/MS_STATUS_PINJAMAN/getStatusPinjaman
 
 ###
-GET http://localhost:5000/MS_TYPE_PINJAMAN
+GET http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman
 
 ### Create Default MS_STATUS_PINJAMAN Data
-POST http://localhost:5000/MS_STATUS_PINJAMAN
+POST http://localhost:5000/MS_STATUS_PINJAMAN/createStatusPinjaman
 Content-Type: application/json
 
 [
@@ -49,7 +49,7 @@ Content-Type: application/json
 ]
 
 ### Create Default MS_TYPE_PINJAMAN Data
-POST http://localhost:5000/MS_TYPE_PINJAMAN
+POST http://localhost:5000/MS_TYPE_PINJAMAN/createTypePinjaman
 Content-Type: application/json
 
 [
@@ -86,30 +86,33 @@ Content-Type: application/json
 ]
 
 ### Create TR_PENGAJUAN_PINJAMAN dummy
-POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN
+POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
 Content-Type: application/json
 
 {
+    "UUID_MS_USER": 4,
     "UUID_MS_STATUS_PINJAMAN": 1,
-    "UUID_TYPE_PINJAMAN": 1,
+    "UUID_MS_TYPE_PINJAMAN": 1,
     "USR_CRT": "johnnydummy123@dummy.com",
-    "NAMA_LENGKAP": "Dummy Johnny",
-    "ALAMAT": "Jalan Dummy, Block 12, Lantai 326 Lt. Street",
-    "NOMOR_TELEPON": "0819588436",
-    "UNIT_KERJA": "Sekolah",
-    "NOMOR_ANGGOTA": "D5MMY-153023",
     "NOMINAL_UANG": 850000,
     "DESKRIPSI": "Kepingin aja pinjem gituh.."
 }
 
 ###
-PATCH http://localhost:5000/users/1
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "Nikolas Febrisan",
-    "email": "nikolasfeber@gmail.com",
-    "gender": "Male"
+    "IS_ACTIVE": 1,
+    "IS_DELETED": 0,
+    "USR_CRT": "admin",
+    "NOMOR_TELP": "0819788367",
+    "EMAIL": "dummy@gmail.com",
+    "PASSWORD": "dummy",
+    "NAMA_LENGKAP": "dummymomment",
+    "ALAMAT": "dummy lt searganet",
+    "UUID_MS_JOB": 1,
+    "ROLE": "dummy"
 }
 
 ###

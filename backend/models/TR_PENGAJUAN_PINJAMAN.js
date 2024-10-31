@@ -34,32 +34,13 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
             key: "UUID_STATUS_PINJAMAN"
         }
     },
-    UUID_TYPE_PINJAMAN: {
+    UUID_MS_TYPE_PINJAMAN: {
         type: DataTypes.BIGINT,
         allowNull:false,
         references: {
             model: "MS_TYPE_PINJAMAN",
             key: "UUID_TYPE_PINJAMAN"
         }
-    },
-    NAMA_LENGKAP: {
-        allowNull:false,
-        type: DataTypes.STRING(100),
-    },
-    ALAMAT: {
-        type: DataTypes.STRING(255),
-    },
-    NOMOR_TELEPON: {
-        allowNull:false,
-        type: DataTypes.BIGINT,
-    },
-    UNIT_KERJA: {
-        allowNull:false,
-        type: DataTypes.STRING(50),
-    },
-    NOMOR_ANGGOTA: {
-        allowNull:false,
-        type: DataTypes.STRING(50),
     },
     UUID_MS_USER: {
         type: DataTypes.BIGINT,
@@ -83,6 +64,7 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
 (async () => {
     const { default: MS_USER } = await import('./MS_USER.js');
     const { default: MS_STATUS_PINJAMAN } = await import('./MS_STATUS_PINJAMAN.js');
+    const { default: MS_TYPE_PINJAMAN } = await import('./MS_TYPE_PINJAMAN.js');
 
     PengajuanPinjaman.belongsTo(MS_USER, {
         foreignKey: 'UUID_MS_USER',
@@ -94,6 +76,12 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
         foreignKey: 'UUID_MS_STATUS_PINJAMAN',
         targetKey: 'UUID_STATUS_PINJAMAN',
         as: 'status'
+    });
+
+    PengajuanPinjaman.belongsTo(MS_TYPE_PINJAMAN, {
+        foreignKey: 'UUID_MS_TYPE_PINJAMAN',
+        targetKey: 'UUID_TYPE_PINJAMAN',
+        as: 'type'
     });
 })();
 

@@ -34,39 +34,34 @@ export const getTypePinjaman = async(req, res) => {
     }
 }
 
-export const getDetailPengajuanPinjaman = async(req, res) => {
+export const getDetailPengajuanPinjaman = async (req, res) => {
     try {
-        const query = `
-            SELECT 
-                p."UUID_PENGAJUAN_PINJAMAN",
-                p."NAMA_LENGKAP",
-                p."ALAMAT",
-                p."NOMOR_TELEPON",
-                p."UNIT_KERJA",
-                p."NOMOR_ANGGOTA",
-                p."NOMINAL_UANG",
-                p."DESKRIPSI",
-                s."UUID_STATUS_PINJAMAN",
-                s."STATUS_CODE",
-                t."UUID_TYPE_PINJAMAN",
-                t."TYPE_NAME",
-                t."MINIMUM_PINJAMAN",
-                t."MAXIMUM_PINJAMAN"
-            FROM 
-                "TR_PENGAJUAN_PINJAMAN" p
-            LEFT JOIN 
-                "MS_STATUS_PINJAMAN" s ON p."UUID_MS_STATUS_PINJAMAN" = s."UUID_STATUS_PINJAMAN"
-            LEFT JOIN 
-                "MS_TYPE_PINJAMAN" t ON p."UUID_TYPE_PINJAMAN" = t."UUID_TYPE_PINJAMAN"
-        `;
+        const results = await PengajuanPinjaman.findAll({
+            include: [
+                {
+                    model: StatusPinjaman,
+                    as: 'status',
+                    attributes: ['UUID_STATUS_PINJAMAN', 'STATUS_CODE']
+                },
+                {
+                    model: TypePinjaman,
+                    as: 'type',
+                    attributes: ['UUID_TYPE_PINJAMAN', 'TYPE_NAME', 'MINIMUM_PINJAMAN', 'MAXIMUM_PINJAMAN']
+                }
+            ],
+            attributes: [
+                'UUID_PENGAJUAN_PINJAMAN',
+                'NOMINAL_UANG',
+                'DESKRIPSI'
+            ]
+        });
 
-        const [results] = await db.query(query);
         res.status(200).json(results);
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: "Error fetching data", error: error.message });
     }
-}
+};
 
 export const createStatusPinjaman = async (req, res) => {
     try {
