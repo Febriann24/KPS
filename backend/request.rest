@@ -117,3 +117,37 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:5000/users
+
+###
+GET http://localhost:5000/MS_USER
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJpYXQiOjE3MzAyOTI5MjQsImV4cCI6MTczMDI5Mjk1NH0.tFiSsXirYIZl8OkklFBV4phWG9HgpSmMZXK97hMtPUc
+###
+POST http://localhost:5000/MS_USER
+Content-Type: application/json
+
+{
+    "EMAIL": "admin@gmail.com",
+    "PASSWORD": "pakquin",
+    "NAMA_LENGKAP": "Winarno",
+    "ROLE": "Anggota",
+    "NOMOR_TELP": "08123456789"
+}
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "pakquin"
+}
+
+
+###
+GET http://localhost:5000/token
+
+###
+DELETE http://localhost:5000/logout
+
+###
+DELETE http://localhost:5000/users

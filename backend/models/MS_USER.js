@@ -20,7 +20,7 @@ const MS_USER = db.define("MS_USER", {
     DTM_CRT: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW // Default to current date and time
     },
     USR_CRT: {
         type: DataTypes.STRING(50),
@@ -43,7 +43,7 @@ const MS_USER = db.define("MS_USER", {
         allowNull: false
     },
     PASSWORD: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(255), // Password akan di-hash
         allowNull: false
     },
     NAMA_LENGKAP: {
@@ -57,7 +57,7 @@ const MS_USER = db.define("MS_USER", {
     },
     ALAMAT: {
         type: DataTypes.STRING(100), 
-        allowNull: false
+        allowNull: true
     },
     UUID_MS_JOB: {
         type: DataTypes.BIGINT,
@@ -67,7 +67,10 @@ const MS_USER = db.define("MS_USER", {
     ROLE: {
         type: DataTypes.STRING(20),
         allowNull: false
-    }
+    },    
+    refresh_token: {
+        type: DataTypes.STRING,
+    }      
 }, {
     freezeTableName: true 
 });
@@ -80,7 +83,7 @@ MS_USER.hasMany(PengajuanPinjaman, {
 // Sync the database
 (async () => {  
     try {
-        await db.sync(); 
+        await db.sync({ alter: true }); 
         console.log("Database synchronized successfully.");
     } catch (error) {
         console.error("Error synchronizing the database:", error);

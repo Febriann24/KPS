@@ -1,9 +1,34 @@
 import { PersonIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { Link, useLocation } from "react-router-dom";
 import foto from '../Foto/Koperasi_Logo.png';
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useNavigate } from 'react';
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 function Header() {
+
+    const [name, setName] = useState('');
+    const [token, setToken] = useState('');
+    const [expire, setExpire] = useState('');
+
+    useEffect(() => {
+        refreshToken();
+    }, []);
+
+    const refreshToken = async () => {
+        try {
+            const response = await axios.get("http://localhost:5000/token");
+            setToken(response.data.accessToken);
+            
+            const decoded = jwtDecode.default(response.data.accessToken);
+            console.log(decoded);
+        } catch (error) {
+            if (error.response) {
+                alert(error.response.data.msg);
+            }
+        }
+    }
+
+
     const location = useLocation(); 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);

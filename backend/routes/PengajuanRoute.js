@@ -7,7 +7,7 @@ import {
     createStatusPinjaman,
     createTypePinjaman,
     createPengajuanPinjaman,
-} from "../controllers/PengajuanController.js";
+ } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
 

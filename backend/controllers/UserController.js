@@ -1,83 +1,107 @@
-import User from "../models/MS_USER.js";
-import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
-import { Op } from "sequelize";
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
+import MS_USER from "../models/MS_USER.js";
+
 
 export const getUsers = async (req, res) => {
-    try {
-        const response = await User.findAll({
-            include: [{
-                model: PengajuanPinjaman,
-                attributes: ['NOMINAL_UANG'],
-                required: false
-            }],
+    try{ 
+        const users = await MS_USER.findAll({
+            attributes:['UUID_MS_USER', 'EMAIL']
         });
-        res.status(200).json(response);
+        res.json(users);    
+       } 
+    catch (error) {
+    console.log(error);
+    }
+}
+export const registerUser = async (req, res) => {
+    const { EMAIL, PASSWORD, NOMOR_TELP, NAMA_LENGKAP, ROLE } = req.body;
+
+    if (!EMAIL || !PASSWORD || !NOMOR_TELP || !NAMA_LENGKAP || !ROLE) {
+        return res.status(400).json({ message: "Semua field harus diisi." });
+    }
+    
+
+    
+    try {
+        const salt = await bcrypt.genSalt();
+        const hashPassword = await bcrypt.hash(PASSWORD, salt);
+        await MS_USER.create({
+            EMAIL,
+            PASSWORD: hashPassword,
+            NOMOR_TELP,
+            NAMA_LENGKAP,
+            ROLE,
+        });
+        res.status(201).json({ message: 'User registered', MS_USER });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ message: "Error fetching users", error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
-export const getUserById = async(req, res) => {
-    try{
-        const response = await User.findOne({
-            where:{
-                id: req.params.id
-            }
-        });
-        res.status(200).json(response);
-    }
-    catch(error) {
-        console.log(error.message);
-    }
-}
 
-export const createUser = async(req, res) => {
-    try{
-        await User.create(req.body);
-        res.status(201).json({msg: "User Created Successfully"});
-    }
-    catch(error) {
-        console.log(error.message);
-    }
-}
+// Fungsi untuk login
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
 
-export const updateUser = async(req, res) => {
-    try{
-        await User.update(req.body, {
-            where:{
-                id: req.params.id
-            }
-        });
-        res.status(201).json({msg: "User Updated Successfully"});
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email dan password harus diisi.' });
     }
-    catch(error) {
-        console.log(error.message);
-    }
-}
 
-export const deleteUser = async(req, res) => {
-    try{
-        await User.destroy({
-            where:{
-                id: req.params.id
-            }
+    try {
+        // Cari pengguna berdasarkan email
+        const user = await MS_USER.findOne({ 
+            where: { EMAIL: email } 
         });
-        res.status(201).json({msg: "User Deleted Successfully"});
-    }
-    catch(error) {
-        console.log(error.message);
-    }
-}
+        // console.log(user); // Cek data pengguna yang ditemukan
 
-export const deleteAllUser = async(req, res) => {
-    try{
-        const response = await User.destroy({
-            where:{}
+        if (!user) return res.status(404).json({ message: 'Email tidak terdaftar' });
+
+        // Periksa apakah password cocok
+        const isMatch = await bcrypt.compare(password, user.PASSWORD);
+        // console.log(isMatch); // Cek hasil perbandingan password
+
+        if (!isMatch) return res.status(401).json({ message: 'Password salah' });
+
+        // Buat token JWT
+        const accesToken = jwt.sign({ id: user.UUID_MS_USER, }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
+        const refreshToken = jwt.sign({ id: user.UUID_MS_USER }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+
+        await MS_USER.update({ refresh_token: refreshToken }, { 
+            where: { UUID_MS_USER: user.UUID_MS_USER } 
         });
-        res.status(200).json({msg: response + " Users Deleted Successfully"});
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000
+        });
+
+        res.json({ accesToken });
+
+    } catch (error) {
+        // console.error(error); // Log kesalahan untuk debugging
+        res.status(500).json({ message: "Terjadi kesalahan pada server" });
     }
-    catch(error) {
-        console.log(error.message);
-    }
+};
+
+
+export const Logout = async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.sendStatus(204);// status no konten (204)
+
+    const user = await MS_USER.findAll({ 
+        where: { 
+            refresh_token: refreshToken
+        } 
+    });
+    if (!user) return res.sendStatus(204);
+    const userId = user[0].UUID_MS_USER;
+
+    await MS_USER.update({ refresh_token: null }, { 
+        where: { 
+            UUID_MS_USER: userId 
+        } 
+    });
+    res.clearCookie('refreshToken');
+    return res.sendStatus(200);
 }
