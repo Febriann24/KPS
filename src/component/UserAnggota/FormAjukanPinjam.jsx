@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { 
+  useEffect, 
+  useState 
+} from 'react';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import foto from '../Foto/Koperasi_Logo.png';
@@ -20,6 +23,7 @@ function FormAjukanPinjam() {
   maksimalPinjaman: '0',
   minimalPinjaman: '0',
   nominalPinjaman: '0',
+  tipePinjaman: '',
   angsuran: '0',
   tagihanBulanan: '100000',
   deduksiBulanan: '0',
@@ -27,25 +31,54 @@ function FormAjukanPinjam() {
   setuju: false,
  });
 
- const handleChange = (e) => {
-  const { name, value, type, checked } = e.target;
+ const [selectedType, setSelectedType] = useState(null);
+ const [typePinjaman, setTypePinjaman] = useState([]);
 
-  const handlers = {
-    nominalPinjaman: () => {
-      const numericValue = value.replace(/\D/g, ''); // Only accepts digit 0-9 inputs
-      return formatRupiah(numericValue);
-    },
-    checkbox: () => checked,
-    default: () => value,
+ useEffect(() => {
+  const fetchTypePinjaman = async () => {
+      try {
+          const response = await axios.get('http://localhost:5000/MS_TYPE_PINJAMAN'); // Update with your actual endpoint
+          setTypePinjaman(response.data);
+      } catch (error) {
+          console.error('Error fetching type pinjaman:', error);
+      }
   };
 
-  const formattedValue = handlers[name] ? handlers[name]() : (type === 'checkbox' ? checked : value);
-  
-  setFormData((prevData) => ({
-    ...prevData,
-    [name]: formattedValue,
-  }));
-};
+  fetchTypePinjaman();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    const handlers = {
+      nominalPinjaman: () => {
+        const numericValue = value.replace(/\D/g, ''); // Only accepts digit 0-9 inputs
+        return formatRupiah(numericValue);
+      },
+      checkbox: () => checked,
+      default: () => value,
+    };
+
+    const formattedValue = handlers[name] ? handlers[name]() : (type === 'checkbox' ? checked : value);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: formattedValue,
+    }));
+  };
+
+  const handleSelectChange = (e) => {
+    const selectedValue = e.target.value;
+    const selectedOption = typePinjaman.find(item => item.TYPE_NAME === selectedValue);
+    console.log(selectedValue)
+    setFormData((prevData) => ({
+      ...prevData,
+      tipePinjaman: selectedValue, // Update formData with selected type
+      angsuran: selectedOption ? selectedOption.ANGSURAN_MONTH : '0',
+      minimalPinjaman: selectedOption ? formatRupiah(selectedOption.MINIMUM_PINJAMAN) : '0',
+      maksimalPinjaman: selectedOption ? formatRupiah(selectedOption.MAXIMUM_PINJAMAN) : '0'
+    }));
+  };
 
 
  const handleSubmit = async (e) => {
@@ -72,6 +105,20 @@ function FormAjukanPinjam() {
         alert(error.response ? error.response.data.message : 'An unexpected error occurred.');
     }
  };
+
+ const isSubmitable = () => {
+  return (
+    formData.namaLengkap.trim() !== '' &&
+    formData.nomorTelepon.trim() !== '' &&
+    formData.alamat.trim() !== '' &&
+    formData.unitKerja.trim() !== '' &&
+    formData.nomorAnggota.trim() !== '' && 
+    formData.tipePinjaman !== '' &&
+    formData.nominalPinjaman.trim() !== '' &&
+    formData.keperluanPinjaman.trim() !== '' &&
+    formData.setuju == true
+  );
+};
 
  return (
   <>
@@ -156,16 +203,20 @@ function FormAjukanPinjam() {
       <div>
         <label className="block mb-1 font-medium">Tipe Pinjaman</label>
         <select
-        name="bank"
-        value={formData.bank}
-        onChange={handleChange}
+        name="tipePinjaman"
+        value={formData.tipePinjaman}
+        onChange={handleSelectChange}
         className="w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300"
         required
         >
         <option value="">Pilih Tipe Pinjaman</option>
-        <option value="Mandiri">KPKA</option>
-        <option value="BCA">UKTP</option>
-        <option value="BRI">UKSP</option>
+
+          {typePinjaman.map((item) => (
+            <option key={item.UUID_TYPE_PINJAMAN} value={item.TYPE_NAME}>
+              {item.TYPE_NAME}
+            </option>
+          ))}
+
         </select>
       </div>
 
@@ -250,8 +301,6 @@ function FormAjukanPinjam() {
         required
         />
       </div>
-
-      <button type="submit" className="hidden">Submit</button>
       </form>
     </div>
     </div>
@@ -276,6 +325,7 @@ function FormAjukanPinjam() {
         type="button"
         onClick={handleSubmit} // Call handleSubmit to submit form
         className="bg-blue-500 text-white w-full px-6 py-2 rounded shadow hover:bg-blue-600 transition duration-200"
+        disabled={!isSubmitable()}
         >
         Ajukan
         </button>
