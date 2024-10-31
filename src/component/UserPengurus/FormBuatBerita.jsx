@@ -10,43 +10,60 @@ function FormBuatBerita() {
     penulis: '',
     kontenBerita: '',
     fotoBerita: null,
+    fotoBeritaBase64: '',
   });
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'file' ? files[0] : value,
-    });
+    if (type === 'file') {
+      const file = files[0];
+      setFormData({ ...formData, fotoBerita: file });
+      convertToBase64(file);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const convertToBase64 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setFormData((prevData) => ({ ...prevData, fotoBeritaBase64: reader.result }));
+    };
+    reader.onerror = (error) => {
+      console.error("Error converting file to Base64:", error);
+    };
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const beritaData = new FormData();
-    beritaData.append('judulBerita', formData.judulBerita);
-    beritaData.append('penulis', formData.penulis);
-    beritaData.append('kontenBerita', formData.kontenBerita);
-    beritaData.append('fotoBerita', formData.fotoBerita);
+    const beritaData = {
+      judulBerita: formData.judulBerita,
+      penulis: formData.penulis,
+      kontenBerita: formData.kontenBerita,
+      fotoBerita: formData.fotoBeritaBase64,
+    };
 
-    console.log('Form Data Being Sent:', Array.from(beritaData.entries()));
+    console.log('Form Data Being Sent:', beritaData);
 
     try {
       const response = await axios.post('http://localhost:5000/berita', beritaData, {
-          headers: {
-              'Content-Type': 'multipart/form-data',
-          },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
       console.log('Berita Created:', response.data);
       alert('Berita Created Successfully');
       navigate('/BeritaMenu'); 
       setFormData({
-          judulBerita: '',
-          penulis: '',
-          kontenBerita: '',
-          fotoBerita: null,
+        judulBerita: '',
+        penulis: '',
+        kontenBerita: '',
+        fotoBerita: null,
+        fotoBeritaBase64: '',
       });
     } catch (error) {
       console.error('Error creating berita:', error);

@@ -29,7 +29,7 @@ export const getBeritaById = async (req, res) => {
 };
 
 export const createBerita = async (req, res) => {
-    const { judulBerita, kontenBerita, penulis } = req.body;
+    const { judulBerita, kontenBerita, penulis, fotoBeritaBase64} = req.body;
 
     if (!req.file) {
         return res.status(400).json({ message: "No file uploaded or file is not a PNG or JPG!" });
@@ -39,7 +39,7 @@ export const createBerita = async (req, res) => {
         const newBerita = await Berita.create({
             JUDUL_BERITA: judulBerita, 
             ISI_BERITA: kontenBerita,
-            FOTO_BERITA: req.file.filename,
+            FOTO_BERITA: fotoBeritaBase64,
             USER_UPD: penulis, 
             IS_DELETED: 0,
             DTM_CRT: new Date(),
@@ -66,9 +66,17 @@ export const updateBerita = async (req, res) => {
             JUDUL_BERITA: req.body.judulBerita || berita.JUDUL_BERITA,
             ISI_BERITA: req.body.kontenBerita || berita.ISI_BERITA,
             USER_UPD: req.body.penulis || berita.USER_UPD,
-            FOTO_BERITA: req.file ? `upload/${req.file.filename}` : berita.FOTO_BERITA,
-            IS_DELETED: 0
+            IS_DELETED: 0,
         };
+
+        if (req.body.fotoBerita) {
+            if (!req.body.fotoBerita.startsWith('data:image/')) {
+                return res.status(400).json({ message: 'Invalid base64 image format' });
+            }
+            updatedData.FOTO_BERITA = req.body.fotoBerita;
+        } else {
+            updatedData.FOTO_BERITA = berita.FOTO_BERITA;
+        }
 
         console.log('Updating with data:', updatedData);
 

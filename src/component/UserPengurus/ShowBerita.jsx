@@ -48,11 +48,13 @@ const ShowBerita = () => {
                             Written on {new Date(berita.DTM_CRT).toLocaleDateString()} by
                         </div>
                         <div className="flex justify-center mb-4">
-                            <img 
-                                className="rounded-md max-w-full h-auto"
-                                src={`src/component/upload/${berita.FOTO_BERITA}`}
-                                alt={berita.FOTO_BERITA} 
-                            />
+                            {berita.FOTO_BERITA && (
+                                <img 
+                                    className="rounded-md max-w-full h-auto"
+                                    src={berita.FOTO_BERITA}
+                                    alt={berita.JUDUL_BERITA} 
+                                />
+                            )}
                         </div>
                         <p className="text-lg text-gray-800 leading-relaxed font-bold text-center">{berita.ISI_BERITA}</p>
                     </div>
