@@ -47,7 +47,7 @@ const Berita = db.define("TR_BERITA", {
         allowNull: true
     },
     FOTO_BERITA: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.TEXT,
         allowNull: true
     }
 }, {
@@ -59,5 +59,5 @@ export default Berita;
 
 console.log("Creating TR_BERITA");
 (async () => {
-    await db.sync();    
+    await db.sync({ alter: true });    
 })();

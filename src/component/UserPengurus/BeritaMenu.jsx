@@ -24,8 +24,11 @@ const BeritaMenu = () => {
         fetchBerita();
     }, []);
 
-    const getImageSrc = (filename) => {
-        return `http://localhost:5000/uploads/${filename}`;
+    const getImageSrc = (fotoBerita) => {
+        if (fotoBerita.startsWith("data:image/")) {
+            return fotoBerita;
+        }
+        return "http://localhost:5000/uploads/" + fotoBerita;
     };
 
     const deleteBerita = async (id) => {
@@ -60,8 +63,8 @@ const BeritaMenu = () => {
                             <div key={item.UUID_BERITA} className="bg-white rounded-md overflow-hidden shadow-md">
                                 <div className="image-container">
                                     <img
-                                        src={getImageSrc(item.FOTO_BERITA)}
-                                        alt={item.FOTO_BERITA}
+                                        src={getImageSrc(item.FOTO_BERITA)} 
+                                        alt={item.JUDUL_BERITA}
                                         className="w-full h-48 object-cover cursor-pointer"
                                     />
                                 </div>

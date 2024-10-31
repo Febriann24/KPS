@@ -12,6 +12,7 @@ const EditBerita = () => {
         penulis: '',
         kontenBerita: '',
         fotoBerita: null,
+        fotoBeritaBase64: '',
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,6 +27,7 @@ const EditBerita = () => {
                     penulis: response.data.USER_UPD,
                     kontenBerita: response.data.ISI_BERITA,
                     fotoBerita: null,
+                    fotoBeritaBase64: response.data.FOTO_BERITA || '',
                 });
                 setLoading(false);
             } catch (err) {
@@ -37,28 +39,56 @@ const EditBerita = () => {
         fetchBerita();
     }, [id]);
 
-    const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === 'file' ? files[0] : value,
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                console.log('Base64 Result:', reader.result);
+                resolve(reader.result);
+            };
+            reader.onerror = (error) => reject(error);
         });
     };
+    
+
+    const handleChange = async (e) => {
+        const { name, value, type, files } = e.target;
+        if (type === 'file') {
+            const file = files[0];
+            console.log('Selected File:', file);
+            setFormData({
+                ...formData,
+                fotoBerita: file,
+            });
+            const base64String = await convertToBase64(file);
+            console.log('Converted Base64 String:', base64String);
+            setFormData((prevData) => ({ ...prevData, fotoBeritaBase64: base64String }));
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const beritaData = new FormData();
-        beritaData.append('judulBerita', formData.judulBerita);
-        beritaData.append('penulis', formData.penulis);
-        beritaData.append('kontenBerita', formData.kontenBerita);
-        beritaData.append('fotoBerita', formData.fotoBerita);
+        
+        const beritaData = {
+            judulBerita: formData.judulBerita,
+            penulis: formData.penulis,
+            kontenBerita: formData.kontenBerita,
+            fotoBerita: formData.fotoBeritaBase64,
+        };
     
-        console.log('Form Data Being Sent:', Array.from(beritaData.entries()));
-    
+        console.log('Form Data Being Sent:', beritaData);
+        
         try {
             const response = await axios.patch(`http://localhost:5000/updateBerita/${id}`, beritaData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                 },
             });
             console.log('Berita Updated:', response.data);
@@ -66,9 +96,11 @@ const EditBerita = () => {
             navigate('/BeritaMenu');
         } catch (error) {
             console.error('Error updating berita:', error.response?.data || error.message);
-            alert('Failed to update Berita');
+            alert(`Failed to update Berita: ${error.response?.data.message || error.message}`);
         }
-    };    
+    };
+    
+    
 
     if (loading) {
         return <div>Loading...</div>;
@@ -126,6 +158,7 @@ const EditBerita = () => {
                                 <input
                                     type="file"
                                     name="fotoBerita"
+                                    accept="image/*"
                                     onChange={handleChange}
                                 />
                             </div>
