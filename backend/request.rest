@@ -1,0 +1,69 @@
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN
+
+###
+GET http://localhost:5000/MS_STATUS_PINJAMAN/1
+
+###
+POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN
+Content-Type: application/json
+
+{
+"statusData": {
+        "IS_ACTIVE": 1,
+        "IS_DELETED": 0,
+        "USR_CRT": "admin",
+        "STATUS_CODE": "ACTIVE",
+        "STATUS_NAME": "Active Status",
+        "STATUS_DESC": "The status is currently active."
+    },
+"pengajuanData": {
+        "USR_CRT": "admin",
+        "NAMA_LENGKAP": "John Doe",
+        "ALAMAT": "123 Main St, City, Country",
+        "NOMOR_TELEPON": 1234567890,
+        "NOMOR_ANGGOTA": "A123456",
+        "NOMINAL_UANG": 5000000,
+        "NOMOR_REKENING": 987654321,
+        "BANK": "Bank Example",
+        "ANGSURAN": 12,
+        "DESKRIPSI": "Pinjaman untuk kebutuhan pribadi"
+        // Include any other necessary fields
+    }
+}
+
+
+###
+GET http://localhost:5000/MS_USER
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJpYXQiOjE3MzAyOTI5MjQsImV4cCI6MTczMDI5Mjk1NH0.tFiSsXirYIZl8OkklFBV4phWG9HgpSmMZXK97hMtPUc
+###
+POST http://localhost:5000/MS_USER
+Content-Type: application/json
+
+{
+    "EMAIL": "admin@gmail.com",
+    "PASSWORD": "pakquin",
+    "NAMA_LENGKAP": "Winarno",
+    "ROLE": "Anggota",
+    "NOMOR_TELP": "08123456789"
+}
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "pakquin"
+}
+
+
+###
+GET http://localhost:5000/token
+
+
+
+###
+DELETE http://localhost:5000/logout
+
+###
+DELETE http://localhost:5000/users
