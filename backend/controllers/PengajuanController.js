@@ -1,7 +1,7 @@
 import db from "../config/database.js"
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
-import TypePinjaman from "../models/MS_TYPE-PINJAMAN.js";
+import TypePinjaman from "../models/MS_TYPE_PINJAMAN.js";
 
 export const getPengajuanPinjaman = async (req, res) => {
     try {
