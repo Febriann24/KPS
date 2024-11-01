@@ -15,27 +15,29 @@ function FormBuatBerita() {
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
-      const file = files[0];
-      setFormData({ ...formData, fotoBerita: file });
-      convertToBase64(file);
+        const file = files[0];
+        setFormData({ ...formData, fotoBerita: file });
+        const base64String = await convertToBase64(file);
+        setFormData((prevData) => ({ ...prevData, fotoBeritaBase64: base64String }));
     } else {
-      setFormData({ ...formData, [name]: value });
+        setFormData({ ...formData, [name]: value });
     }
-  };
+};
 
   const convertToBase64 = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setFormData((prevData) => ({ ...prevData, fotoBeritaBase64: reader.result }));
-    };
-    reader.onerror = (error) => {
-      console.error("Error converting file to Base64:", error);
-    };
-  };
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            resolve(reader.result);
+        };
+        reader.onerror = (error) => reject(error);
+    });
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
