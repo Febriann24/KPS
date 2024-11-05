@@ -1,6 +1,7 @@
 import express from "express";
 import {
     getUsers,
+    UserData,
     Register,
     Login,
     Logout // Tambahkan fungsi ini
@@ -18,6 +19,7 @@ const router = express.Router();
 // Rute untuk registrasi dan login
 router.get("/users", verifyToken, getUsers);
 router.post("/users", Register);
+router.get("/user", UserData);
 router.post("/login", Login);
 router.get("/token", refreshToken);
 router.delete("/logout", Logout);

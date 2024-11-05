@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import Users from "../models/MS_USER.js";
-
+import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -20,6 +20,21 @@ export const getUsers = async (req, res) => {
     }
 };
 
+export const UserData = async (req, res) => {
+    try {
+        const users = await Users.findAll({
+            include: [{
+                model: PengajuanPinjaman,
+                attributes: ['NOMINAL_UANG'],
+                required: false,
+            }],
+        });
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error.message);
+        res.status(500).json({ message: "Error fetching users", error: error.message });
+    }
+};
 
 export const Register = async (req, res) => {
     const { name, email, password, confPassword, noTelp, role } = req.body;
