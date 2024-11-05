@@ -10,6 +10,7 @@ import SimpanPinjam from './component/UserAnggota/SimpanPinjam';
 import FormAjukanPinjam from './component/UserAnggota/FormAjukanPinjam';
 import PengajuanPinjaman from './component/UserAnggota/PengajuanPinjam';
 import ListUser from './component/UserPengurus/ListUser';
+import LaporanKeuangan from './component/UserPengurus/LaporanKeuangan';
 import ListPengajuanUser from './component/UserPengurus/ListPengajuanUser';
 import FormBuatBerita from './component/UserPengurus/FormBuatBerita';
 import Profile from './component/Profile';
@@ -33,6 +34,7 @@ function App() {
         <Route exact path="/FormAjukanPinjam" element={<FormAjukanPinjam/>} />
         <Route exact path='/PengajuanPinjaman' element = {<PengajuanPinjaman/>} />
         <Route exact path='/ListUser' element = {<ListUser/>} />
+        <Route exact path='/LaporanKeuangan' element = {<LaporanKeuangan/>} />
         <Route exact path='/ListPengajuanUser' element = {<ListPengajuanUser/>} />
         <Route exact path='/BeritaMenu' element ={<BeritaMenu/>} />
         <Route exact path='/FormBuatBerita' element ={<FormBuatBerita/>} />

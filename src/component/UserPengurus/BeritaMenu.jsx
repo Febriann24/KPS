@@ -52,9 +52,9 @@ const BeritaMenu = () => {
         <>
             <H />
             <div className="container mx-auto px-4 py-8">
-                <h1 className="text-center bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white py-2 mb-4">News</h1>
+                <h1 className="text-center bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white py-2 mb-4">Berita</h1>
                 <div className="mb-4">
-                    <a href="/FormBuatBerita" className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white py-2 px-4 rounded-md">Make new news</a>
+                    <a href="/FormBuatBerita" className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white py-2 px-4 rounded-md">Membuat berita baru</a>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {berita.map((item) => {
@@ -73,7 +73,7 @@ const BeritaMenu = () => {
                                     <p className="text-sm text-gray-600 mb-2">Written on {new Date(item.DTM_CRT).toLocaleDateString()}</p>
                                     <p className="text-gray-700">{item.ISI_BERITA.substring(0, 150)}...</p>
                                     <div className="mt-4">
-                                        <a href={`/showBerita/${item.UUID_BERITA}`} className="text-yellow-500 font-semibold">Read More</a>
+                                        <a href={`/showBerita/${item.UUID_BERITA}`} className="text-yellow-500 font-semibold">Detail berita</a>
                                         <a href={`/editBerita/${item.UUID_BERITA}`} className="text-blue-600 ml-2">EDIT</a>
                                         <button onClick={() => deleteBerita(item.UUID_BERITA)} className="text-red-600 ml-2">DELETE</button>
                                     </div>
