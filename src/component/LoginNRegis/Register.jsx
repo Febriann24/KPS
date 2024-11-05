@@ -12,12 +12,12 @@ function Register(){
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState('');
-    const navigate = useNavigate();
     const [msg, setMsg] = useState('');
+    const navigate = useNavigate();
 
     const Register = async(e) => {
         e.preventDefault();
-        if (!name || !email || !phone || !password || !confirmPassword || !role) {
+        if (!name || !email || !phone || !password || !confirmPassword || !role ) {
             setMsg("Semua field harus diisi");
             return;
         }
@@ -28,17 +28,18 @@ function Register(){
             return;
         }
         try {
-            await axios.post("http://localhost:5000/MS_USER", {
-                NAMA_LENGKAP: name,
-                EMAIL: email,
-                NOMOR_TELP: phone,
-                PASSWORD: password,
-                ROLE: role 
+            await axios.post("http://localhost:5000/users", {
+                name: name,
+                email: email,
+                password: password,
+                confPassword: confirmPassword,
+                noTelp: phone,
+                role: role 
             });
             navigate("/login");
         } catch (error) {
                 if(error.reponse){
-                    setMsg(error.reponse.data.msg);
+                    setMsg(error.reponse.data);
                 }
             }
 
@@ -64,6 +65,7 @@ function Register(){
 
                             <div className="mt-3 md:flex md:items-center md:-mx-2">
                     <button 
+                    value={role}
                         onClick={() => setRole('Anggota')} 
                         className={`flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none ${role === 'Anggota' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -72,7 +74,8 @@ function Register(){
                         <span className="mx-2">Anggota</span>
                     </button>
                     <button 
-                        onClick={() => setRole('Pengrurus')}  
+                    value={role}
+                        onClick={() => setRole('Pengurus')}  
                         className={`flex justify-center w-full px-6 py-3 mt-4 rounded-lg md:mt-0 md:w-auto md:mx-2 focus:outline-none ${role === 'Pengurus' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

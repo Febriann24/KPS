@@ -6,33 +6,6 @@ import axios from 'axios'; // Pastikan axios terinstal\
 
 
 function Login() {
-  // const navigate = useNavigate();
-
-  // const [input, setInput] = useState({
-  //   email: "",
-  //   password: "",
-  // });
-
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-    
-  //   try {
-  //     const response = await axios.post('http://localhost:5000/api/login', {
-  //       EMAIL: input.email,
-  //       PASSWORD: input.password,
-  //     });
-      
-  //     // Simpan token di local storage
-  //     localStorage.setItem('token', response.data.token); // Menyimpan token
-  //     // Jika Anda ingin menyimpan data pengguna
-  //     localStorage.setItem('user', JSON.stringify(response.data.user));
-
-  //     navigate("/"); // Pindah ke halaman utama
-  //   } catch (error) {
-  //     alert(error.response.data.message || "Login failed");
-  //   }
-  // };  
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -49,14 +22,14 @@ function Login() {
             email: email,
             password: password
         });
-        navigate("/");
+        navigate("/berandaAnggota");
     } catch (error) {
         if(error.reponse){
             setMsg(error.reponse.data.msg);
         }
       }
   }
-
+  
   return (
     <>
       <div style={{ backgroundImage: `url(${hijo})` }} className=' sm:bg-cover h-screen'>

@@ -1,8 +1,8 @@
 import express from "express";
 import {
     getUsers,
-    registerUser,
-    loginUser,
+    Register,
+    Login,
     Logout // Tambahkan fungsi ini
 } from "../controllers/UserController.js"; // Pastikan Anda menambahkan fungsi ini di controller Anda
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -16,9 +16,9 @@ const router = express.Router();
 
 
 // Rute untuk registrasi dan login
-router.get("/MS_USER", verifyToken,  getUsers);
-router.post("/MS_USER", registerUser);
-router.post("/login", loginUser);
+router.get("/users", verifyToken, getUsers);
+router.post("/users", Register);
+router.post("/login", Login);
 router.get("/token", refreshToken);
 router.delete("/logout", Logout);
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import { Link } from 'react-router-dom';
+import { jwtDecode }  from 'jwt-decode';
 
 const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, handleFilter }) => {
   return (
@@ -90,6 +91,7 @@ const DataTable = ({ data, onSort }) => {
 };
 
 const ListUser = () => {
+  const [name, setName] = useState('');
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [filterCriteria, setFilterCriteria] = useState({ selectedOption: '', searchTerm: '' });
@@ -98,17 +100,39 @@ const ListUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const response = await axios.get("http://localhost:5000/users");
-          console.log(response.data);
-          setData(response.data);
-          setOriginalData(response.data);
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          console.error("Access token not found");
+          return;
+        }
+  
+        const decoded = jwtDecode(token);
+        setName(decoded.name);
+  
+        const response = await axios.get("http://localhost:5000/users", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
+        setData(response.data);
+        setOriginalData(response.data);
       } catch (error) {
-          console.error("Error fetching data:", error);
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error("Error fetching data:", error.response.data);
+        } else if (error.request) {
+          // Request was made but no response received
+          console.error("Error fetching data: No response received");
+        } else {
+          // Something happened in setting up the request
+          console.error("Error fetching data:", error.message);
+        }
       }
-  };
+    };
+  
     fetchData();
-  }, []);
-
+  }, []);  
   // Function to handle filtering data
   const handleSearch = () => {
     const filteredData = originalData.filter((row) => {
@@ -179,6 +203,7 @@ const ListUser = () => {
           handleFilter={handleFilter} 
         />
         {data.length > 0 ? <DataTable data={data} onSort={handleSort} /> : <p>No data available.</p>}
+        {name}
       </div>
 
       <div className="w-full">

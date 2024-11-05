@@ -59,11 +59,6 @@ const MS_USER = db.define("MS_USER", {
         type: DataTypes.STRING(100), 
         allowNull: true
     },
-    UUID_MS_JOB: {
-        type: DataTypes.BIGINT,
-        allowNullValue: false,
-        forenkey: true
-    },
     ROLE: {
         type: DataTypes.STRING(20),
         allowNull: false
