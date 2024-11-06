@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
 import PengajuanPinjaman from './TR_PENGAJUAN_PINJAMAN.js';
+import MS_JOB from './MS_JOB.js';
 const { DataTypes } = Sequelize;
 
 const MS_USER = db.define("MS_USER", { 
@@ -59,10 +60,10 @@ const MS_USER = db.define("MS_USER", {
         type: DataTypes.STRING(100), 
         allowNull: true
     },
-    ROLE: {
-        type: DataTypes.STRING(20),
-        allowNull: false
-    },    
+    UUID_MS_JOB: {
+        type: DataTypes.BIGINT,  // Sesuaikan tipe data dengan yang ada di MS_JOB
+        allowNull: false,
+    },   
     refresh_token: {
         type: DataTypes.STRING,
     }      
@@ -70,10 +71,16 @@ const MS_USER = db.define("MS_USER", {
     freezeTableName: true 
 });
 
-MS_USER.hasMany(PengajuanPinjaman, {
-    foreignKey: 'UUID_MS_USER',
-    sourceKey: 'UUID_MS_USER',
+// MS_USER.hasMany(PengajuanPinjaman, {
+//     foreignKey: 'UUID_MS_USER',
+//     sourceKey: 'UUID_MS_USER',
+// });
+
+MS_USER.belongsTo(MS_JOB, {
+    foreignKey: 'UUID_MS_JOB',
+    targetKey: 'UUID_MS_JOB'
 });
+
 
 // Sync the database
 (async () => {  
