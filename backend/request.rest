@@ -1,7 +1,7 @@
 GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman
 
 ### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/2
 
 ###
 GET http://localhost:5000/MS_STATUS_PINJAMAN/getStatusPinjaman

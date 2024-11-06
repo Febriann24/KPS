@@ -9,6 +9,7 @@ import {
   formatDate,
   formatRupiah
 } from '../../utils/utils';
+import { useNavigate } from 'react-router-dom';
 
 const getProcessColor = (process) => {
   switch (process) {
@@ -29,12 +30,14 @@ const LoanData = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLoanData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman');
         const formattedData = response.data.map(item => ({
+          id: item.UUID_PENGAJUAN_PINJAMAN,
           name: item.user.NAMA_LENGKAP,
           nominal: 'Rp ' + formatRupiah(item.NOMINAL_UANG),
           date: formatDate(item.DTM_CRT),
@@ -55,36 +58,50 @@ const LoanData = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <td colSpan="8" className='p-2 text-center font-bold'>Loading...</td>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <td colSpan="8" className='p-2 text-center font-bold text-red-500'>
+      Error: {error}, tolong hubungi: 
+      
+      </td>;
   }
 
   return (
     <tbody>
-        {data.map((loan, index) => (
+      {data.length > 0 ? (
+        data.map((loan, index) => (
           <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-            <td className='border p-2 text-center'>{index + 1}</td>
-            <td className="border p-2">{loan.name}</td>
-            <td className="border p-2 text-center">{loan.date}</td>
-            <td className="border p-2 text-center">{loan.type}</td>
-            <td className="border p-2 text-right">{loan.nominal}</td>
-            <td className="border p-2 text-center">{loan.deskripsi}</td>
-            <td className="border p-2 text-center">
-              <span className={`inline-block px-2 py-1 rounded-md ${getProcessColor(loan.status_code)}`}>
-                {loan.status_name}
-              </span>
-            </td>
-            <td className="border p-2 text-center">
-              <a href={`/User`} className="text-blue-500 hover:underline">
-                Buka
-              </a>
-            </td>
-          </tr>
-        ))}
-      </tbody>
+          <td className="border p-2 text-center">{index + 1}</td>
+          <td className="border p-2">{loan.name}</td>
+          <td className="border p-2 text-center">{loan.date}</td>
+          <td className="border p-2 text-center">{loan.type}</td>
+          <td className="border p-2 text-right">{loan.nominal}</td>
+          <td className="border p-2 text-center truncate max-w-xs">{loan.deskripsi}</td>
+          <td className="border p-2 text-center">
+            <span className={`inline-block px-2 py-1 rounded-md ${getProcessColor(loan.status_code)}`}>
+              {loan.status_name}
+            </span>
+          </td>
+          <td className="border p-2 text-center">
+            <button 
+              className="text-blue-500 hover:underline"
+              onClick={() => navigate(`/PengajuanPinjaman/${loan.id}`)}
+            >
+              Buka
+            </button>
+          </td>
+        </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="8" className="border p-2 text-center font-bold text-red-500">
+            Belum ada pengajuan
+          </td>
+        </tr>
+      )}
+    </tbody>
   );
 };
 

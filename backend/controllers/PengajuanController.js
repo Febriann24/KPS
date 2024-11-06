@@ -70,6 +70,45 @@ export const getDetailPengajuanPinjaman = async (req, res) => {
     }
 };
 
+export const getOneDetailPengajuanPinjaman = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const results = await PengajuanPinjaman.findOne({
+            where: {
+                UUID_PENGAJUAN_PINJAMAN: id
+            },
+            include: [
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: ['NAMA_LENGKAP']
+                },
+                {
+                    model: StatusPinjaman,
+                    as: 'status',
+                    attributes: ['UUID_STATUS_PINJAMAN', 'STATUS_CODE', "STATUS_NAME"]
+                },
+                {
+                    model: TypePinjaman,
+                    as: 'type',
+                    attributes: ['UUID_TYPE_PINJAMAN', 'TYPE_NAME', 'MINIMUM_PINJAMAN', 'MAXIMUM_PINJAMAN']
+                }
+            ],
+            attributes: [
+                'UUID_PENGAJUAN_PINJAMAN',
+                'NOMINAL_UANG',
+                'DESKRIPSI',
+                'DTM_CRT'
+            ]
+        });
+
+        res.status(200).json(results);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: "Error fetching data", error: error.message });
+    }
+};
+
 export const createStatusPinjaman = async (req, res) => {
     try {
         const createdStatuses = await StatusPinjaman.bulkCreate(req.body); // Use bulkCreate to create multiple records
