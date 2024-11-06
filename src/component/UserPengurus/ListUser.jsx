@@ -8,15 +8,18 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
   return (
     <div className="flex justify-between items-center p-4 bg-gray-100 shadow-sm">
       <div className="flex items-center space-x-4 w-full">
-        <select
-          className="border p-2 rounded-md bg-white"
-          value={filterCriteria.selectedOption}
-          onChange={(e) => setFilterCriteria({ ...filterCriteria, selectedOption: e.target.value })}
-        >
-          <option value="">Nama</option>
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-        </select>
+          <select
+            className="border p-2 rounded-md bg-white"
+            value={filterCriteria.selectedOption}
+            onChange={(e) => setFilterCriteria({ ...filterCriteria, selectedOption: e.target.value })}
+          >
+            <option value="semua">Semua Data</option>
+            <option value="NAMA_LENGKAP">Nama</option>
+            <option value="createdAt">Waktu Bergabung</option>
+            <option value="TR_PENGAJUAN_PINJAMANs">Pinjaman</option>
+            <option value="savings">Tabungan</option>
+            <option value="principalSavings">Simpanan Pokok</option>
+          </select>
         <input
           type="text"
           placeholder="Search..."
@@ -30,6 +33,7 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
     </div>
   );
 };
+
 
 const FilterButton = ({ handleFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,13 +115,33 @@ const ListUser = () => {
 
   // Function to handle filtering data
   const handleSearch = () => {
+    if (filterCriteria.selectedOption === "semua") {
+      // Show all data if "Semua Data" is selected
+      setData(originalData);
+      return;
+    }
+  
     const filteredData = originalData.filter((row) => {
-      const matchesSearchTerm = row.NAMA_LENGKAP.toLowerCase().includes(filterCriteria.searchTerm.toLowerCase());
-      const matchesSelectedOption = filterCriteria.selectedOption ? row.someField === filterCriteria.selectedOption : true; // Replace 'someField' with the actual field to filter by
-      return matchesSearchTerm && matchesSelectedOption;
+      const searchTerm = filterCriteria.searchTerm.toLowerCase();
+      const selectedField = filterCriteria.selectedOption;
+  
+      if (selectedField === "NAMA_LENGKAP") {
+        return row.NAMA_LENGKAP.toLowerCase().includes(searchTerm);
+      } else if (selectedField === "createdAt") {
+        return row.createdAt && new Date(row.createdAt).toLocaleDateString().includes(searchTerm);
+      } else if (selectedField === "TR_PENGAJUAN_PINJAMANs") {
+        return row.TR_PENGAJUAN_PINJAMANs.length > 0
+          && row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG.toString().includes(searchTerm);
+      } else if (selectedField === "savings") {
+        return row.savings && row.savings.toString().includes(searchTerm);
+      } else if (selectedField === "principalSavings") {
+        return row.principalSavings && row.principalSavings.toString().includes(searchTerm);
+      }
+      return false;
     });
+  
     setData(filteredData);
-  };
+  }; 
 
   const handleSort = (column) => {
     let direction = 'asc';
