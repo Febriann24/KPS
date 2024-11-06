@@ -16,3 +16,12 @@ export const formatRupiah = (angka) => {
 export const deformatRupiah = (angka) => {
     return parseInt(angka.replace(/\./g, ''), 10)
 };
+
+export const formatDate = (string) => {
+    const date = new Date(string)
+    return date.toLocaleString('id-ID', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+};

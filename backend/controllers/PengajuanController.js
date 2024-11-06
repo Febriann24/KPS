@@ -1,6 +1,7 @@
 import db from "../config/database.js"
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
+import User from "../models/MS_USER.js"
 import TypePinjaman from "../models/MS_TYPE_PINJAMAN.js";
 
 export const getPengajuanPinjaman = async (req, res) => {
@@ -39,9 +40,14 @@ export const getDetailPengajuanPinjaman = async (req, res) => {
         const results = await PengajuanPinjaman.findAll({
             include: [
                 {
+                    model: User,
+                    as: 'user',
+                    attributes: ['NAMA_LENGKAP']
+                },
+                {
                     model: StatusPinjaman,
                     as: 'status',
-                    attributes: ['UUID_STATUS_PINJAMAN', 'STATUS_CODE']
+                    attributes: ['UUID_STATUS_PINJAMAN', 'STATUS_CODE', "STATUS_NAME"]
                 },
                 {
                     model: TypePinjaman,
@@ -52,7 +58,8 @@ export const getDetailPengajuanPinjaman = async (req, res) => {
             attributes: [
                 'UUID_PENGAJUAN_PINJAMAN',
                 'NOMINAL_UANG',
-                'DESKRIPSI'
+                'DESKRIPSI',
+                'DTM_CRT'
             ]
         });
 
