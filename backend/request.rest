@@ -85,17 +85,30 @@ Content-Type: application/json
     }
 ]
 
-### Create TR_PENGAJUAN_PINJAMAN dummy
+### Create TR_PENGAJUAN_PINJAMAN dummy 1
 POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
 Content-Type: application/json
 
 {
-    "UUID_MS_USER": 4,
+    "UUID_MS_USER": 1,
     "UUID_MS_STATUS_PINJAMAN": 1,
     "UUID_MS_TYPE_PINJAMAN": 1,
     "USR_CRT": "johnnydummy123@dummy.com",
     "NOMINAL_UANG": 850000,
     "DESKRIPSI": "Kepingin aja pinjem gituh.."
+}
+
+### Create TR_PENGAJUAN_PINJAMAN dummy 2
+POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
+Content-Type: application/json
+
+{
+    "UUID_MS_USER": 2,
+    "UUID_MS_STATUS_PINJAMAN": 2,
+    "UUID_MS_TYPE_PINJAMAN": 2,
+    "USR_CRT": "johnnydummy123@dummy.com",
+    "NOMINAL_UANG": 3000000,
+    "DESKRIPSI": "Lorem Ipsum Ahh description, i like my cheese drippy bruh, ohio looksmaxxing sigma boutta bust! gyatt look at shawty like im kai cenat, livvy dunne be like skibidi rizz."
 }
 
 ###
@@ -128,7 +141,7 @@ Content-Type: application/json
 {
     "EMAIL": "admin@gmail.com",
     "PASSWORD": "pakquin",
-    "NAMA_LENGKAP": "Winarno",
+    "NAMA_LENGKAP": "Hamood Habibi",
     "ROLE": "Anggota",
     "NOMOR_TELP": "08123456789"
 }
