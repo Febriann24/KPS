@@ -3,6 +3,9 @@ import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import { Link } from 'react-router-dom';
+import { 
+  formatRupiah
+} from '../../utils/utils';
 
 const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, handleFilter }) => {
   return (
@@ -79,7 +82,9 @@ const DataTable = ({ data, onSort }) => {
             <td className="border p-2">{row.NAMA_LENGKAP}</td>
             <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
             <td className="border p-2 text-center">
-              {row.TR_PENGAJUAN_PINJAMANs.length > 0 ? row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 'N/A'}
+              {row.TR_PENGAJUAN_PINJAMANs.length > 0 
+                ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG)
+                : 'N/A'}
             </td>
             <td className="border p-2 text-center">{row.savings || 'N/A'}</td>
             <td className="border p-2 text-center">{row.principalSavings || 'N/A'}</td>
@@ -113,10 +118,8 @@ const ListUser = () => {
     fetchData();
   }, []);
 
-  // Function to handle filtering data
   const handleSearch = () => {
     if (filterCriteria.selectedOption === "semua") {
-      // Show all data if "Semua Data" is selected
       setData(originalData);
       return;
     }

@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import Users from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
+import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 
 export const getUsers = async (req, res) => {
     try {

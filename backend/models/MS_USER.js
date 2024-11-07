@@ -71,10 +71,10 @@ const MS_USER = db.define("MS_USER", {
     freezeTableName: true 
 });
 
-// MS_USER.hasMany(PengajuanPinjaman, {
-//     foreignKey: 'UUID_MS_USER',
-//     sourceKey: 'UUID_MS_USER',
-// });
+MS_USER.hasMany(PengajuanPinjaman, {
+    foreignKey: 'UUID_MS_USER',
+    sourceKey: 'UUID_MS_USER',
+ });
 
 MS_USER.belongsTo(MS_JOB, {
     foreignKey: 'UUID_MS_JOB',
