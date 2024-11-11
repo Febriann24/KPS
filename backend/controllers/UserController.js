@@ -7,7 +7,7 @@ import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 export const getUsers = async (req, res) => {
     try {
         const users = await Users.findAll({
-            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'NOMOR_TELP', 'ROLE']
+            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'NOMOR_TELP', 'UUID_MS_JOB']
     });
         res.json(users);
     } catch (error) {    
@@ -71,12 +71,10 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
     try {
-        const user = await Users.findAll({ 
-            where: { 
-                EMAIL: req.body.email 
-            } 
+        const user = await Users.findAll({
+            where: { EMAIL: req.body.email },
+            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'PASSWORD', 'UUID_MS_JOB']
         });
-        // Validasi  user
 
         const match  = await bcrypt.compare(req.body.password, user[0].PASSWORD);
         if(!match) return res.status(400).json({ msg: "Wrong Password" });
@@ -84,11 +82,12 @@ export const Login = async (req, res) => {
         const userId = user[0].UUID_MS_USER;
         const name = user[0].NAMA_LENGKAP;
         const email = user[0].EMAIL;
+        const role = user[0].UUID_MS_JOB;
 
-        const accesstoken = jwt.sign({ userId, name, email }, process.env.ACCESS_TOKEN_SECRET, {
+        const accesstoken = jwt.sign({ userId, name, email, role }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: '20s'
         })
-        const refreshToken = jwt.sign({ userId, name, email }, process.env.REFRESH_TOKEN_SECRET, {
+        const refreshToken = jwt.sign({ userId, name, email, role  }, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '1d'
         })
         await Users.update({ refresh_token: refreshToken }, {
@@ -101,7 +100,7 @@ export const Login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         })
 
-        res.json({ accesstoken });
+        res.json({ accesstoken, role });
     } catch (error) {
         res.status(404).json({ message: "Email not found" });
     }

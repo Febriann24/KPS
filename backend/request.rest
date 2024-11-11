@@ -129,21 +129,20 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/users
+GET http://localhost:5000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MSIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW4xQGdtYWlsLmNvbSIsImlhdCI6MTczMDcyNDY2NCwiZXhwIjoxNzMwNzI0Njc5fQ.BErLIBqRCLTiRBundjcbixwzcDNkY_lPUb_t7Xd_Kqw
 
 ###
-GET http://localhost:5000/MS_USER
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJpYXQiOjE3MzAyOTI5MjQsImV4cCI6MTczMDI5Mjk1NH0.tFiSsXirYIZl8OkklFBV4phWG9HgpSmMZXK97hMtPUc
-###
-POST http://localhost:5000/MS_USER
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "EMAIL": "admin@gmail.com",
-    "PASSWORD": "pakquin",
-    "NAMA_LENGKAP": "Hamood Habibi",
-    "ROLE": "Anggota",
-    "NOMOR_TELP": "08123456789"
+    "name": "Admin",
+    "email": "admin1@gmail.com",
+    "password": "admin123",
+    "confPassword": "admin123",
+    "noTelp" : "082125158988",
+    "role" : "Anggota"
 }
 
 ###
@@ -151,16 +150,14 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "email": "admin@gmail.com",
-    "password": "pakquin"
+    "email": "admin1@gmail.com",
+    "password": "admin123"
 }
 
 
 ###
 GET http://localhost:5000/token
 
-###
-DELETE http://localhost:5000/logout
 
 ###
-DELETE http://localhost:5000/users
+DELETE http://localhost:5000/logout

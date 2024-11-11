@@ -8,7 +8,6 @@ import LogIn from './component/LoginNRegis/Login'
 import Register from './component/LoginNRegis/Register';
 import SimpanPinjam from './component/UserAnggota/SimpanPinjam';
 import FormAjukanPinjam from './component/UserAnggota/FormAjukanPinjam';
-import BerandaAnggota from './component/UserAnggota/BerandaAnggota';
 import PengajuanPinjaman from './component/UserAnggota/PengajuanPinjam';
 import ListUser from './component/UserPengurus/ListUser';
 import LaporanKeuangan from './component/UserPengurus/LaporanKeuangan';
@@ -18,6 +17,8 @@ import Profile from './component/Profile';
 import BeritaMenu from './component/UserPengurus/BeritaMenu';
 import ShowBerita from './component/UserPengurus/ShowBerita';
 import EditBerita from './component/UserPengurus/EditBerita';
+import BerandaAnggota from './component/UserAnggota/main/BerandaAnggota';
+import BerandaPengurus from './component/UserPengurus/main/BerandaPengurus';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route exact path='/showBerita/:id' element ={<ShowBerita/>} />
         <Route exact path='/editBerita/:id' element ={<EditBerita/>} />
         <Route exact path='/BerandaAnggota' element = {<BerandaAnggota/>} />
+        <Route exact path='/BerandaPengurus' element = {<BerandaPengurus/>} />
         </Routes>
       </Router>
     </>

@@ -11,24 +11,35 @@ function Login() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState('');
 
-  const Auth = async(e) => {
+
+  const Auth = async (e) => {
     e.preventDefault();
     if (!email || !password) {
         setMsg("Semua field harus diisi");
         return;
     }
     try {
-        await axios.post("http://localhost:5000/login", {
+        const response = await axios.post("http://localhost:5000/login", {
             email: email,
             password: password
         });
-        navigate("/berandaAnggota");
-    } catch (error) {
-        if(error.reponse){
-            setMsg(error.reponse.data.msg);
+
+        const { accesstoken, role } = response.data; 
+        localStorage.setItem('accessToken', accesstoken);
+        if (role === '1') { 
+            navigate("/navBarAnggota");
+        } else if (role === '2') {
+            navigate("/navBarPengurus");
+        } else {
+            setMsg("Role tidak dikenali");
         }
-      }
-  }
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+
+  
   
   return (
     <>

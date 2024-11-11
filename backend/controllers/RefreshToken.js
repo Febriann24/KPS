@@ -17,7 +17,8 @@ export const refreshToken = async (req, res) => {
             const userId = user[0].UUID_MS_USER;
             const name = user[0].NAMA_LENGKAP;
             const email = user[0].EMAIL;
-            const accessToken = jwt.sign({ userId, name, email }, process.env.ACCESS_TOKEN_SECRET, { 
+            const role = user[0].UUID_MS_JOB;
+            const accessToken = jwt.sign({ userId, name, email, role }, process.env.ACCESS_TOKEN_SECRET, { 
                 expiresIn: '15s' 
             });
             res.json({ accessToken });

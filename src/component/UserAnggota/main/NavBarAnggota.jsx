@@ -1,6 +1,6 @@
 import { PersonIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { Link, useLocation } from "react-router-dom";
-import foto from '../Foto/Koperasi_Logo.png';
+import foto from '../../Foto/Koperasi_Logo.png';
 import React, { useState, useEffect, useNavigate } from 'react';
 
 export default function NavBarAnggota() {

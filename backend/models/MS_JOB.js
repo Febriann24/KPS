@@ -50,10 +50,12 @@ const MS_JOB = db.define("MS_JOB", {
 (async () => {
     try {
       const { default: MS_USER } = await import('./MS_USER.js');
-      MS_JOB.hasMany(MS_USER, {
-        foreignKey: 'UUID_MS_JOB', // Foreign key di tabel MS_USER
-        sourceKey: 'UUID_MS_JOB'   // Primary key di tabel MS_JOB
-      });
+
+      MS_JOB.belongsTo(MS_USER, {
+        foreignKey: 'UUID_MS_JOB',
+        targetKey: 'UUID_MS_JOB',
+    });
+
   
       await db.sync({ alter: true }); 
       console.log("Database synchronized successfully 😊 .");

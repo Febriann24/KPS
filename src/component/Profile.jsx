@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import H from "./UserAnggota/NavBarAnggota";  
+import H from "./UserAnggota/main/NavBarAnggota";  
 import F from "./H&F/Footer";  
 import foto from './Foto/Koperasi_Logo.png';
 import { useNavigate } from 'react-router-dom';
