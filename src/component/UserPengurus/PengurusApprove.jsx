@@ -9,13 +9,13 @@ const PengurusApprove = () => {
     const [isSearching, setIsSearching] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: 'NAMA_LENGKAP', direction: 'asc' });
-    const [jobFilter, setJobFilter] = useState(''); // New state for job filter
+    const [jobFilter, setJobFilter] = useState('');
 
     const fetchApprovals = async () => {
         try {
             const response = await axios.get("http://localhost:5000/approvals");
             setApprovals(response.data);
-            setSearchResults(response.data); // Initialize searchResults with all data
+            setSearchResults(response.data);
         } catch (error) {
             console.error("Error fetching approvals:", error);
         }
@@ -51,7 +51,7 @@ const PengurusApprove = () => {
         setIsSearching(true);
 
         if (!searchTerm.trim()) {
-            setSearchResults(approvals); // If search term is empty, show all data
+            setSearchResults(approvals);
             return;
         }
 
@@ -61,7 +61,7 @@ const PengurusApprove = () => {
             return user.NAMA_LENGKAP.toLowerCase().includes(searchTermLower);
         });
 
-        setSearchResults(filteredData); // Update searchResults with filtered data
+        setSearchResults(filteredData);
     };
 
     // Handle job filter
@@ -87,7 +87,7 @@ const PengurusApprove = () => {
 
     const sortedData = () => {
         const data = isSearching ? searchResults : approvals;
-        const filteredData = filteredByJob(data); // Apply job filter
+        const filteredData = filteredByJob(data);
         return filteredData.sort((a, b) => {
             if (a[sortConfig.key] < b[sortConfig.key]) {
                 return sortConfig.direction === 'asc' ? -1 : 1;
@@ -109,11 +109,8 @@ const PengurusApprove = () => {
         <div className="flex flex-col min-h-screen">
             <H />
             <main className="flex-grow container mx-auto p-6">
-                <h2 className="text-2xl font-bold mb-4 text-gray-700 text-center">User Approval Management</h2>
-
-                {/* Search and Job Filter Form */}
+                <h2 className="text-2xl font-bold mb-4 text-gray-700 text-center">Manajemen Persetujuan Pengguna</h2>
                 <form onSubmit={handleSearch} className="mb-6 flex items-center justify-center space-x-4">
-                    {/* Job Filter Dropdown */}
                     <select
                         className="border border-gray-300 rounded-lg px-4 py-2"
                         value={jobFilter}
@@ -124,7 +121,6 @@ const PengurusApprove = () => {
                         <option value="Pengurus">Pengurus</option>
                     </select>
 
-                    {/* Search Input */}
                     <input
                         type="text"
                         className="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-md"
@@ -140,7 +136,6 @@ const PengurusApprove = () => {
                     </button>
                 </form>
 
-                {/* Table */}
                 <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg text-center">
                     <thead>
                         <tr className="bg-gray-100">

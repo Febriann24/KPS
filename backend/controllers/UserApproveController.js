@@ -2,7 +2,6 @@ import MS_USER_APPROVE from "../models/MS_USER_APPROVE.js";
 import MS_USER from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
 
-// Get all pending user approvals
 export const getPendingApprovals = async (req, res) => {
     try {
         const approvals = await MS_USER_APPROVE.findAll({
@@ -15,7 +14,6 @@ export const getPendingApprovals = async (req, res) => {
     }
 };
 
-// Approve a user and insert into MS_USER
 export const approveUser = async (req, res) => {
     const { id } = req.params;
     try {
@@ -24,7 +22,6 @@ export const approveUser = async (req, res) => {
             return res.status(404).json({ message: "User approval not found" });
         }
 
-        // Insert approved user into MS_USER
         const newUser = await MS_USER.create({
             NOMOR_TELP: userApproval.NOMOR_TELP,
             EMAIL: userApproval.EMAIL,
@@ -36,7 +33,6 @@ export const approveUser = async (req, res) => {
             IS_ACTIVE: 1
         });
 
-        // Update the approval status in MS_USER_APPROVE
         await userApproval.update({ IS_APPROVE: 1 });
 
         res.status(200).json({
@@ -44,11 +40,11 @@ export const approveUser = async (req, res) => {
             newUser
         });
     } catch (error) {
-        res.status(500).json({ message: "Error approving user", error });
+        console.error("Error approving user:", error.message, error.stack);
+        res.status(500).json({ message: "Error approving user", error: error.message });
     }
 };
 
-// Reject a user by deleting the approval request
 export const rejectUser = async (req, res) => {
     const { id } = req.params;
     try {
@@ -56,14 +52,13 @@ export const rejectUser = async (req, res) => {
         if (!userApproval) {
             return res.status(404).json({ message: "User approval not found" });
         }
-        await userApproval.destroy();  // Delete the record if rejected
+        await userApproval.destroy();
         res.status(200).json({ message: "User rejected and request deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error rejecting user", error });
     }
 };
 
-// Create a new user approval request (if needed)
 export const createUserApproval = async (req, res) => {
     const { NOMOR_TELP, EMAIL, PASSWORD, NAMA_LENGKAP, TANGGAL_LAHIR, ALAMAT, UUID_MS_JOB } = req.body;
     try {

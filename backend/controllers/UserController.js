@@ -15,6 +15,7 @@ export const getUsers = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch users." });
     }    
 }
+
 export const UserData = async (req, res) => {
     try {
         const users = await Users.findAll({
@@ -34,14 +35,13 @@ export const UserData = async (req, res) => {
 
 export const Register = async (req, res) => {
     const { name, email, password, confPassword, noTelp, role } = req.body;
-
-    // Memeriksa kesesuaian password    
+ 
     if (password !== confPassword) {    
         return res.status(400).json({ message: "Passwords do not match with confirm password!" });    
     }
     
     try {
-        // Menentukan UUID_MS_JOB berdasarkan role yang dipilih
+
         const job = await MS_JOB.findOne({ where: { JOB_DESC: role } });
         if (!job) {
             return res.status(400).json({ message: "Role tidak ditemukan di database." });
@@ -50,14 +50,13 @@ export const Register = async (req, res) => {
         const salt = await bcrypt.genSalt();
         const hashPassword = await bcrypt.hash(password, salt);
         
-        // Insert user baru dengan role yang benar
         await Users.create({
             NAMA_LENGKAP: name,
             EMAIL: email,
             PASSWORD: hashPassword,
             NOMOR_TELP: noTelp,
             ROLE: role,
-            UUID_MS_JOB: job.UUID_MS_JOB // Menambahkan UUID_MS_JOB dari role yang dipilih
+            UUID_MS_JOB: job.UUID_MS_JOB
         });
         
         res.json({ msg: "Register Success" });

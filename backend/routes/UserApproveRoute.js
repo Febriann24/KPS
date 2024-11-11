@@ -1,4 +1,3 @@
-// routes/userApproveRoutes.js
 import express from "express";
 import {
     getPendingApprovals,
