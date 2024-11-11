@@ -168,7 +168,7 @@ function Header() {
                             </Link>
                         </>
                     ) : (
-                        <button className="border-2 border-white inline-block rounded-[8px] w-[110px] h-[40px] px-4 py-1 mt-[30px] mb-4 ml-[400px] ">
+                        <button className="border-2 border-white inline-block rounded-[8px] w-[110px] h-[40px] px-4 py-1 mt-[30px] mb-4 mr-[30px] ">
                             <Link to="/Login" className="text-end">
                                 <PersonIcon className="inline-block align-middle mr-2 mb-[4px]" />
                                 Masuk
