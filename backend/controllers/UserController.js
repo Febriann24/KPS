@@ -16,9 +16,31 @@ export const getUsers = async (req, res) => {
     }    
 }
 
+export const UserApproval = async (req, res) => {
+    try {
+        const users = await Users.findAll({
+            where: {
+                IS_ACTIVE: 0
+            }
+        });
+
+        if (users.length > 0) {
+            res.status(200).json(users);
+        } else {
+            res.status(404).json({ message: "No users pending approval" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving users", error: error.message });
+    }
+};
+
+
 export const UserData = async (req, res) => {
     try {
         const users = await Users.findAll({
+            where: {
+                IS_ACTIVE: 1
+            },
             include: [{
                 model: PengajuanPinjaman,
                 attributes: ['NOMINAL_UANG'],
@@ -31,7 +53,6 @@ export const UserData = async (req, res) => {
         res.status(500).json({ message: "Error fetching users", error: error.message });
     }
 };
-
 
 export const Register = async (req, res) => {
     const { name, email, password, confPassword, noTelp, role } = req.body;
@@ -124,3 +145,43 @@ export const Logout = async (req, res) => {
         res.clearCookie('refreshToken');
         return res.sendStatus(200);
 }
+
+export const approveUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await Users.update(
+            { IS_ACTIVE: 1 },
+            { where: { UUID_MS_USER: id } }
+        );
+
+        if (result[0] === 0) {
+            return res.status(404).json({ message: "User not found or already approved" });
+        }
+
+        res.status(200).json({ message: "User approved successfully" });
+    } catch (error) {
+        console.error("Error approving user:", error);
+        res.status(500).json({ message: "Error approving user", error });
+    }
+};
+
+export const rejectUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await Users.update(
+            { IS_ACTIVE: 0, IS_DELETED: 1 },
+            { where: { UUID_MS_USER: id } }
+        );
+
+        if (result[0] === 0) {
+            return res.status(404).json({ message: "User not found or already rejected" });
+        }
+
+        res.status(200).json({ message: "User rejected successfully" });
+    } catch (error) {
+        console.error("Error rejecting user:", error);
+        res.status(500).json({ message: "Error rejecting user", error });
+    }
+};

@@ -13,7 +13,7 @@ const PengurusApprove = () => {
 
     const fetchApprovals = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/approvals");
+            const response = await axios.get("http://localhost:5000/approval");
             setApprovals(response.data);
             setSearchResults(response.data);
         } catch (error) {
@@ -25,7 +25,6 @@ const PengurusApprove = () => {
         try {
             await axios.put(`http://localhost:5000/approve/${id}`);
             alert("User approved successfully!");
-            // Update local state to remove the approved user
             setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== id));
             setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== id));
         } catch (error) {
@@ -42,7 +41,6 @@ const PengurusApprove = () => {
         try {
             await axios.delete(`http://localhost:5000/reject/${id}`);
             alert("User rejected successfully!");
-            // Update local state to remove the rejected user
             setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== id));
             setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== id));
         } catch (error) {
@@ -59,7 +57,6 @@ const PengurusApprove = () => {
             return;
         }
 
-        // Search only in the NAMA_LENGKAP field
         const filteredData = approvals.filter((user) => {
             const searchTermLower = searchTerm.toLowerCase();
             return user.NAMA_LENGKAP.toLowerCase().includes(searchTermLower);
@@ -68,7 +65,6 @@ const PengurusApprove = () => {
         setSearchResults(filteredData);
     };
 
-    // Handle job filter
     const handleJobFilter = (e) => {
         setJobFilter(e.target.value);
     };

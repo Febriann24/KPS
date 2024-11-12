@@ -4,24 +4,24 @@ import {
     UserData,
     Register,
     Login,
-    Logout // Tambahkan fungsi ini
-} from "../controllers/UserController.js"; // Pastikan Anda menambahkan fungsi ini di controller Anda
+    Logout,
+    approveUser,
+    rejectUser,
+    UserApproval
+} from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 
-
 const router = express.Router();
 
-
-// Rute CRUD pengguna yang sudah ada
-
-
-// Rute untuk registrasi dan login
 router.get("/users", verifyToken, getUsers);
 router.post("/users", Register);
 router.get("/user", UserData);
 router.post("/login", Login);
 router.get("/token", refreshToken);
 router.delete("/logout", Logout);
+router.put("/approve/:id", approveUser);
+router.delete("/reject/:id", rejectUser);
+router.get("/approval", UserApproval);
 
 export default router;
