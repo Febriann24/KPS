@@ -25,7 +25,9 @@ const PengurusApprove = () => {
         try {
             await axios.put(`http://localhost:5000/approve/${id}`);
             alert("User approved successfully!");
-            fetchApprovals();
+            // Update local state to remove the approved user
+            setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== id));
+            setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== id));
         } catch (error) {
             console.error("Error approving user:", error);
             if (error.response && error.response.data) {
@@ -40,7 +42,9 @@ const PengurusApprove = () => {
         try {
             await axios.delete(`http://localhost:5000/reject/${id}`);
             alert("User rejected successfully!");
-            fetchApprovals();
+            // Update local state to remove the rejected user
+            setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== id));
+            setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== id));
         } catch (error) {
             console.error("Error rejecting user:", error);
         }
@@ -143,7 +147,7 @@ const PengurusApprove = () => {
                                 className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
                                 onClick={() => handleSort('NAMA_LENGKAP')}
                             >
-                                Name
+                                Nama
                             </th>
                             <th
                                 className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
@@ -161,10 +165,10 @@ const PengurusApprove = () => {
                                 className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
                                 onClick={() => handleSort('UUID_MS_JOB')}
                             >
-                                Job
+                                Pekerjaan
                             </th>
                             <th className="px-4 py-2 border-b font-semibold text-gray-700 text-center">
-                                Actions
+                                Aksi
                             </th>
                         </tr>
                     </thead>
@@ -183,13 +187,13 @@ const PengurusApprove = () => {
                                             onClick={() => handleApprove(user.UUID_MS_USER)}
                                             className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600 mr-2"
                                         >
-                                            Approve
+                                            Terima
                                         </button>
                                         <button
                                             onClick={() => handleReject(user.UUID_MS_USER)}
                                             className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
                                         >
-                                            Reject
+                                            Tolak
                                         </button>
                                     </td>
                                 </tr>
