@@ -81,7 +81,7 @@ export const getOneDetailPengajuanPinjaman = async (req, res) => {
                 {
                     model: User,
                     as: 'user',
-                    attributes: ['NAMA_LENGKAP']
+                    attributes: ['NAMA_LENGKAP', 'ALAMAT', 'DTM_CRT', 'NOMOR_TELP']
                 },
                 {
                     model: StatusPinjaman,
