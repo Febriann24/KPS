@@ -4,6 +4,7 @@ import {
     getStatusPinjaman,
     getTypePinjaman,
     getDetailPengajuanPinjaman,
+    getOneDetailPengajuanPinjaman,
     createStatusPinjaman,
     createTypePinjaman,
     createPengajuanPinjaman,
@@ -12,7 +13,8 @@ import {
 const router = express.Router();
 
 router.get("/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman", getPengajuanPinjaman);
-router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman", getDetailPengajuanPinjaman);
+router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/", getDetailPengajuanPinjaman);
+router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/:id", getOneDetailPengajuanPinjaman);
 router.get("/MS_STATUS_PINJAMAN/getStatusPinjaman", getStatusPinjaman);
 router.get("/MS_TYPE_PINJAMAN/getTypePinjaman", getTypePinjaman);
 

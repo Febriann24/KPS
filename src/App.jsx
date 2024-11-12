@@ -35,7 +35,7 @@ function App() {
 
         <Route exact path='/SimpanPinjam' element={<SimpanPinjam/>} />
         <Route exact path="/FormAjukanPinjam" element={<FormAjukanPinjam/>} />
-        <Route exact path='/PengajuanPinjaman' element = {<PengajuanPinjaman/>} />
+        <Route exact path='/PengajuanPinjaman/:id' element = {<PengajuanPinjaman/>} />
         <Route exact path='/ListUser' element = {<ListUser/>} />
         <Route exact path='/LaporanKeuangan' element = {<LaporanKeuangan/>} />
         <Route exact path='/BeritaMenu' element ={<BeritaMenu/>} />

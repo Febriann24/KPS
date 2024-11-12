@@ -1,7 +1,7 @@
 GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman
 
 ### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/2
 
 ###
 GET http://localhost:5000/MS_STATUS_PINJAMAN/getStatusPinjaman
@@ -90,7 +90,7 @@ POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
 Content-Type: application/json
 
 {
-    "UUID_MS_USER": 1,
+    "UUID_MS_USER": 2,
     "UUID_MS_STATUS_PINJAMAN": 1,
     "UUID_MS_TYPE_PINJAMAN": 1,
     "USR_CRT": "johnnydummy123@dummy.com",
@@ -104,8 +104,8 @@ Content-Type: application/json
 
 {
     "UUID_MS_USER": 2,
-    "UUID_MS_STATUS_PINJAMAN": 2,
-    "UUID_MS_TYPE_PINJAMAN": 2,
+    "UUID_MS_STATUS_PINJAMAN": 4,
+    "UUID_MS_TYPE_PINJAMAN": 3,
     "USR_CRT": "johnnydummy123@dummy.com",
     "NOMINAL_UANG": 3000000,
     "DESKRIPSI": "Lorem Ipsum Ahh description, i like my cheese drippy bruh, ohio looksmaxxing sigma boutta bust! gyatt look at shawty like im kai cenat, livvy dunne be like skibidi rizz."
