@@ -113,10 +113,13 @@ function Header() {
                                             <Link to="/ListUser" className="block px-4 py-2 hover:bg-gray-200">Daftar User Anggota</Link>
                                         </li>
                                         <li className="whitespace-nowrap">
-                                            <Link to="/BeritaMenu" className="block px-4 py-2 hover:bg-gray-200">Menu Berita</Link>
+                                            <Link to="/PengurusApprove" className="block px-4 py-2 hover:bg-gray-200">Daftar Approve User</Link>
                                         </li>
                                         <li className="whitespace-nowrap">
                                             <Link to="/LaporanKeuangan" className="block px-4 py-2 hover:bg-gray-200">Laporan Keuangan</Link>
+                                        </li>
+                                        <li className="whitespace-nowrap">
+                                            <Link to="/BeritaMenu" className="block px-4 py-2 hover:bg-gray-200">Menu Berita</Link>
                                         </li>
                                     </ul>
                                 )}
