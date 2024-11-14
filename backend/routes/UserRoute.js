@@ -1,3 +1,4 @@
+// In your routes file (e.g., routes/UserRoutes.js)
 import express from "express";
 import {
     getUsers,
@@ -7,7 +8,8 @@ import {
     Logout,
     approveUser,
     rejectUser,
-    UserApproval
+    UserApproval,
+    UserDataById,
 } from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -17,6 +19,7 @@ const router = express.Router();
 router.get("/users", verifyToken, getUsers);
 router.post("/users", Register);
 router.get("/user", UserData);
+router.get("/userTable/:id", UserDataById);
 router.post("/login", Login);
 router.get("/token", refreshToken);
 router.delete("/logout", Logout);

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import Users from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
+import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -54,6 +55,42 @@ export const UserData = async (req, res) => {
     }
 };
 
+export const UserDataById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await Users.findOne({
+        where: {
+          UUID_MS_USER: id,
+          IS_ACTIVE: 1
+        },
+        include: [
+          {
+            model: PengajuanPinjaman,
+            attributes: ['NOMINAL_UANG'],
+            required: false,
+            include: [
+              {
+                model: StatusPinjaman,
+                as: 'status',
+                attributes: ['STATUS_CODE'],
+                required: false
+              }
+            ]
+          }
+        ],
+      });
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      res.status(200).json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Error fetching user", error: error.message });
+    }
+  };  
+  
 export const Register = async (req, res) => {
     const { name, email, password, confPassword, noTelp, role } = req.body;
  

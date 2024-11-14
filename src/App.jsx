@@ -14,6 +14,7 @@ import LaporanKeuangan from './component/UserPengurus/LaporanKeuangan';
 import ListPengajuanUser from './component/UserPengurus/ListPengajuanUser';
 import FormBuatBerita from './component/UserPengurus/FormBuatBerita';
 import PengurusApprove from './component/UserPengurus/PengurusApprove';
+import UserTable from './component/UserPengurus/UserTable';
 import Profile from './component/Profile';
 import BeritaMenu from './component/UserPengurus/BeritaMenu';
 import ShowBerita from './component/UserPengurus/ShowBerita';
@@ -41,6 +42,7 @@ function App() {
         <Route exact path='/BeritaMenu' element ={<BeritaMenu/>} />
         <Route exact path='/FormBuatBerita' element ={<FormBuatBerita/>} />
         <Route exact path='/PengurusApprove' element ={<PengurusApprove/>} />
+        <Route exact path='/userTable/:id' element ={<UserTable/>} />
         <Route exact path='/Profile' element = {<Profile/>} />
         <Route exact path='/showBerita/:id' element ={<ShowBerita/>} />
         <Route exact path='/editBerita/:id' element ={<EditBerita/>} />

@@ -3,26 +3,24 @@ import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import { Link } from 'react-router-dom';
-import { 
-  formatRupiah
-} from '../../utils/utils';
+import { formatRupiah } from '../../utils/utils';
 
 const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, handleFilter }) => {
   return (
     <div className="flex justify-between items-center p-4 bg-gray-100 shadow-sm">
       <div className="flex items-center space-x-4 w-full">
-          <select
-            className="border p-2 rounded-md bg-white"
-            value={filterCriteria.selectedOption}
-            onChange={(e) => setFilterCriteria({ ...filterCriteria, selectedOption: e.target.value })}
-          >
-            <option value="semua">Semua Data</option>
-            <option value="NAMA_LENGKAP">Nama</option>
-            <option value="createdAt">Waktu Bergabung</option>
-            <option value="TR_PENGAJUAN_PINJAMANs">Pinjaman</option>
-            <option value="savings">Tabungan</option>
-            <option value="principalSavings">Simpanan Pokok</option>
-          </select>
+        <select
+          className="border p-2 rounded-md bg-white"
+          value={filterCriteria.selectedOption}
+          onChange={(e) => setFilterCriteria({ ...filterCriteria, selectedOption: e.target.value })}
+        >
+          <option value="semua">Semua Data</option>
+          <option value="NAMA_LENGKAP">Nama</option>
+          <option value="createdAt">Waktu Bergabung</option>
+          <option value="TR_PENGAJUAN_PINJAMANs">Pinjaman</option>
+          <option value="savings">Tabungan</option>
+          <option value="principalSavings">Simpanan Pokok</option>
+        </select>
         <input
           type="text"
           placeholder="Search..."
@@ -37,7 +35,6 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
   );
 };
 
-
 const FilterButton = ({ handleFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
@@ -47,7 +44,7 @@ const FilterButton = ({ handleFilter }) => {
   const handleSort = (order) => {
     setSortOrder(order);
     handleFilter(order);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   return (
@@ -82,14 +79,18 @@ const DataTable = ({ data, onSort }) => {
             <td className="border p-2">{row.NAMA_LENGKAP}</td>
             <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
             <td className="border p-2 text-center">
-              {row.TR_PENGAJUAN_PINJAMANs.length > 0 
+              {row.TR_PENGAJUAN_PINJAMANs.length > 0
                 ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG)
                 : 'N/A'}
             </td>
             <td className="border p-2 text-center">{row.savings || 'N/A'}</td>
             <td className="border p-2 text-center">{row.principalSavings || 'N/A'}</td>
             <td className="border p-2 text-center">
-              <Link to="/ListPengajuanUser" className="text-blue-500 hover:underline">Buka</Link>
+              {row.UUID_MS_USER ? (
+                <Link to={`/userTable/${row.UUID_MS_USER}`} className="text-blue-500 hover:underline">Buka</Link>
+              ) : (
+                <span className="text-gray-500">No UUID Available</span>
+              )}
             </td>
           </tr>
         ))}
@@ -107,14 +108,14 @@ const ListUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const response = await axios.get("http://localhost:5000/user");
-          console.log(response.data);
-          setData(response.data);
-          setOriginalData(response.data);
+        const response = await axios.get("http://localhost:5000/user");
+        console.log(response.data);
+        setData(response.data);
+        setOriginalData(response.data);
       } catch (error) {
-          console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error);
       }
-  };
+    };
     fetchData();
   }, []);
 
@@ -123,11 +124,11 @@ const ListUser = () => {
       setData(originalData);
       return;
     }
-  
+
     const filteredData = originalData.filter((row) => {
       const searchTerm = filterCriteria.searchTerm.toLowerCase();
       const selectedField = filterCriteria.selectedOption;
-  
+
       if (selectedField === "NAMA_LENGKAP") {
         return row.NAMA_LENGKAP.toLowerCase().includes(searchTerm);
       } else if (selectedField === "createdAt") {
@@ -142,9 +143,9 @@ const ListUser = () => {
       }
       return false;
     });
-  
+
     setData(filteredData);
-  }; 
+  };
 
   const handleSort = (column) => {
     let direction = 'asc';
@@ -152,10 +153,10 @@ const ListUser = () => {
       direction = 'desc';
     }
     setSortConfig({ key: column, direction });
-    
+
     const sortedData = [...data].sort((a, b) => {
       let aValue, bValue;
-  
+
       if (column === 'TR_PENGAJUAN_PINJAMANs') {
         aValue = a.TR_PENGAJUAN_PINJAMANs.length > 0 ? a.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 0;
         bValue = b.TR_PENGAJUAN_PINJAMANs.length > 0 ? b.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 0;
@@ -163,7 +164,7 @@ const ListUser = () => {
         aValue = a[column];
         bValue = b[column];
       }
-  
+
       if (aValue < bValue) {
         return direction === 'asc' ? -1 : 1;
       }
@@ -172,12 +173,12 @@ const ListUser = () => {
       }
       return 0;
     });
-  
+
     setData(sortedData);
   };
 
   const handleFilter = (order) => {
-    const columnToSort = 'createdAt'; 
+    const columnToSort = 'createdAt';
 
     const sortedData = [...originalData].sort((a, b) => {
       if (a[columnToSort] < b[columnToSort]) {
@@ -193,24 +194,11 @@ const ListUser = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="w-full">
-        <H />
-      </div>
-
-      <div className="container mx-auto p-4 flex-grow">
-        <SearchFilterBar 
-          filterCriteria={filterCriteria} 
-          setFilterCriteria={setFilterCriteria} 
-          handleSearch={handleSearch} 
-          handleFilter={handleFilter} 
-        />
-        {data.length > 0 ? <DataTable data={data} onSort={handleSort} /> : <p>No data available.</p>}
-      </div>
-
-      <div className="w-full">
-        <F />
-      </div>
+    <div>
+      <H />
+      <SearchFilterBar filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} handleSearch={handleSearch} handleFilter={handleFilter} />
+      <DataTable data={data} onSort={handleSort} />
+      <F />
     </div>
   );
 };

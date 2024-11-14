@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
-import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 
 const LaporanKeuangan = () => {
   const reportData = [
-    { no: 1, tanggal: "21-08-2024", kategori: "Keluarga", keterangan: "Kiki", pemasukan: "Rp. 1,000,000,-", pengeluaran: "-" },
-    { no: 2, tanggal: "21-07-2024", kategori: "Keperluan Kantor", keterangan: "Beli Alat Kantor", pemasukan: "-", pengeluaran: "Rp. 50,000,-" },
-    { no: 3, tanggal: "20-06-2024", kategori: "Penjualan Aplikasi", keterangan: "Pembayaran Project", pemasukan: "Rp. 1,500,000,-", pengeluaran: "-" },
+    { no: 1, tipe: "KPKA", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
+    { no: 2, tipe: "USP", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
+    { no: 3, tipe: "UKTP", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
+    { no: 4, tipe: "Simpanan Sukarela", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
   ];
+  
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -18,39 +19,60 @@ const LaporanKeuangan = () => {
 
   const exportToExcel = async () => {
     const XLSX = await import("xlsx");
-    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+  
+    const worksheetData = [
+      ["No", "Tipe", "Masuk", "Keluar"],
+      ...filteredData.map((item) => [item.no, item.tipe, item.masuk, item.keluar])
+    ];
+  
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData); 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
+
+    const headerStyle = { font: { bold: true } };
+    worksheet["A1"].s = headerStyle;
+    worksheet["B1"].s = headerStyle;
+    worksheet["C1"].s = headerStyle;
+    worksheet["D1"].s = headerStyle;
+  
     XLSX.writeFile(workbook, "LaporanKeuangan.xlsx");
   };
 
   const exportToPDF = () => {
     const doc = new jsPDF();
-    doc.text("Laporan Pemasukan & Pengeluaran", 20, 20);
+    doc.setFontSize(16);
+    doc.text("Laporan Pemasukan & Pengeluaran", 105, 20, null, null, "center"); 
+  
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("No", 20, 40);
+    doc.text("Tipe", 40, 40);
+    doc.text("Masuk", 100, 40);
+    doc.text("Keluar", 150, 40);
+    doc.line(18, 42, 190, 42); 
+    doc.setFont("helvetica", "normal");
+    let yOffset = 50;
+  
 
-    let yOffset = 40;
     filteredData.forEach((item, index) => {
-      doc.text(
-        `${index + 1}. ${item.tanggal} - ${item.kategori} - ${item.keterangan} - ${item.pemasukan} - ${item.pengeluaran}`,
-        20,
-        yOffset
-      );
+      doc.text(`${item.no}`, 20, yOffset);
+      doc.text(item.tipe, 40, yOffset);
+      doc.text(item.masuk, 100, yOffset);
+      doc.text(item.keluar, 150, yOffset);
       yOffset += 10;
     });
-
+  
     doc.save("LaporanKeuangan.pdf");
   };
 
   const handleFilter = (e) => {
     e.preventDefault();
 
-    // Filter based on date range and category
     const filtered = reportData.filter((item) => {
-      const itemDate = new Date(item.tanggal.split("-").reverse().join("-")); // Convert "DD-MM-YYYY" to "YYYY-MM-DD" for Date parsing
+      const itemDate = new Date(item.tanggal.split("-").reverse().join("-")); 
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
 
-      // Check if the item's date falls within the range, and if the category matches
       const isWithinDateRange = (!start || itemDate >= start) && (!end || itemDate <= end);
       const isCategoryMatch = !category || category === item.kategori || category === "- Semua Kategori -";
       return isWithinDateRange && isCategoryMatch;
@@ -126,37 +148,33 @@ const LaporanKeuangan = () => {
               Cetak PDF
             </button>
             <button onClick={exportToExcel} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-              Export to Excel
+              Cetak Excel
             </button>
           </div>
 
-          <table className="w-full border border-gray-200 text-left text-sm">
+          <table className="w-full border border-gray-200 text-center text-sm">
             <thead>
               <tr className="bg-gray-200">
                 <th className="p-2 border">No</th>
-                <th className="p-2 border">Tanggal</th>
-                <th className="p-2 border">Kategori</th>
-                <th className="p-2 border">Keterangan</th>
-                <th className="p-2 border">Pemasukan</th>
-                <th className="p-2 border">Pengeluaran</th>
+                <th className="p-2 border">Tipe</th>
+                <th className="p-2 border">Masuk</th>
+                <th className="p-2 border">Keluar</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((item) => (
                 <tr key={item.no} className="hover:bg-gray-100">
-                  <td className="p-2 border">{item.no}</td>
-                  <td className="p-2 border">{item.tanggal}</td>
-                  <td className="p-2 border">{item.kategori}</td>
-                  <td className="p-2 border">{item.keterangan}</td>
-                  <td className="p-2 border">{item.pemasukan}</td>
-                  <td className="p-2 border">{item.pengeluaran}</td>
+                  <td className="p-2 border text-center">{item.no}</td>
+                  <td className="p-2 border text-center">{item.tipe}</td>
+                  <td className="p-2 border text-center">{item.masuk}</td>
+                  <td className="p-2 border text-center">{item.keluar}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+
         </div>
       </main>
-
       <F />
     </div>
   );
