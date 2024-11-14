@@ -58,6 +58,3 @@ const Berita = db.define("TR_BERITA", {
 export default Berita;
 
 console.log("Creating TR_BERITA");
-(async () => {
-    await db.sync({ alter: true });    
-})();

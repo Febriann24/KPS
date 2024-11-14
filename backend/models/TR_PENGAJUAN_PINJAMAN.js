@@ -85,15 +85,6 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
     });
 })();
 
-(async () => {  
-    try {
-        await db.sync();
-        console.log("Database synchronized successfully.");
-    } catch (error) {
-        console.error("Error synchronizing the database:", error);
-    }
-})();
-
 export default PengajuanPinjaman;
 
 console.log("Creating TR_PENGAJUAN_PINJAMAN");

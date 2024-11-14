@@ -7,10 +7,20 @@ import PengajuanRoute from "./routes/PengajuanRoute.js";
 import BeritaRoute from "./routes/BeritaRoute.js";
 import KeuanganRoute from "./routes/KeuanganRoute.js";
 import JobRoute from "./routes/JobRoute.js";
+import db from "./config/database.js";
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 const app = express();
+
+(async () => {
+    try {
+        await db.sync({ alter: true }); 
+        console.log("Database synchronized successfully.");
+    } catch (error) {
+        console.error("Error synchronizing the database:", error);
+    }
+})();
 
 // CORS configuration with credentials
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));

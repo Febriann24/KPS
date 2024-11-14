@@ -53,6 +53,3 @@ const StatusPinjaman = db.define("MS_STATUS_PINJAMAN", {
 export default StatusPinjaman;
 
 console.log("Creating MS_STATUS_PINJAMAN");
-(async () => {
-    await db.sync();
-})();
