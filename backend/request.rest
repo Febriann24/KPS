@@ -1,7 +1,7 @@
 GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman
 
 ### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/2
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/3
 
 ###
 GET http://localhost:5000/MS_STATUS_PINJAMAN/getStatusPinjaman
@@ -9,106 +9,28 @@ GET http://localhost:5000/MS_STATUS_PINJAMAN/getStatusPinjaman
 ###
 GET http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman
 
-### Create Default MS_STATUS_PINJAMAN Data
-POST http://localhost:5000/MS_STATUS_PINJAMAN/createStatusPinjaman
-Content-Type: application/json
-
-[
-    {    
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "STATUS_CODE": "ACTIVE",
-        "STATUS_NAME": "Aktif",
-        "STATUS_DESC": "Pengajuan sedang aktif dan belum di proses."
-    },
-    {
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "STATUS_CODE": "APPROVED",
-        "STATUS_NAME": "Disetujui",
-        "STATUS_DESC": "Pengajuan sudah disetujui."
-    },
-    {
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "STATUS_CODE": "DECLINED",
-        "STATUS_NAME": "Ditolak",
-        "STATUS_DESC": "Pengajuan sudah ditolak."
-    },
-    {
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "STATUS_CODE": "ABORTED",
-        "STATUS_NAME": "Dibatalkan",
-        "STATUS_DESC": "Pengajuan dibatalkan."
-    }
-]
-
-### Create Default MS_TYPE_PINJAMAN Data
-POST http://localhost:5000/MS_TYPE_PINJAMAN/createTypePinjaman
-Content-Type: application/json
-
-[
-    {    
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "TYPE_NAME": "KPKA",
-        "TYPE_DESC": "Kredit Pelayanan Khusus Anggota",
-        "ANGSURAN_MONTH": 36,
-        "MINIMUM_PINJAMAN": 1000000,
-        "MAXIMUM_PINJAMAN": 10000000
-    },
-    {    
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "TYPE_NAME": "UKSP",
-        "TYPE_DESC": "Usaha Kredit Simpan Pinjam",
-        "ANGSURAN_MONTH": 24,
-        "MINIMUM_PINJAMAN": 10000001,
-        "MAXIMUM_PINJAMAN": 100000000
-    },
-    {    
-        "IS_ACTIVE": 1,
-        "IS_DELETED": 0,
-        "USR_CRT": "admin",
-        "TYPE_NAME": "UKTP",
-        "TYPE_DESC": "Usaha Kredit Tunjangan Profesi",
-        "ANGSURAN_MONTH": 12,
-        "MINIMUM_PINJAMAN": 100000001,
-        "MAXIMUM_PINJAMAN": 1000000000
-    }
-]
-
-### Create TR_PENGAJUAN_PINJAMAN dummy 1
-POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
+###
+GET http://localhost:5000/getTotalPengeluaranAnggota
 Content-Type: application/json
 
 {
-    "UUID_MS_USER": 2,
-    "UUID_MS_STATUS_PINJAMAN": 1,
-    "UUID_MS_TYPE_PINJAMAN": 1,
-    "USR_CRT": "johnnydummy123@dummy.com",
-    "NOMINAL_UANG": 850000,
-    "DESKRIPSI": "Kepingin aja pinjem gituh.."
 }
 
-### Create TR_PENGAJUAN_PINJAMAN dummy 2
-POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
+###
+GET http://localhost:5000/getJobID
 Content-Type: application/json
 
 {
-    "UUID_MS_USER": 2,
-    "UUID_MS_STATUS_PINJAMAN": 4,
-    "UUID_MS_TYPE_PINJAMAN": 3,
-    "USR_CRT": "johnnydummy123@dummy.com",
-    "NOMINAL_UANG": 3000000,
-    "DESKRIPSI": "Lorem Ipsum Ahh description, i like my cheese drippy bruh, ohio looksmaxxing sigma boutta bust! gyatt look at shawty like im kai cenat, livvy dunne be like skibidi rizz."
+    "job_code": "" 
+}
+
+### Update STATUS Pengajuan Pinjaman TESTING
+PATCH http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman
+Content-Type: application/json
+
+{
+    "id": 2,
+    "status": "ACTIVE"
 }
 
 ###
@@ -129,20 +51,21 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MSIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW4xQGdtYWlsLmNvbSIsImlhdCI6MTczMDcyNDY2NCwiZXhwIjoxNzMwNzI0Njc5fQ.BErLIBqRCLTiRBundjcbixwzcDNkY_lPUb_t7Xd_Kqw
+DELETE http://localhost:5000/users
 
 ###
-POST http://localhost:5000/users
+GET http://localhost:5000/MS_USER
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJpYXQiOjE3MzAyOTI5MjQsImV4cCI6MTczMDI5Mjk1NH0.tFiSsXirYIZl8OkklFBV4phWG9HgpSmMZXK97hMtPUc
+###
+POST http://localhost:5000/MS_USER
 Content-Type: application/json
 
 {
-    "name": "Admin",
-    "email": "admin1@gmail.com",
-    "password": "admin123",
-    "confPassword": "admin123",
-    "noTelp" : "082125158988",
-    "role" : "Anggota"
+    "EMAIL": "admin@gmail.com",
+    "PASSWORD": "pakquin",
+    "NAMA_LENGKAP": "Hamood Habibi",
+    "ROLE": "Anggota",
+    "NOMOR_TELP": "08123456789"
 }
 
 ###
@@ -150,14 +73,16 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "email": "admin1@gmail.com",
-    "password": "admin123"
+    "email": "admin@gmail.com",
+    "password": "pakquin"
 }
 
 
 ###
 GET http://localhost:5000/token
 
-
 ###
 DELETE http://localhost:5000/logout
+
+###
+DELETE http://localhost:5000/users

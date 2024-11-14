@@ -5,7 +5,7 @@ const { DataTypes } = Sequelize;
 const MS_JOB = db.define("MS_JOB", { 
     UUID_MS_JOB: {
         type: DataTypes.BIGINT,
-        allowNullValue: false,
+        autoIncrement: true,
         primaryKey: true
     },
     IS_ACTIVE: {
@@ -49,18 +49,10 @@ const MS_JOB = db.define("MS_JOB", {
 // Sync the database
 (async () => {
     try {
-      const { default: MS_USER } = await import('./MS_USER.js');
-
-      MS_JOB.belongsTo(MS_USER, {
-        foreignKey: 'UUID_MS_JOB',
-        targetKey: 'UUID_MS_JOB',
-    });
-
-  
-      await db.sync({ alter: true }); 
-      console.log("Database synchronized successfully 😊 .");
+        // await db.sync({ alter: true }); 
+        console.log("Database synchronized successfully.");
     } catch (error) {
-      console.error("Error synchronizing the database:", error);
+        console.error("Error synchronizing the database:", error);
     }
   })();
 

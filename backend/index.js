@@ -6,6 +6,8 @@ import UserRoute from "./routes/UserRoute.js";
 import PengajuanRoute from "./routes/PengajuanRoute.js";
 import BeritaRoute from "./routes/BeritaRoute.js";
 import UserApproveRoute from "./routes/UserApproveRoute.js";
+import KeuanganRoute from "./routes/KeuanganRoute.js";
+import JobRoute from "./routes/JobRoute.js";
 
 dotenv.config(); // Load environment variables
 
@@ -24,6 +26,8 @@ app.use(UserRoute);
 app.use(PengajuanRoute);
 app.use(BeritaRoute);
 app.use(UserApproveRoute);
+app.use(KeuanganRoute);
+app.use(JobRoute);
 
 // Start the server
 app.listen(5000, () => console.log("Server is running..."));
