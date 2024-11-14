@@ -61,6 +61,3 @@ const TypePinjaman = db.define("MS_TYPE_PINJAMAN", {
 export default TypePinjaman;
 
 console.log("Creating MS_TYPE_PINJAMAN");
-(async () => {
-    await db.sync();    
-})();

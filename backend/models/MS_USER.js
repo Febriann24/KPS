@@ -81,17 +81,6 @@ MS_USER.belongsTo(MS_JOB, {
     targetKey: 'UUID_MS_JOB'
 });
 
-
-// Sync the database
-(async () => {  
-    try {
-        await db.sync({ alter: true }); 
-        console.log("Database synchronized successfully.");
-    } catch (error) {
-        console.error("Error synchronizing the database:", error);
-    }
-})();
-
 export default MS_USER;
 
 console.log("Creating MS_USER");

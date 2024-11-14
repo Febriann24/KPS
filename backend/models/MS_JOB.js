@@ -45,19 +45,6 @@ const MS_JOB = db.define("MS_JOB", {
     freezeTableName: true 
 });
 
-
-// Sync the database
-(async () => {
-    try {
-        // await db.sync({ alter: true }); 
-        console.log("Database synchronized successfully.");
-    } catch (error) {
-        console.error("Error synchronizing the database:", error);
-    }
-  })();
-
-
-
 export default MS_JOB;
 
 
