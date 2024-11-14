@@ -39,15 +39,15 @@ function SimpanPinjam() {
                       <div className="bg-black bg-opacity-30 px-4 py-4 rounded-lg mx-auto">
                         <div className="text-left text-white">
                           <div className="flex mb-2">
+                          <p className="text-lg w-48">Unit Kerja</p>
+                          <p className="text-lg ml-4">: Sekolah</p>
+                          </div>
+                          <div className="flex mb-2">
                           <p className="text-lg w-48">Nomor Anggota</p>
-                          <p className="text-lg ml-4">: A12345</p>
+                          <p className="text-lg ml-4">: A79123</p>
                           </div>
                           <div className="flex mb-2">
                           <p className="text-lg w-48">Total Tabungan</p>
-                          <p className="text-lg ml-4">: Rp 3.000.650,00</p>
-                          </div>
-                          <div className="flex mb-2">
-                          <p className="text-lg w-48">Total Pinjaman</p>
                           <p className="text-lg ml-4">: Rp 750.650,00</p>
                           </div>
                           <div className="flex mb-2">

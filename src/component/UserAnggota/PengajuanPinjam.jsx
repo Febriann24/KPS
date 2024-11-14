@@ -42,21 +42,19 @@ const ProfileInfomation = ({data}) => {
     <div className='py-4 px-4 flex flex-col w-full h-full text-left items-center'>
       <div className='bg-gray-300 w-[100px] h-[100px] rounded-full my-4' />
       <p className='text-center text-[20px] whitespace-nowrap w-[300px]'>{data.nama}</p>
-      <div className='bg-black w-full h-0.5 my-4' />
+      <div className='bg-black w-full h-[1px] my-2' />
       <div className='grid grid-cols-[1fr_1fr]'>
         <div className='self-start mx-4'>
           <p>Tanggal Bergabung </p>
           <p>Unit Kerja </p>
           <p>Nomor Anggota </p>
-          <p>Alamat </p>
           <p>Nomor Telepon </p>
           <p>Total Tabungan </p>
         </div>
         <div>
           <p>: {data.tnglbergabung}</p>
-          <p>: {}</p>
-          <p>: {}</p>
-          <p>: {data.alamat}</p>
+          <p>: {data.unitkerja}</p>
+          <p>: {data.noanggota}</p>
           <p>: {data.notelp}</p>
           <p>: {}</p>
         </div>
@@ -68,10 +66,90 @@ const ProfileInfomation = ({data}) => {
 
 const PengajuanInformation = ({data}) => {
   return (
-    <div className='py-4 px-4 flex flex-col w-full h-full text-left items-center'>
-
+    <div>
+      <div className='py-4 px-4 flex flex-col w-full h-full items-center'>
+        <p className='text-[20px]'>Data Pengajuan</p>
+        <div className='bg-black w-[400px] h-[1px] my-2' />
+      </div>
+      <div className='grid grid-cols-[1fr_3fr] text-[20px]'>
+        <div className='self-start mx-4 w-full'>
+          <p>Nominal Pinjaman </p>
+          <p>Tipe Pinjaman </p>
+          <p>Angsuran (Bulan) </p>
+          <p>Deduksi Bulanan </p>
+          <p>Keperluan Pinjaman </p>
+        </div>
+        <div className='w-full'>
+          <p>: {data.nominal}</p>
+          <p>: {data.tipe}</p>
+          <p>: {data.angsuran}</p>
+          <p>: {}</p>
+          <p>: {data.alasan}</p>
+        </div>
+      </div>
     </div>
   )
+}
+
+const PengajuanButton = ({ id, status }) => {
+  const handleChangeStatus = async (newStatus) => {
+    try {
+      const response = await axios.patch("http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", {
+        "id": id,
+        "status": newStatus
+      });
+      window.location.reload();
+      console.log("Updated Success", response);
+    } catch (error) {
+      console.log("error found: ", error);
+    }
+  }
+  if (status === 'ACTIVE') {
+    return (
+      <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
+        <button 
+        className="bg-green-500 text-white 
+        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+        hover:shadow-sm hover:bg-green-400 transition-all duration-300"
+        onClick={() => handleChangeStatus('APPROVED')}
+        >
+          SETUJU
+        </button>
+  
+        <button 
+        className="bg-red-500 text-white 
+        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+        hover:shadow-sm hover:bg-red-400 transition-all duration-300"
+        onClick={() => handleChangeStatus('DECLINED')}
+        >
+          TOLAK
+        </button>
+  
+        <button 
+        className="bg-teal-500 text-white 
+        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+        hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
+          Cetak Dokumen
+        </button>
+      </div>
+    )
+  } else {
+    return (
+      <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
+        <div className='w-full' />
+  
+        <div className='w-full' />
+  
+        <button 
+        className="bg-teal-500 text-white 
+        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+        hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
+          Cetak Dokumen
+        </button>
+      </div>
+    )
+        
+  }
 }
 
 const Information = () => {
@@ -88,16 +166,21 @@ const Information = () => {
         const obj = response.data;
         const formattedData = {
           id: obj.UUID_PENGAJUAN_PINJAMAN,
+
           nama: obj.user.NAMA_LENGKAP,
           alamat: obj.user.ALAMAT,
           tnglbergabung: formatDate(obj.user.DTM_CRT),
           notelp: obj.user.NOMOR_TELP,
+          unitkerja: obj.user.UNIT_KERJA,
+          noanggota: obj.user.NOMOR_ANGGOTA,
+
           nominal: 'Rp ' + formatRupiah(obj.NOMINAL_UANG),
-          date: formatDate(obj.DTM_CRT),
-          type: obj.type.TYPE_NAME,
+          tanggal: formatDate(obj.DTM_CRT),
+          tipe: obj.type.TYPE_NAME,
+          angsuran: obj.type.ANGSURAN_MONTH,
           status_code: obj.status.STATUS_CODE,
           status_name: obj.status.STATUS_NAME,
-          deskripsi: obj.DESKRIPSI
+          alasan: obj.DESKRIPSI
         };
         setData(formattedData)
       } catch (error) {
@@ -308,7 +391,14 @@ const Information = () => {
           <ProfileInfomation data={data}/>
         </div>
         <div className='bg-white shadow-lg rounded-lg w-full'>
-          
+          <div className='flex flex-col h-full justify-between'>
+            <div>
+              <PengajuanInformation data={data} />
+            </div>
+            <div className='my-6'>
+              <PengajuanButton status={data.status_code} id={data.id} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

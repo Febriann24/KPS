@@ -8,6 +8,7 @@ import {
     createStatusPinjaman,
     createTypePinjaman,
     createPengajuanPinjaman,
+    updateStatusPengajuanPinjaman,
  } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router.get("/MS_TYPE_PINJAMAN/getTypePinjaman", getTypePinjaman);
 router.post("/MS_STATUS_PINJAMAN/createStatusPinjaman", createStatusPinjaman);
 router.post("/MS_TYPE_PINJAMAN/createTypePinjaman", createTypePinjaman);
 router.post("/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman", createPengajuanPinjaman);
+router.patch("/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", updateStatusPengajuanPinjaman);
+
 
 export default router;

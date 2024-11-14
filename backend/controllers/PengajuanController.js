@@ -91,7 +91,7 @@ export const getOneDetailPengajuanPinjaman = async (req, res) => {
                 {
                     model: TypePinjaman,
                     as: 'type',
-                    attributes: ['UUID_TYPE_PINJAMAN', 'TYPE_NAME', 'MINIMUM_PINJAMAN', 'MAXIMUM_PINJAMAN']
+                    attributes: ['UUID_TYPE_PINJAMAN', 'TYPE_NAME', 'MINIMUM_PINJAMAN', 'MAXIMUM_PINJAMAN', 'ANGSURAN_MONTH']
                 }
             ],
             attributes: [
@@ -136,5 +136,25 @@ export const createPengajuanPinjaman = async (req, res) => {
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: "Error creating data", error: error.message });
+    }
+}
+
+export const updateStatusPengajuanPinjaman = async (req, res) => {
+    try {
+        const { id, status } = req.body;
+        const UUID_STATUS = await StatusPinjaman.findOne({ where: { STATUS_CODE: status } });
+        const updatedPengajuanPinjaman = await PengajuanPinjaman.update(
+            {
+                UUID_MS_STATUS_PINJAMAN: UUID_STATUS.UUID_STATUS_PINJAMAN
+            }, {
+                where: {
+                    UUID_PENGAJUAN_PINJAMAN: id
+                }
+            }
+        );
+        res.status(201).json({ msg: "Status Pinjaman Updated Successfully", data: updatedPengajuanPinjaman });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: "Error creating data", error: error.message });        
     }
 }
