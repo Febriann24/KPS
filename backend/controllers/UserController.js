@@ -66,7 +66,7 @@ export const UserDataById = async (req, res) => {
         include: [
           {
             model: PengajuanPinjaman,
-            attributes: ['NOMINAL_UANG'],
+            attributes: ['NOMINAL_UANG', 'updatedAt'],
             required: false,
             include: [
               {

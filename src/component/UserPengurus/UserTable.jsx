@@ -15,6 +15,7 @@ const UserTable = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/userTable/${id}`);
+        console.log("API Response:", response.data);
         if (response.data) {
           setUserData(response.data);
         } else {
@@ -71,10 +72,10 @@ const UserTable = () => {
     ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.BUNGA, 0)
     : 0;
 
-  const loanStatus = latestLoan
-    ? latestLoan.STATUS_PINJAMAN
+  const loanStatus = latestLoan && latestLoan.status
+    ? latestLoan.status.STATUS_CODE
     : 'N/A';
-
+  
   const formattedJoinDate = userData.createdAt
     ? new Date(userData.createdAt).toLocaleDateString()
     : 'N/A';
@@ -98,7 +99,7 @@ const UserTable = () => {
               <span className="font-semibold">Jumlah Pinjaman Terakhir:</span>
               <p className="ml-2">
                 {latestLoan
-                  ? 'Rp ' + formatRupiah(latestLoan.NOMINAL_UANG) + ' (tanggal ' + new Date(latestLoan.TGL_PINJAMAN).toLocaleDateString() + ')'
+                  ? 'Rp ' + formatRupiah(latestLoan.NOMINAL_UANG) + ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
                   : 'N/A'}
               </p>
             </div>
