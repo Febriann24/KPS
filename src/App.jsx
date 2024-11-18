@@ -19,8 +19,6 @@ import Profile from './component/Profile';
 import BeritaMenu from './component/UserPengurus/BeritaMenu';
 import ShowBerita from './component/UserPengurus/ShowBerita';
 import EditBerita from './component/UserPengurus/EditBerita';
-import BerandaAnggota from './component/UserAnggota/main/BerandaAnggota';
-import BerandaPengurus from './component/UserPengurus/main/BerandaPengurus';
 
 function App() {
   return (
@@ -47,8 +45,6 @@ function App() {
         <Route exact path='/showBerita/:id' element ={<ShowBerita/>} />
         <Route exact path='/editBerita/:id' element ={<EditBerita/>} />
         <Route exact path='/ListPengajuanUser' element = {<ListPengajuanUser/>} />
-        <Route exact path='/BerandaAnggota' element = {<BerandaAnggota/>} />
-        <Route exact path='/BerandaPengurus' element = {<BerandaPengurus/>} />
         </Routes>
       </Router>
     </>

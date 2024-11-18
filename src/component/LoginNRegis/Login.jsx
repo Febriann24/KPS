@@ -26,13 +26,15 @@ function Login() {
 
         const { accesstoken, role } = response.data; 
         localStorage.setItem('accessToken', accesstoken);
-        if (role === '1') { 
-            navigate("/navBarAnggota");
-        } else if (role === '2') {
-            navigate("/navBarPengurus");
-        } else {
-            setMsg("Role tidak dikenali");
-        }
+        localStorage.setItem('UUID_MS_JOB', role);
+        navigate("/");
+        // if (role === '1') { 
+        //     navigate("/BerandaAnggota");
+        // } else if (role === '2') {
+        //     navigate("/BerandaPengurus");
+        // } else {
+        //     setMsg("Role tidak dikenali");
+        // }
     } catch (error) {
         console.log(error)
     }

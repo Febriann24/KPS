@@ -11,7 +11,7 @@ function Register(){
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState('ANGGOTA');
+    const [role, setRole] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import H from "./UserAnggota/main/NavBarAnggota";  
+import H from "./H&F/Header";
 import F from "./H&F/Footer";  
 import foto from './Foto/Koperasi_Logo.png';
 import { useNavigate } from 'react-router-dom';
@@ -42,6 +42,8 @@ export default function Profile() {
     const Logout  = async () => {
       try {
         await axios.delete("http://localhost:5000/logout");
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('uuid_ms_job');
         navigate("/");
       } catch (error) {
         console.log(error);
@@ -63,7 +65,7 @@ export default function Profile() {
         </div>
 
         <div className="flex-grow md:w-1/2 p-8 md:p-16 flex items-center justify-center bg-white">
-          <div className="w-full max-w-lg p-6 rounded-lg shadow-lg bg-gray-100">
+          <div className="w-full max-w-lg p-6 rounded-lg shadow-lg bg-gray-200">
             <div className="flex flex-col items-center mb-6">
               <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center mb-4">
                 <span className="text-gray-500 text-4xl">👤</span>
@@ -113,14 +115,14 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6  text-center">
                 <button className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition">
                 EDIT
                 </button>
 
                 <button
                 onClick={Logout}
-                className="bg-white text-black rounded px-4 py-2 mt-4"
+                className="bg-white text-black rounded-lg ml-[10px] px-4 py-2 mt-4 "
                 >
                 Logout
                 </button>
