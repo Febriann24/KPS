@@ -1,6 +1,6 @@
 import express from "express";
 import { 
-    getPengajuanPinjaman,
+    getPengajuan,
     getStatusPinjaman,
     getTypePinjaman,
     getDetailPengajuanPinjaman,
@@ -10,17 +10,19 @@ import {
     createPengajuanPinjaman,
     updateStatusPengajuanPinjaman,
     getOneTypePinjaman,
+    getActivePengajuanPinjamanAnggota,
  } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
 
-router.get("/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman", getPengajuanPinjaman);
+router.post("/getPengajuan", getPengajuan);
 router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/", getDetailPengajuanPinjaman);
 router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/:id", getOneDetailPengajuanPinjaman);
 router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/anggotaId/:id", getDetailPengajuanPinjaman);
 router.get("/MS_STATUS_PINJAMAN/getStatusPinjaman", getStatusPinjaman);
 router.get("/MS_TYPE_PINJAMAN/getTypePinjaman", getTypePinjaman);
 router.get("/getOneTypePinjaman", getOneTypePinjaman);
+router.get("/getActivePengajuanPinjamanAnggota/:id/:month/:year", getActivePengajuanPinjamanAnggota);
 
 router.post("/MS_STATUS_PINJAMAN/createStatusPinjaman", createStatusPinjaman);
 router.post("/MS_TYPE_PINJAMAN/createTypePinjaman", createTypePinjaman);

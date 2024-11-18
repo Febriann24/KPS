@@ -11,22 +11,16 @@ import axios from "axios";
 
 const KeuanganAnggota = ({userData}) => { 
   const [data, setData] = useState([])
-  const [keuanganData, setKeuanganData] = useState('')
   const [keuangan, setKeuangan] = useState([])
     useEffect(() => {
       if (!isNaN(userData?.UUID_MS_USER)){
         const fetchDataType = async () => {
             try {
               const now = new Date();
-                const DATA = await axios.get(`http://localhost:5000/getTotalPengeluaranAnggota`, {
-                  params:{
-                    anggotaId: userData?.UUID_MS_USER,
-                    month: now.getMonth() + 1,
-                    year: now.getFullYear()
-                  }
-                });
-                setData(DATA.data.type)
-                setKeuanganData(DATA.data)
+              const month = now.getMonth() + 1;
+              const year = now.getFullYear();
+              const DATA = await axios.get(`http://localhost:5000/getActivePengajuanPinjamanAnggota/${userData?.UUID_MS_USER}/${month}/${year}`);
+              setData(DATA.data)
             } catch (error) {
                 console.log(error);
             }
@@ -37,15 +31,15 @@ const KeuanganAnggota = ({userData}) => {
     }, [userData])
 
     useEffect(() => {
-      if(data.length > 0) {
+      if(data.processedData) {
         const fetchDataKeuangan = async () => {
           try {
-            const details = data.map((item) => {
-              if (item.TOTAL > 0) {
+            const details = data.processedData.map((item) => {
+              if (item) {
                 return (
                     <div className="flex justify-between">
                       <p className="text-lg">Pinjaman {item.TYPE_NAME}</p>
-                      <p className="text-lg">{"Rp " + formatRupiah(String(item.TOTAL))}</p>
+                      <p className="text-lg">{"Rp " + formatRupiah(String(item.DEDUKSI_BULANAN))}</p>
                     </div>
                   );
               } else {
@@ -87,7 +81,7 @@ const KeuanganAnggota = ({userData}) => {
       {/* TOTAL PINJAMAN */}
       <div className="flex font-bold mt-4 justify-between">
         <p className="text-lg">Total Pinjaman</p>
-        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(keuanganData.total))}</p>
+        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(data.TOTAL_DEDUKSI_BULANAN))}</p>
       </div>
 
       {keuangan}
@@ -150,13 +144,25 @@ function SimpanPinjam() {
                     </div>
 
                     <div className="flex justify-between gap-4">
-                      <Link to='/FormAjukanPinjam' className="w-full">
-                      <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-bold">
-                        Ajukan Pengajuan
-                      </button>
-                      </Link>
+                      <div className="flex flex-col items-center gap-4 w-full justify-center">
+                        <span className="text-lg font-semibold">Ajukan Pengajuan</span>
+                        <div className="flex justify-between gap-4 w-full">
+                          <Link to='/FormAjukanPinjam' className="w-full">
+                          <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
+                            Pinjaman
+                          </button>
+                          </Link>
+                          <Link to='/FormAjukanSimpan' className="w-full">
+                          <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
+                            Simpanan
+                          </button>
+                          </Link>
+                        </div>
+                      </div>
+                      
+                      
                       <Link to='/ListPengajuanUser' className="w-full">
-                      <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-bold">
+                      <button className="h-full w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
                         Lihat Pengajuan
                       </button>
                       </Link>

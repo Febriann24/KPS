@@ -11,6 +11,9 @@ import {
   getCurrentLoggedInData
 } from '../../utils/utils';
 import { useNavigate } from 'react-router-dom';
+import {
+  BackButton
+} from '../../utils/components'
 
 const getProcessColor = (process) => {
   switch (process) {
@@ -39,12 +42,16 @@ const LoanData = () => {
       const fetchLoanData = async () => {
         setLoading(true);
         try {
-          let url = ``;
+          let UUID_MS_USER = ``;
           if (userData?.MS_JOB.JOB_CODE !== 'PENGURUS') {
-            url = `/anggotaId/${userData?.UUID_MS_USER}`;
+            UUID_MS_USER = `/anggotaId/${userData?.UUID_MS_USER}`;
           }
-          const response = await axios.get(`http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman${url}`);
-          console.log(response);
+          const response = await axios.post(`http://localhost:5000/getPengajuan`, {
+            PENGAJUAN: "PINJAMAN",
+            UUID_MS_TYPE: "", 
+            UUID_MS_USER: UUID_MS_USER, 
+            UUID_MS_STATUS: "" 
+          });
           const formattedData = response.data.map(item => ({
             id: item.UUID_PENGAJUAN_PINJAMAN,
             name: item.user.NAMA_LENGKAP,
@@ -56,8 +63,6 @@ const LoanData = () => {
             deskripsi: item.DESKRIPSI
           }));
           setData(formattedData);
-          console.log(url)
-          console.log(formattedData)
         } catch (error) {
           setError(error.message);
         } finally {
@@ -84,7 +89,7 @@ const LoanData = () => {
     <tbody>
       {data.length > 0 ? (
         data.map((loan, index) => (
-          <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
+          <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-200' : ''}`}>
           <td className="border p-2 text-center">{index + 1}</td>
           <td className="border p-2">{loan.name}</td>
           <td className="border p-2 text-center">{loan.date}</td>
@@ -120,7 +125,7 @@ const LoanData = () => {
 
 const SearchFilterBar = () => {
   return (
-    <div className="flex justify-between items-center p-4 bg-gray-100 shadow-sm">
+    <div className="flex justify-between items-center p-4 bg-gray-200 shadow-sm">
       <div className="flex items-center space-x-4 w-full">
         <select className="border p-2 rounded-md bg-white shadow-sm">
           <option value="">Pengaju</option>
@@ -163,12 +168,13 @@ const DataTable = () => {
 
 const ListPengajuanUser = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="w-full">
         <H />
       </div>
 
-      <div className="container mx-auto p-4 flex-grow">
+      <div className='container mx-auto my-4 p-4 flex-grow justify-center'>
+        <BackButton nav="/SimpanPinjam"/>
         <SearchFilterBar />
         <DataTable />
       </div>

@@ -21,6 +21,7 @@ import ShowBerita from './component/UserPengurus/ShowBerita';
 import EditBerita from './component/UserPengurus/EditBerita';
 import BerandaAnggota from './component/UserAnggota/main/BerandaAnggota';
 import BerandaPengurus from './component/UserPengurus/main/BerandaPengurus';
+import FormAjukanSimpan from './component/UserAnggota/FormAjukanSimpan';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route exact path='/SimpanPinjam' element={<SimpanPinjam/>} />
         <Route exact path="/FormAjukanPinjam" element={<FormAjukanPinjam/>} />
         <Route exact path='/PengajuanPinjaman/:id' element = {<PengajuanPinjaman/>} />
+        <Route exact path='/FormAjukanSimpan' element = {<FormAjukanSimpan/>} />
         <Route exact path='/ListUser' element = {<ListUser/>} />
         <Route exact path='/LaporanKeuangan' element = {<LaporanKeuangan/>} />
         <Route exact path='/BeritaMenu' element ={<BeritaMenu/>} />
