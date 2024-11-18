@@ -63,7 +63,7 @@ export const Register = async (req, res) => {
     
     try {
 
-        const job = await MS_JOB.findOne({ where: { JOB_DESC: role } });
+        const job = await MS_JOB.findOne({ where: { JOB_CODE: role } });
         if (!job) {
             return res.status(400).json({ message: "Role tidak ditemukan di database." });
         }
@@ -76,7 +76,6 @@ export const Register = async (req, res) => {
             EMAIL: email,
             PASSWORD: hashPassword,
             NOMOR_TELP: noTelp,
-            ROLE: role,
             UUID_MS_JOB: job.UUID_MS_JOB
         });
         
@@ -185,3 +184,35 @@ export const rejectUser = async (req, res) => {
         res.status(500).json({ message: "Error rejecting user", error });
     }
 };
+
+export const getOneUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const data = await Users.findOne({
+            where: {
+                UUID_MS_USER: id
+            },
+            include: [
+                {
+                    model: MS_JOB,
+                    as: 'MS_JOB',
+                    attributes: ['UUID_MS_JOB', 'JOB_CODE']
+                },
+            ],
+            attributes: [
+                "UUID_MS_USER",
+                "IS_ACTIVE",
+                "NAMA_LENGKAP",
+                "NOMOR_TELP",
+                "EMAIL",
+                "TANGGAL_LAHIR",
+                "ALAMAT",
+                "DTM_CRT"
+            ]
+        });
+        res.status(200).json(data)
+    } catch (error) {
+        console.error("Error finding user:", error);
+        res.status(500).json({ message: "Error finding user", error });
+    }
+}

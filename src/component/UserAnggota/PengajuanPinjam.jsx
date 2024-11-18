@@ -10,6 +10,7 @@ import axios from 'axios';
 import { 
   formatRupiah,
   formatDate,
+  getCurrentLoggedInData,
 } from '../../utils/utils';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -91,64 +92,70 @@ const PengajuanInformation = ({data}) => {
   )
 }
 
-const PengajuanButton = ({ id, status }) => {
-  const handleChangeStatus = async (newStatus) => {
+const handleChangeStatus = async (id, newStatus) => {
+  if(userData?.UUID_MS_USER && userData?.MS_JOB.JOB_CODE == "PENGURUS"){
     try {
-      const response = await axios.patch("http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", {
-        "id": id,
-        "status": newStatus
-      });
-      window.location.reload();
-      console.log("Updated Success", response);
+    const response = await axios.patch("http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", {
+      "id": id,
+      "status": newStatus
+    });
+    window.location.reload();
     } catch (error) {
       console.log("error found: ", error);
     }
   }
-  if (status === 'ACTIVE') {
-    return (
-      <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
-        <button 
-        className="bg-green-500 text-white 
-        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
-        hover:shadow-sm hover:bg-green-400 transition-all duration-300"
-        onClick={() => handleChangeStatus('APPROVED')}
-        >
-          SETUJU
-        </button>
-  
-        <button 
-        className="bg-red-500 text-white 
-        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
-        hover:shadow-sm hover:bg-red-400 transition-all duration-300"
-        onClick={() => handleChangeStatus('DECLINED')}
-        >
-          TOLAK
-        </button>
-  
-        <button 
-        className="bg-teal-500 text-white 
-        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
-        hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
-          Cetak Dokumen
-        </button>
-      </div>
-    )
-  } else {
-    return (
-      <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
-        <div className='w-full' />
-  
-        <div className='w-full' />
-  
-        <button 
-        className="bg-teal-500 text-white 
-        px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
-        hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
-          Cetak Dokumen
-        </button>
-      </div>
-    )
-        
+}
+
+const PengajuanButton = ({ id, status }) => {
+  const userData = getCurrentLoggedInData();
+  console.log(userData);
+  if(userData?.UUID_MS_USER) {
+    if (status === 'ACTIVE' && userData?.MS_JOB.JOB_CODE == "PENGURUS") {
+      return (
+        <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
+          <button 
+          className="bg-green-500 text-white 
+          px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+          hover:shadow-sm hover:bg-green-400 transition-all duration-300"
+          onClick={() => handleChangeStatus(id, 'APPROVED')}
+          >
+            SETUJU
+          </button>
+    
+          <button 
+          className="bg-red-500 text-white 
+          px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+          hover:shadow-sm hover:bg-red-400 transition-all duration-300"
+          onClick={() => handleChangeStatus(id, 'DECLINED')}
+          >
+            TOLAK
+          </button>
+    
+          <button 
+          className="bg-teal-500 text-white 
+          px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+          hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
+            Cetak Dokumen
+          </button>
+        </div>
+      )
+    } else {
+      return (
+        <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
+          <div className='w-full' />
+    
+          <div className='w-full' />
+    
+          <button 
+          className="bg-teal-500 text-white 
+          px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
+          hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
+            Cetak Dokumen
+          </button>
+        </div>
+      )
+          
+    }
   }
 }
 
@@ -377,7 +384,6 @@ const Information = () => {
     )
   }
 
-  console.log(data.status_code)
 
   return (
     <div>

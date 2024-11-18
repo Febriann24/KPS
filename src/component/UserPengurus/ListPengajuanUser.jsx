@@ -7,7 +7,8 @@ import F from "../H&F/Footer";
 import axios from 'axios';
 import { 
   formatDate,
-  formatRupiah
+  formatRupiah,
+  getCurrentLoggedInData
 } from '../../utils/utils';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,31 +32,42 @@ const LoanData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const userData = getCurrentLoggedInData();
 
   useEffect(() => {
-    const fetchLoanData = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman');
-        const formattedData = response.data.map(item => ({
-          id: item.UUID_PENGAJUAN_PINJAMAN,
-          name: item.user.NAMA_LENGKAP,
-          nominal: 'Rp ' + formatRupiah(item.NOMINAL_UANG),
-          date: formatDate(item.DTM_CRT),
-          type: item.type.TYPE_NAME,
-          status_code: item.status.STATUS_CODE,
-          status_name: item.status.STATUS_NAME,
-          deskripsi: item.DESKRIPSI
-        }));
-        setData(formattedData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!isNaN(userData?.UUID_MS_USER)) {
+      const fetchLoanData = async () => {
+        setLoading(true);
+        try {
+          let url = ``;
+          if (userData?.MS_JOB.JOB_CODE !== 'PENGURUS') {
+            url = `/anggotaId/${userData?.UUID_MS_USER}`;
+          }
+          const response = await axios.get(`http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman${url}`);
+          console.log(response);
+          const formattedData = response.data.map(item => ({
+            id: item.UUID_PENGAJUAN_PINJAMAN,
+            name: item.user.NAMA_LENGKAP,
+            nominal: 'Rp ' + formatRupiah(item.NOMINAL_UANG),
+            date: formatDate(item.DTM_CRT),
+            type: item.type.TYPE_NAME,
+            status_code: item.status.STATUS_CODE,
+            status_name: item.status.STATUS_NAME,
+            deskripsi: item.DESKRIPSI
+          }));
+          setData(formattedData);
+          console.log(url)
+          console.log(formattedData)
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchLoanData();
-  }, []);
+      fetchLoanData();
+    }
+  }, [userData]);
 
   if (loading) {
     return <td colSpan="8" className='p-2 text-center font-bold'>Loading...</td>;
@@ -78,7 +90,7 @@ const LoanData = () => {
           <td className="border p-2 text-center">{loan.date}</td>
           <td className="border p-2 text-center">{loan.type}</td>
           <td className="border p-2 text-right">{loan.nominal}</td>
-          <td className="border p-2 text-center truncate max-w-xs">{loan.deskripsi}</td>
+          <td className="border p-2 text-left truncate max-w-xs">{loan.deskripsi}</td>
           <td className="border p-2 text-center">
             <span className={`inline-block px-2 py-1 rounded-md ${getProcessColor(loan.status_code)}`}>
               {loan.status_name}

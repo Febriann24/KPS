@@ -11,7 +11,7 @@ function Register(){
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('ANGGOTA');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
 
@@ -66,8 +66,8 @@ function Register(){
                             <div className="mt-3 md:flex md:items-center md:-mx-2">
                     <button 
                     value={role}
-                        onClick={() => setRole('Anggota')} 
-                        className={`flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none ${role === 'Anggota' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
+                        onClick={() => setRole('ANGGOTA')} 
+                        className={`flex justify-center w-full px-6 py-3 rounded-lg md:w-auto md:mx-2 focus:outline-none ${role === 'ANGGOTA' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -75,8 +75,8 @@ function Register(){
                     </button>
                     <button 
                     value={role}
-                        onClick={() => setRole('Pengurus')}  
-                        className={`flex justify-center w-full px-6 py-3 mt-4 rounded-lg md:mt-0 md:w-auto md:mx-2 focus:outline-none ${role === 'Pengurus' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
+                        onClick={() => setRole('PENGURUS')}  
+                        className={`flex justify-center w-full px-6 py-3 mt-4 rounded-lg md:mt-0 md:w-auto md:mx-2 focus:outline-none ${role === 'PENGURUS' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>

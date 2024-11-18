@@ -1,3 +1,18 @@
+###
+POST http://localhost:5000/createJob
+Content-Type: application/json
+
+[
+    {
+        "JOB_CODE": "ANGGOTA",
+        "JOB_DESC": "Anggota Adalah KOperasi"
+    },
+    {
+        "JOB_CODE": "PENGURUS",
+        "JOB_DESC": "Pengurus Adalah KOperasi"
+    }
+]
+
 ### Create Default MS_STATUS_PINJAMAN Data
 POST http://localhost:5000/MS_STATUS_PINJAMAN/createStatusPinjaman
 Content-Type: application/json
@@ -49,6 +64,7 @@ Content-Type: application/json
         "TYPE_NAME": "KPKA",
         "TYPE_DESC": "Kredit Pelayanan Khusus Anggota",
         "ANGSURAN_MONTH": 36,
+        "BUNGA_PERCENTAGE": 5,
         "MINIMUM_PINJAMAN": 1000000,
         "MAXIMUM_PINJAMAN": 10000000
     },
@@ -59,6 +75,7 @@ Content-Type: application/json
         "TYPE_NAME": "UKSP",
         "TYPE_DESC": "Usaha Kredit Simpan Pinjam",
         "ANGSURAN_MONTH": 24,
+        "BUNGA_PERCENTAGE": 5,
         "MINIMUM_PINJAMAN": 10000001,
         "MAXIMUM_PINJAMAN": 100000000
     },
@@ -69,6 +86,7 @@ Content-Type: application/json
         "TYPE_NAME": "UKTP",
         "TYPE_DESC": "Usaha Kredit Tunjangan Profesi",
         "ANGSURAN_MONTH": 12,
+        "BUNGA_PERCENTAGE": 5,
         "MINIMUM_PINJAMAN": 100000001,
         "MAXIMUM_PINJAMAN": 1000000000
     }
@@ -112,18 +130,3 @@ Content-Type: application/json
     "NOMINAL_UANG": 15000000,
     "DESKRIPSI": "OGH MAI GAD TESTING"
 }
-
-###
-POST http://localhost:5000/createJob
-Content-Type: application/json
-
-[
-    {
-        "JOB_CODE": "ANGGOTA",
-        "JOB_DESC": "Anggota Adalah KOperasi"
-    },
-    {
-        "JOB_CODE": "PENGURUS",
-        "JOB_DESC": "Pengurus Adalah KOperasi"
-    }
-]
