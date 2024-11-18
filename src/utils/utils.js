@@ -37,7 +37,7 @@ export const sumDate = (string, num) => {
   
 
 export const countDeduksiBulan = (nominal, bunga, totalBulan) => {
-    const formula = Math.round((nominal / totalBulan) + ((nominal * bunga/100)/12))
+    const formula = Math.round((nominal / totalBulan) + ((nominal * bunga/100)/totalBulan))
     if (formula == 0) {
         return '0';
     } else {

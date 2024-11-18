@@ -44,7 +44,7 @@ const LoanData = () => {
         try {
           let UUID_MS_USER = ``;
           if (userData?.MS_JOB.JOB_CODE !== 'PENGURUS') {
-            UUID_MS_USER = `/anggotaId/${userData?.UUID_MS_USER}`;
+            UUID_MS_USER = userData?.UUID_MS_USER;
           }
           const response = await axios.post(`http://localhost:5000/getPengajuan`, {
             PENGAJUAN: "PINJAMAN",
