@@ -11,7 +11,13 @@ import {
   formatRupiah,
   formatDate,
   getCurrentLoggedInData,
+  countDeduksiBulan,
+  deformatRupiah,
+  sumDate
 } from '../../utils/utils';
+import {
+  BackButton
+} from '../../utils/components'
 import { useNavigate } from 'react-router-dom';
 import { 
   Back_icon,
@@ -20,79 +26,78 @@ import {
   X_icon
 } from '../../assets/icons';
 
-const BackButton = () => {
-  const navigate = useNavigate();
-  return (
-    <button 
-    className='mx-auto shadow-lg p-3 rounded-lg bg-gray-600 text-white
-    hover:shadow-xl hover:bg-gray-500 transition-all duration-300 w-[150px]'
-    style={{marginBottom:"20px"}}
-    onClick={() => navigate(`/ListPengajuanUser`)}>
-      <div className='flex justify-between'>
-        <span>Kembali</span>
-        <span>
-          <Back_icon />
-        </span>
-      </div>
-    </button>
-  )
-}
-
 const ProfileInfomation = ({data}) => {
+  const profileFields = [
+    { label: 'Tanggal Bergabung', value: data.tnglbergabung },
+    { label: 'Unit Kerja', value: data.unitkerja },
+    { label: 'Nomor Anggota', value: data.noanggota },
+    { label: 'Nomor Telepon', value: data.notelp },
+    { label: 'Total Tabungan', value: data.totalTabungan || '0' }, // Default to 'N/A' if missing
+  ];
+
   return (
     <div className='py-4 px-4 flex flex-col w-full h-full text-left items-center'>
       <div className='bg-gray-300 w-[100px] h-[100px] rounded-full my-4' />
       <p className='text-center text-[20px] whitespace-nowrap w-[300px]'>{data.nama}</p>
       <div className='bg-black w-full h-[1px] my-2' />
-      <div className='grid grid-cols-[1fr_1fr]'>
-        <div className='self-start mx-4'>
-          <p>Tanggal Bergabung </p>
-          <p>Unit Kerja </p>
-          <p>Nomor Anggota </p>
-          <p>Nomor Telepon </p>
-          <p>Total Tabungan </p>
-        </div>
-        <div>
-          <p>: {data.tnglbergabung}</p>
-          <p>: {data.unitkerja}</p>
-          <p>: {data.noanggota}</p>
-          <p>: {data.notelp}</p>
-          <p>: {}</p>
-        </div>
+
+      {/* Using Grid Layout for labels and values */}
+      <div className='grid grid-cols-1'>
+        {profileFields.map((field, index) => (
+          <div key={index} className="flex justify-start space-x-2 my-1">
+            {/* Label with consistent width */}
+            <p className='min-w-[140px]'>{field.label}</p>
+            <p>: {field.value}</p>
+          </div>
+        ))}
       </div>
-      
     </div>
-  )
+  );
 }
 
 const PengajuanInformation = ({data}) => {
+  const deduksiBulanan = "Rp " + formatRupiah(countDeduksiBulan(
+                                    deformatRupiah(String(data.nominal)),
+                                    data.bunga,
+                                    data.angsuran
+                                  ))
+  const profileFields = [
+    { label: 'Nominal Pinjaman', value: "Rp "+ formatRupiah(String(data.nominal)) },
+    { label: 'Tipe Pinjaman', value: data.tipe },
+    { label: 'Angsuran (Bulan)', value: data.angsuran },
+    { label: 'Deduksi Bulanan', value: deduksiBulanan},
+    { label: 'Tanggal Diajukan', value: data.tanggal},
+    { label: 'Keperluan Pinjaman', value: data.alasan },
+  ];
+
+  if (data.status_code == "APPROVED") {
+    profileFields.push(
+      { label: 'Aktif Sejak', value: formatDate(data.DTM_APPROVED) },
+      { label: 'Aktif Hingga', value: sumDate(data.DTM_APPROVED, data.angsuran) }
+    )
+  }
+
   return (
     <div>
-      <div className='py-4 px-4 flex flex-col w-full h-full items-center'>
+      <div className='py-4 px-4 flex flex-col w-full h-auto items-center'>
         <p className='text-[20px]'>Data Pengajuan</p>
         <div className='bg-black w-[400px] h-[1px] my-2' />
       </div>
-      <div className='grid grid-cols-[1fr_3fr] text-[20px]'>
-        <div className='self-start mx-4 w-full'>
-          <p>Nominal Pinjaman </p>
-          <p>Tipe Pinjaman </p>
-          <p>Angsuran (Bulan) </p>
-          <p>Deduksi Bulanan </p>
-          <p>Keperluan Pinjaman </p>
-        </div>
-        <div className='w-full'>
-          <p>: {data.nominal}</p>
-          <p>: {data.tipe}</p>
-          <p>: {data.angsuran}</p>
-          <p>: {}</p>
-          <p>: {data.alasan}</p>
-        </div>
+
+      <div className='grid grid-cols-1'>
+        {profileFields.map((field, index) => (
+          <div key={index} className="flex justify-start space-x-2 my-1 px-4 text-lg">
+            {/* Label with consistent width */}
+            <p className='min-w-[180px]'>{field.label}</p>
+            <p>: {field.value}</p>
+          </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }
 
-const handleChangeStatus = async (id, newStatus) => {
+const handleChangeStatus = async (id, newStatus, userData) => {
   if(userData?.UUID_MS_USER && userData?.MS_JOB.JOB_CODE == "PENGURUS"){
     try {
     const response = await axios.patch("http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", {
@@ -108,7 +113,6 @@ const handleChangeStatus = async (id, newStatus) => {
 
 const PengajuanButton = ({ id, status }) => {
   const userData = getCurrentLoggedInData();
-  console.log(userData);
   if(userData?.UUID_MS_USER) {
     if (status === 'ACTIVE' && userData?.MS_JOB.JOB_CODE == "PENGURUS") {
       return (
@@ -117,7 +121,7 @@ const PengajuanButton = ({ id, status }) => {
           className="bg-green-500 text-white 
           px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
           hover:shadow-sm hover:bg-green-400 transition-all duration-300"
-          onClick={() => handleChangeStatus(id, 'APPROVED')}
+          onClick={() => handleChangeStatus(id, 'APPROVED', userData)}
           >
             SETUJU
           </button>
@@ -173,6 +177,7 @@ const Information = () => {
         const obj = response.data;
         const formattedData = {
           id: obj.UUID_PENGAJUAN_PINJAMAN,
+          DTM_APPROVED: obj.DTM_APPROVED,
 
           nama: obj.user.NAMA_LENGKAP,
           alamat: obj.user.ALAMAT,
@@ -181,10 +186,11 @@ const Information = () => {
           unitkerja: obj.user.UNIT_KERJA,
           noanggota: obj.user.NOMOR_ANGGOTA,
 
-          nominal: 'Rp ' + formatRupiah(obj.NOMINAL_UANG),
+          nominal: obj.NOMINAL_UANG,
           tanggal: formatDate(obj.DTM_CRT),
           tipe: obj.type.TYPE_NAME,
           angsuran: obj.type.ANGSURAN_MONTH,
+          bunga: obj.type.BUNGA_PERCENTAGE,
           status_code: obj.status.STATUS_CODE,
           status_name: obj.status.STATUS_NAME,
           alasan: obj.DESKRIPSI
@@ -392,7 +398,7 @@ const Information = () => {
       style={{paddingLeft:"100px", paddingRight:"100px"}}>
         <MapLinePoint status={data.status_code} />
       </div>
-      <div className='w-7/8 h-[400px] my-4 mx-auto gap-4 grid grid-cols-[1fr_3fr]'>
+      <div className='w-7/8 h-auto my-4 mx-auto gap-4 grid grid-cols-[1fr_3fr]'>
         <div className='bg-white shadow-lg rounded-lg w-full'>
           <ProfileInfomation data={data}/>
         </div>
@@ -419,8 +425,8 @@ const PengajuanPinjam = () => {
         <H />
       </div>
 
-      <div className='container mx-auto my-4 p-4 flex-grow justify-center'>
-        <BackButton />
+      <div className='container mx-auto my-4 p-4 justify-center h-auto'>
+        <BackButton nav="/listPengajuanUser"/>
         <Information />
       </div>
 

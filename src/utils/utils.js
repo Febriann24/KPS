@@ -26,8 +26,18 @@ export const formatDate = (string) => {
     });
 };
 
+export const sumDate = (string, num) => {
+    const date = new Date(string)
+    date.setMonth(date.getMonth() + num);
+    return date.toLocaleString('id-ID', {
+        year: 'numeric',
+        month: 'long',
+    });
+  }
+  
+
 export const countDeduksiBulan = (nominal, bunga, totalBulan) => {
-    const formula = Math.round((nominal / totalBulan) + ((nominal * bunga/100)/12))
+    const formula = Math.round((nominal / totalBulan) + ((nominal * bunga/100)/totalBulan))
     if (formula == 0) {
         return '0';
     } else {

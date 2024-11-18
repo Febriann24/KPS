@@ -1,10 +1,18 @@
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getPengajuanPinjaman
+POST http://localhost:5000/getPengajuan
+Content-Type: application/json
+
+{
+    "PENGAJUAN": "PINJAMAN",
+    "UUID_MS_TYPE": "", 
+    "UUID_MS_USER": "", 
+    "UUID_MS_STATUS": "" 
+}
 
 ### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
 GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/1
 
 ### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/anggotaId/2
+GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/anggotaId/1
 
 ###
 GET http://localhost:5000/getOneTypePinjaman
@@ -36,13 +44,15 @@ Content-Type: application/json
     "job_code": "" 
 }
 
+###
+GET http://localhost:5000/getActivePengajuanPinjamanAnggota/1/12/2024
 
 ### Update STATUS Pengajuan Pinjaman TESTING
 PATCH http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman
 Content-Type: application/json
 
 {
-    "id": 7,
+    "id": 3,
     "status": "APPROVED"
 }
 

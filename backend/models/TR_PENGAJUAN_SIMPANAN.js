@@ -3,8 +3,8 @@ import db from "../config/database.js";
 
 const { DataTypes } = Sequelize;
 
-const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
-    UUID_PENGAJUAN_PINJAMAN: {
+const PengajuanSimpanan = db.define("TR_PENGAJUAN_SIMPANAN", {
+    UUID_PENGAJUAN_SIMPANAN: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
         primaryKey: true
@@ -26,20 +26,20 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
         type: DataTypes.STRING(50),
         allowNull: true
     },
-    UUID_MS_STATUS_PINJAMAN: {
+    UUID_MS_STATUS_SIMPANAN: {
         type: DataTypes.BIGINT,
         allowNull: false,
         references: {
-            model: "MS_STATUS_PINJAMAN",
-            key: "UUID_STATUS_PINJAMAN"
+            model: "MS_STATUS_SIMPANAN",
+            key: "UUID_STATUS_SIMPANAN"
         }
     },
-    UUID_MS_TYPE_PINJAMAN: {
+    UUID_MS_TYPE_SIMPANAN: {
         type: DataTypes.BIGINT,
         allowNull:false,
         references: {
-            model: "MS_TYPE_PINJAMAN",
-            key: "UUID_TYPE_PINJAMAN"
+            model: "MS_TYPE_SIMPANAN",
+            key: "UUID_TYPE_SIMPANAN"
         }
     },
     UUID_MS_USER: {
@@ -50,6 +50,10 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
             key: "UUID_MS_USER"
         }
     },
+    NO_KONTRAK: {
+        allowNull:true,
+        type: DataTypes.STRING,
+    },
     NOMINAL_UANG: {
         allowNull:false,
         type: DataTypes.BIGINT,
@@ -57,38 +61,34 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
     DESKRIPSI: {
         type: DataTypes.TEXT,
     },
-    DTM_APPROVED: {
-        type: DataTypes.DATE,
-        allowNull: true
-    }
 }, {
     freezeTableName: true
 });
 
 (async () => {
     const { default: MS_USER } = await import('./MS_USER.js');
-    const { default: MS_STATUS_PINJAMAN } = await import('./MS_STATUS_PINJAMAN.js');
-    const { default: MS_TYPE_PINJAMAN } = await import('./MS_TYPE_PINJAMAN.js');
+    const { default: MS_STATUS_SIMPANAN } = await import('./MS_STATUS_SIMPANAN.js');
+    const { default: MS_TYPE_SIMPANAN } = await import('./MS_TYPE_SIMPANAN.js');
 
-    PengajuanPinjaman.belongsTo(MS_USER, {
+    PengajuanSimpanan.belongsTo(MS_USER, {
         foreignKey: 'UUID_MS_USER',
         targetKey: 'UUID_MS_USER',
         as: 'user'
     });
 
-    PengajuanPinjaman.belongsTo(MS_STATUS_PINJAMAN, {
-        foreignKey: 'UUID_MS_STATUS_PINJAMAN',
-        targetKey: 'UUID_STATUS_PINJAMAN',
+    PengajuanSimpanan.belongsTo(MS_STATUS_SIMPANAN, {
+        foreignKey: 'UUID_MS_STATUS_SIMPANAN',
+        targetKey: 'UUID_STATUS_SIMPANAN',
         as: 'status'
     });
 
-    PengajuanPinjaman.belongsTo(MS_TYPE_PINJAMAN, {
-        foreignKey: 'UUID_MS_TYPE_PINJAMAN',
-        targetKey: 'UUID_TYPE_PINJAMAN',
+    PengajuanSimpanan.belongsTo(MS_TYPE_SIMPANAN, {
+        foreignKey: 'UUID_MS_TYPE_SIMPANAN',
+        targetKey: 'UUID_TYPE_SIMPANAN',
         as: 'type'
     });
 })();
 
-export default PengajuanPinjaman;
+export default PengajuanSimpanan;
 
-console.log("Creating TR_PENGAJUAN_PINJAMAN");
+console.log("Creating TR_PENGAJUAN_SIMPANAN");

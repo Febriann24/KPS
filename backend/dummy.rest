@@ -63,7 +63,7 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "KPKA",
         "TYPE_DESC": "Kredit Pelayanan Khusus Anggota",
-        "ANGSURAN_MONTH": 36,
+        "ANGSURAN_MONTH": 1,
         "BUNGA_PERCENTAGE": 5,
         "MINIMUM_PINJAMAN": 1000000,
         "MAXIMUM_PINJAMAN": 10000000
@@ -74,7 +74,7 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "UKSP",
         "TYPE_DESC": "Usaha Kredit Simpan Pinjam",
-        "ANGSURAN_MONTH": 24,
+        "ANGSURAN_MONTH": 3,
         "BUNGA_PERCENTAGE": 5,
         "MINIMUM_PINJAMAN": 10000001,
         "MAXIMUM_PINJAMAN": 100000000
@@ -85,7 +85,7 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "UKTP",
         "TYPE_DESC": "Usaha Kredit Tunjangan Profesi",
-        "ANGSURAN_MONTH": 12,
+        "ANGSURAN_MONTH": 5,
         "BUNGA_PERCENTAGE": 5,
         "MINIMUM_PINJAMAN": 100000001,
         "MAXIMUM_PINJAMAN": 1000000000
