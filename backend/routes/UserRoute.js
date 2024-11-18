@@ -10,6 +10,7 @@ import {
     rejectUser,
     UserApproval,
     UserDataById,
+    getOneUser
 } from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -26,5 +27,6 @@ router.delete("/logout", Logout);
 router.put("/approve/:id", approveUser);
 router.delete("/reject/:id", rejectUser);
 router.get("/approval", UserApproval);
+router.get("/getOneUser/:id", getOneUser);
 
 export default router;

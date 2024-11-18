@@ -1,13 +1,104 @@
 import H from "../H&F/Header"
 import F from "../H&F/Footer"
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { 
+  getCurrentLoggedInData ,
+  formatDate,
+  formatRupiah
+} from "../../utils/utils.js";
+import axios from "axios";
 
-{/* DATABASE REQUIRED:
-    MS_USER Get Data User
-    TR_MONTHLY_FINANCE_ANGGOTA Get Monthly Finance Anggota
-    TR_MONTHLY_FINANCIAL_STATEMENT Get Total Tabungan Koperasi
-  */}
+const KeuanganAnggota = ({userData}) => { 
+  const [data, setData] = useState([])
+  const [keuanganData, setKeuanganData] = useState('')
+  const [keuangan, setKeuangan] = useState([])
+    useEffect(() => {
+      if (!isNaN(userData?.UUID_MS_USER)){
+        const fetchDataType = async () => {
+            try {
+              const now = new Date();
+                const DATA = await axios.get(`http://localhost:5000/getTotalPengeluaranAnggota`, {
+                  params:{
+                    anggotaId: userData?.UUID_MS_USER,
+                    month: now.getMonth() + 1,
+                    year: now.getFullYear()
+                  }
+                });
+                setData(DATA.data.type)
+                setKeuanganData(DATA.data)
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchDataType();
+      }
+    }, [userData])
+
+    useEffect(() => {
+      if(data.length > 0) {
+        const fetchDataKeuangan = async () => {
+          try {
+            const details = data.map((item) => {
+              if (item.TOTAL > 0) {
+                return (
+                    <div className="flex justify-between">
+                      <p className="text-lg">Pinjaman {item.TYPE_NAME}</p>
+                      <p className="text-lg">{"Rp " + formatRupiah(String(item.TOTAL))}</p>
+                    </div>
+                  );
+              } else {
+                return
+              }
+            });
+            setKeuangan(details);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      
+        fetchDataKeuangan();
+      }
+    }, [data])
+
+  return (
+    <div className="col-span-1 row-span-3 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
+    <div>
+      <div className="text-xl font-semibold text-gray-700 mb-2 text-center">Total Deduksi Anggota Akhir Bulan</div>
+      <h1 className="text-5xl font-bold text-red-800 mb-4 text-center">Rp 1.488.666,00</h1> {/* DEDUKSI PERBULAN ANGGOTA */}
+    </div>
+    {/* TOTAL SIMPANAN */}
+    <div className="mt-8">
+      <div className="flex font-bold justify-between">
+        <p className="text-lg">Total Simpanan</p>
+        <p className="text-lg text-red-800">Rp 1.000.000,00</p>
+      </div>
+
+      <div className="flex justify-between">
+        <p className="text-lg">Simpanan Wajib</p>
+        <p className="text-lg">Rp 100.000,00</p>
+      </div>
+      <div className="flex justify-between">
+        <p className="text-lg">Simpanan Sukarela</p>
+        <p className="text-lg">Rp 900.000,00</p>
+      </div>
+
+      {/* TOTAL PINJAMAN */}
+      <div className="flex font-bold mt-4 justify-between">
+        <p className="text-lg">Total Pinjaman</p>
+        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(keuanganData.total))}</p>
+      </div>
+
+      {keuangan}
+
+    </div>
+  </div>
+  )
+}
+
 function SimpanPinjam() {
+  const userData = getCurrentLoggedInData();
     return (
       <>
         <div className="min-h-screen flex flex-col bg-gray-100">
@@ -30,7 +121,7 @@ function SimpanPinjam() {
                         Profile Picture
                       </div>
                       <h2 className="text-3xl font-semibold mb-2 truncate">
-                        Hollywood Benjamin Gunawan 
+                        {userData?.NAMA_LENGKAP}
                       </h2>
 
 
@@ -52,7 +143,7 @@ function SimpanPinjam() {
                           </div>
                           <div className="flex mb-2">
                           <p className="text-lg w-48">Tanggal Bergabung</p>
-                          <p className="text-lg ml-4">: Oktober 12 2023</p>
+                          <p className="text-lg ml-4">: {formatDate(userData?.DTM_CRT)}</p>
                           </div>
                         </div>
                       </div>
@@ -77,47 +168,7 @@ function SimpanPinjam() {
                 </div>
               </div>
 
-              <div className="col-span-1 row-span-3 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
-                <div>
-                  <div className="text-xl font-semibold text-gray-700 mb-2 text-center">Total Deduksi Anggota Akhir Bulan</div>
-                  <h1 className="text-5xl font-bold text-red-800 mb-4 text-center">Rp 1.488.666,00</h1> {/* DEDUKSI PERBULAN ANGGOTA */}
-                </div>
-                {/* TOTAL SIMPANAN */}
-                <div className="mt-8">
-                  <div className="flex font-bold justify-between">
-                    <p className="text-lg">Total Simpanan</p>
-                    <p className="text-lg text-red-800">Rp 1.000.000,00</p>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <p className="text-lg">Simpanan Wajib</p>
-                    <p className="text-lg">Rp 100.000,00</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-lg">Simpanan Sukarela</p>
-                    <p className="text-lg">Rp 900.000,00</p>
-                  </div>
-
-                  {/* TOTAL PINJAMAN */}
-                  <div className="flex font-bold mt-4 justify-between">
-                    <p className="text-lg">Total Pinjaman</p>
-                    <p className="text-lg text-red-800">Rp 488.666,00</p>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <p className="text-lg">Pinjaman KPKA</p>
-                    <p className="text-lg">Rp 488.666,00</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-lg">Pinjaman UKSP</p>
-                    <p className="text-lg">Rp 0</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-lg">Pinjaman UKTP</p>
-                    <p className="text-lg">Rp 0</p>
-                  </div>
-                </div>
-              </div>
+              <KeuanganAnggota userData={userData}/>
               
             </div>
           </div>

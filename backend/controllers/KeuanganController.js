@@ -55,18 +55,20 @@ export const getTotalPengeluaranAnggota = async (req, res) => {
         const typePinjaman = await TypePinjaman.findAll({
             attributes: ["UUID_TYPE_PINJAMAN", "TYPE_NAME"]
         });
-        let totalEachType = {};
+        let totalEachType = [];
         for (let type of typePinjaman) {
-            totalEachType[type.UUID_TYPE_PINJAMAN] = {
+            const total = await PengajuanPinjaman.sum("NOMINAL_UANG", {
+                where: {
+                    ...filter,
+                    UUID_MS_TYPE_PINJAMAN: type.UUID_TYPE_PINJAMAN,
+                }
+            });
+            
+            totalEachType.push({
                 UUID_MS_TYPE_PINJAMAN: type.UUID_TYPE_PINJAMAN,
                 TYPE_NAME: type.TYPE_NAME,
-                TOTAL: await PengajuanPinjaman.sum("NOMINAL_UANG", {
-                    where: {
-                        ...filter,
-                        UUID_MS_TYPE_PINJAMAN: type.UUID_TYPE_PINJAMAN,
-                    }
-                })
-            };
+                TOTAL: total || 0 // handle case where total is null
+            });
         }
 
         // Send the response with the total, month, and year

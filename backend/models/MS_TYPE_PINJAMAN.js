@@ -53,7 +53,11 @@ const TypePinjaman = db.define("MS_TYPE_PINJAMAN", {
     ANGSURAN_MONTH: {
         type: DataTypes.INTEGER,
         allowNull: false
-    }
+    },
+    BUNGA_PERCENTAGE: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
 }, {
     freezeTableName: true
 })

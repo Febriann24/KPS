@@ -35,14 +35,36 @@ export const getTypePinjaman = async(req, res) => {
     }
 }
 
+export const getOneTypePinjaman = async(req, res) => {
+    const { TYPE_NAME } = req.body;
+    try {
+        const response = await TypePinjaman.findOne({
+            where: {
+                TYPE_NAME: TYPE_NAME
+            }
+        });
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: "Error fetching data", error: error.message });
+    }
+}
+
 export const getDetailPengajuanPinjaman = async (req, res) => {
+    const { id } = req.params;
+    let filter = {}
+    if (id) {
+        filter = {
+            UUID_MS_USER: id
+        }
+    }
     try {
         const results = await PengajuanPinjaman.findAll({
             include: [
                 {
                     model: User,
                     as: 'user',
-                    attributes: ['NAMA_LENGKAP']
+                    attributes: ['NAMA_LENGKAP', 'UUID_MS_USER']
                 },
                 {
                     model: StatusPinjaman,
@@ -60,7 +82,8 @@ export const getDetailPengajuanPinjaman = async (req, res) => {
                 'NOMINAL_UANG',
                 'DESKRIPSI',
                 'DTM_CRT'
-            ]
+            ],
+            where: filter
         });
 
         res.status(200).json(results);
@@ -132,7 +155,7 @@ export const createTypePinjaman = async (req, res) => {
 export const createPengajuanPinjaman = async (req, res) => {
     try {
         const createdPengajuanPinjaman = await PengajuanPinjaman.create(req.body);
-        res.status(201).json({ msg: "Type Pinjaman Created Successfully", data: createdPengajuanPinjaman });
+        res.status(201).json(createdPengajuanPinjaman);
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: "Error creating data", error: error.message });
