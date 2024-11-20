@@ -5,81 +5,173 @@ import { jsPDF } from "jspdf";
 
 const LaporanKeuangan = () => {
   const reportData = [
-    { no: 1, tipe: "KPKA", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
-    { no: 2, tipe: "USP", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
-    { no: 3, tipe: "UKTP", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
-    { no: 4, tipe: "Simpanan Sukarela", masuk: "Rp. 1,000", keluar: "Rp. 2,000" },
-  ];
-  
+    { no: 1, tipe: "KPKA", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-10-19" },
+    { no: 2, tipe: "USP", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-09-19" },
+    { no: 3, tipe: "UKTP", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-08-19" },
+    { no: 4, tipe: "Simpanan Sukarela", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-07-19" },
+];
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [category, setCategory] = useState("");
   const [filteredData, setFilteredData] = useState(reportData);
 
-  const exportToExcel = async () => {
+  const exportToExcel = async (startDate, endDate) => {
     const XLSX = await import("xlsx");
-  
+
+const formatDate = (date) => {
+  if (!date || isNaN(new Date(date).getTime())) return "-";
+  const options = { year: "numeric", month: "long" };
+  return new Date(date).toLocaleDateString("id-ID", options);
+};
+
+    const reportPeriod = `Periode ${formatDate(startDate)} - ${formatDate(endDate)}`;
     const worksheetData = [
-      ["No", "Tipe", "Masuk", "Keluar"],
-      ...filteredData.map((item) => [item.no, item.tipe, item.masuk, item.keluar])
+        ["Koperasi Simpan Pinjam Wiyata Mandala"],
+        ["Laporan Keuangan"],
+        [reportPeriod],
+        [],
+        ["Pendapatan"],
+        ["", "Penjualan Bersih", "Rp 460.000.000,00"],
+        ["", "Pendapatan Bunga", "Rp 2.800.000,00"],
+        ["", "Keuntungan atas pelepasan aset tetap", "Rp 800.000,00"],
+        ["", "Total Pendapatan", "Rp 463.600.000,00"],
+        [],
+        ["Pengeluaran"],
+        ["", "Harga Pokok Penjualan", "Rp 316.000.000,00"],
+        ["", "Biaya Beban Operasional", "Rp 114.000.000,00"],
+        ["", "Beban Bunga", "Rp 1.700.000,00"],
+        ["", "Kerugian akibat kerusakan", "Rp 300.000,00"],
+        ["", "Total Pengeluaran", "Rp 432.000.000,00"],
+        [],
+        ["Pendapatan Bersih", "", "Rp 31.000.000,00"]
     ];
-  
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData); 
+
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan");
 
     const headerStyle = { font: { bold: true } };
     worksheet["A1"].s = headerStyle;
-    worksheet["B1"].s = headerStyle;
-    worksheet["C1"].s = headerStyle;
-    worksheet["D1"].s = headerStyle;
-  
-    XLSX.writeFile(workbook, "LaporanKeuangan.xlsx");
-  };
+    worksheet["A2"].s = headerStyle;
+    worksheet["A3"].s = headerStyle;
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("Laporan Pemasukan & Pengeluaran", 105, 20, null, null, "center"); 
-  
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("No", 20, 40);
-    doc.text("Tipe", 40, 40);
-    doc.text("Masuk", 100, 40);
-    doc.text("Keluar", 150, 40);
-    doc.line(18, 42, 190, 42); 
-    doc.setFont("helvetica", "normal");
-    let yOffset = 50;
-  
-
-    filteredData.forEach((item, index) => {
-      doc.text(`${item.no}`, 20, yOffset);
-      doc.text(item.tipe, 40, yOffset);
-      doc.text(item.masuk, 100, yOffset);
-      doc.text(item.keluar, 150, yOffset);
-      yOffset += 10;
+    worksheetData.forEach((row, rowIndex) => {
+        if (row[0] === "Pendapatan" || row[0] === "Pengeluaran" || row[0] === "Pendapatan Bersih") {
+            const cell = XLSX.utils.encode_cell({ r: rowIndex, c: 0 });
+            if (worksheet[cell]) worksheet[cell].s = headerStyle;
+        }
     });
-  
-    doc.save("LaporanKeuangan.pdf");
+    XLSX.writeFile(workbook, "LaporanLabaRugi.xlsx");
+};
+const exportToPDF = (startDate, endDate) => {
+  const doc = new jsPDF();
+
+  const formatDate = (date) => {
+      if (!date || isNaN(new Date(date).getTime())) return "-";
+      const options = { year: "numeric", month: "long" };
+      return new Date(date).toLocaleDateString("id-ID", options);
   };
 
-  const handleFilter = (e) => {
-    e.preventDefault();
+  let reportPeriod = "";
+  if (!startDate && !endDate) {
+      reportPeriod = "Periode Semua Data";
+  } else {
+      reportPeriod = `Periode ${formatDate(startDate)} - ${formatDate(endDate)}`;
+  }
 
-    const filtered = reportData.filter((item) => {
-      const itemDate = new Date(item.tanggal.split("-").reverse().join("-")); 
-      const start = startDate ? new Date(startDate) : null;
-      const end = endDate ? new Date(endDate) : null;
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.text("Koperasi Simpan Pinjam Wiyata Mandala", 105, 10, null, null, "center");
+  doc.setFontSize(12);
+  doc.text("Laporan Keuangan", 105, 16, null, null, "center");
+  doc.text(reportPeriod, 105, 22, null, null, "center");
 
-      const isWithinDateRange = (!start || itemDate >= start) && (!end || itemDate <= end);
-      const isCategoryMatch = !category || category === item.kategori || category === "- Semua Kategori -";
-      return isWithinDateRange && isCategoryMatch;
-    });
+  doc.setFont("helvetica", "bold");
+  doc.text("Pendapatan", 20, 35);
 
-    setFilteredData(filtered);
-  };
+  doc.setFont("helvetica", "normal");
+  doc.text("Penjualan Bersih", 30, 43);
+  doc.text("Rp 460.000.000,00", 140, 43, null, null, "right");
+
+  doc.text("Pendapatan Bunga", 30, 50);
+  doc.text("Rp 2.800.000,00", 140, 50, null, null, "right");
+
+  doc.text("Keuntungan atas pelepasan aset tetap", 30, 57);
+  doc.text("Rp 800.000,00", 140, 57, null, null, "right");
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Total Pendapatan", 30, 65);
+  doc.text("Rp 463.600.000,00", 140, 65, null, null, "right");
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Pengeluaran", 20, 80);
+
+  doc.setFont("helvetica", "normal");
+  doc.text("Harga Pokok Penjualan", 30, 88);
+  doc.text("Rp 316.000.000,00", 140, 88, null, null, "right");
+
+  doc.text("Biaya Beban Operasional", 30, 95);
+  doc.text("Rp 114.000.000,00", 140, 95, null, null, "right");
+
+  doc.text("Beban Bunga", 30, 102);
+  doc.text("Rp 1.700.000,00", 140, 102, null, null, "right");
+
+  doc.text("Kerugian akibat kerusakan", 30, 109);
+  doc.text("Rp 300.000,00", 140, 109, null, null, "right");
+
+  doc.setFont("helvetica", "bold");
+  doc.text("Total Pengeluaran", 30, 117);
+  doc.text("Rp 432.000.000,00", 140, 117, null, null, "right");
+
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 0, 0);
+  doc.text("Pendapatan Bersih", 30, 130);
+  doc.text("Rp 31.000.000,00", 140, 130, null, null, "right");
+
+  doc.save("LaporanKeuangan.pdf");
+};
+
+const handleFilter = (e) => {
+  e.preventDefault();
+
+  if (!startDate && !endDate) {
+    console.log("All Data History");
+    setFilteredData(reportData);
+    return;
+  }
+
+  if (
+    (startDate && isNaN(new Date(startDate).getTime())) ||
+    (endDate && isNaN(new Date(endDate).getTime()))
+  ) {
+    console.error("Invalid dates");
+    return;
+  }
+
+  console.log("Start Date:", startDate || "N/A");
+  console.log("End Date:", endDate || "N/A");
+
+  const filtered = reportData.filter((item) => {
+    if (!item.tanggal) {
+      console.warn(`Item is missing 'tanggal':`, item);
+      return false;
+    }
+
+    const startDateObj = startDate ? new Date(startDate) : null;
+    const endDateObj = endDate ? new Date(endDate) : null;
+    const itemDate = new Date(item.tanggal);
+
+    const isAfterStart = !startDate || itemDate >= startDateObj;
+    const isBeforeEnd = !endDate || itemDate <= endDateObj;
+
+    const isWithinRange = isAfterStart && isBeforeEnd;
+
+    return isWithinRange;
+  });
+
+  setFilteredData(filtered);
+};
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -138,19 +230,35 @@ const LaporanKeuangan = () => {
           <h2 className="text-lg font-semibold mb-4">Laporan Pemasukan & Pengeluaran</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-sm">
-            <div><strong>Dari Tanggal:</strong> {startDate || "N/A"}</div>
-            <div><strong>Sampai Tanggal:</strong> {endDate || "N/A"}</div>
-            <div><strong>Kategori:</strong> {category || "Semua Kategori"}</div>
+          <div><strong>Dari Tanggal:</strong> {startDate || "Semua Data"}</div>
+          <div><strong>Sampai Tanggal:</strong> {endDate || "Semua Data"}</div>
+          <div><strong>Kategori:</strong> {category || "Semua Kategori"}</div>
           </div>
 
           <div className="flex space-x-2 mb-4">
-            <button onClick={exportToPDF} className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-              Cetak PDF
-            </button>
-            <button onClick={exportToExcel} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-              Cetak Excel
-            </button>
-          </div>
+          <button
+            onClick={() => exportToPDF(startDate, endDate)}
+            disabled={!startDate || !endDate}
+            className={`py-2 px-4 rounded ${
+              !startDate || !endDate
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600 text-white"
+            }`}
+          >
+            Cetak PDF
+          </button>
+          <button
+            onClick={() => exportToExcel(startDate, endDate)}
+            disabled={!startDate || !endDate}
+            className={`py-2 px-4 rounded ${
+              !startDate || !endDate
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
+            }`}
+          >
+            Cetak Excel
+          </button>
+        </div>
 
           <table className="w-full border border-gray-200 text-center text-sm">
             <thead>
