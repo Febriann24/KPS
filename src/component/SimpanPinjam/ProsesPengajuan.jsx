@@ -11,7 +11,7 @@ import {
   formatRupiah,
   formatDate,
   getCurrentLoggedInData,
-  countDeduksiBulan,
+  countAngsuran,
   deformatRupiah,
   sumDate
 } from '../../utils/utils';
@@ -56,24 +56,33 @@ const ProfileInfomation = ({data}) => {
 }
 
 const PengajuanInformation = ({data}) => {
-  const deduksiBulanan = "Rp " + formatRupiah(countDeduksiBulan(
+  const angsuran = "Rp " + formatRupiah(countAngsuran(
                                     deformatRupiah(String(data.nominal)),
                                     data.bunga,
-                                    data.angsuran
+                                    data.tenor
                                   ))
   const profileFields = [
-    { label: 'Nominal Pinjaman', value: "Rp "+ formatRupiah(String(data.nominal)) },
-    { label: 'Tipe Pinjaman', value: data.tipe },
-    { label: 'Angsuran (Bulan)', value: data.angsuran },
-    { label: 'Deduksi Bulanan', value: deduksiBulanan},
+    { label: 'Nominal Pengajuan', value: "Rp "+ formatRupiah(String(data.nominal)) },
+    { label: 'Tipe Pengajuan', value: data.tipe },
     { label: 'Tanggal Diajukan', value: data.tanggal},
-    { label: 'Keperluan Pinjaman', value: data.alasan },
   ];
 
-  if (data.status_code == "APPROVED") {
+  if(data.pengajuan == "PINJAMAN") {
+    profileFields.push(
+      { label: 'Tenor (Bulan)', value: data.tenor },
+      { label: `Angsuran (${data.bunga}%)`, value: angsuran},
+      { label: 'Keperluan Pengajuan', value: data.alasan },
+    )
+  }
+
+  if (data.status_code == "APPROVED" && data.pengajuan == "PINJAMAN") {
     profileFields.push(
       { label: 'Aktif Sejak', value: formatDate(data.DTM_APPROVED) },
-      { label: 'Aktif Hingga', value: sumDate(data.DTM_APPROVED, data.angsuran) }
+      { label: 'Aktif Hingga', value: sumDate(data.DTM_APPROVED, data.tenor) }
+    )
+  } else if(data.status_code == "APPROVED" && data.pengajuan == "SIMPANAN") {
+    profileFields.push(
+      { label: 'Tanggal Disetujui', value: formatDate(data.DTM_APPROVED) },
     )
   }
 
@@ -97,10 +106,12 @@ const PengajuanInformation = ({data}) => {
   );
 }
 
-const handleChangeStatus = async (id, newStatus, userData) => {
+const handleChangeStatus = async (id, pengajuan, newStatus, userData) => {
   if(userData?.UUID_MS_USER && userData?.MS_JOB.JOB_CODE == "PENGURUS"){
     try {
-    const response = await axios.patch("http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", {
+      console.log(id, pengajuan, newStatus)
+    const response = await axios.patch("http://localhost:5000/updateStatusPengajuan", {
+      "PENGAJUAN": pengajuan,
       "id": id,
       "status": newStatus
     });
@@ -111,7 +122,7 @@ const handleChangeStatus = async (id, newStatus, userData) => {
   }
 }
 
-const PengajuanButton = ({ id, status }) => {
+const PengajuanButton = ({ id, status, pengajuan }) => {
   const userData = getCurrentLoggedInData();
   if(userData?.UUID_MS_USER) {
     if (status === 'ACTIVE' && userData?.MS_JOB.JOB_CODE == "PENGURUS") {
@@ -121,7 +132,7 @@ const PengajuanButton = ({ id, status }) => {
           className="bg-green-500 text-white 
           px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
           hover:shadow-sm hover:bg-green-400 transition-all duration-300"
-          onClick={() => handleChangeStatus(id, 'APPROVED', userData)}
+          onClick={() => handleChangeStatus(id, pengajuan, 'APPROVED', userData)}
           >
             SETUJU
           </button>
@@ -130,7 +141,7 @@ const PengajuanButton = ({ id, status }) => {
           className="bg-red-500 text-white 
           px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
           hover:shadow-sm hover:bg-red-400 transition-all duration-300"
-          onClick={() => handleChangeStatus(id, 'DECLINED')}
+          onClick={() => handleChangeStatus(id, pengajuan, 'DECLINED', userData)}
           >
             TOLAK
           </button>
@@ -164,7 +175,7 @@ const PengajuanButton = ({ id, status }) => {
 }
 
 const Information = () => {
-  const { id } = useParams();
+  const { id, pengajuan } = useParams();
   const [data, setData] = useState({})
   const [showPinModal, setShowPinModal] = useState(false);
   const [showCetakModal, setShowCetakModal] = useState(false);
@@ -173,10 +184,20 @@ const Information = () => {
   useEffect(() => {
     const fetchDataPengajuan = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/${id}`)
-        const obj = response.data;
+        const response = await axios.post(`http://localhost:5000/getPengajuan`, {
+          PENGAJUAN: pengajuan,
+          UUID_MS_TYPE: "", 
+          UUID_MS_USER: "", 
+          UUID_MS_STATUS: "",
+          UUID_PENGAJUAN_PINJAMAN: (pengajuan=="PINJAMAN"? id : ""),
+          UUID_PENGAJUAN_SIMPANAN: (pengajuan=="SIMPANAN"? id : "")
+        });
+        console.log(response)
+
+        const obj = response.data[0]
         const formattedData = {
-          id: obj.UUID_PENGAJUAN_PINJAMAN,
+          id: obj.UUID_PENGAJUAN_PINJAMAN || obj.UUID_PENGAJUAN_SIMPANAN,
+          pengajuan: pengajuan,
           DTM_APPROVED: obj.DTM_APPROVED,
 
           nama: obj.user.NAMA_LENGKAP,
@@ -186,14 +207,14 @@ const Information = () => {
           unitkerja: obj.user.UNIT_KERJA,
           noanggota: obj.user.NOMOR_ANGGOTA,
 
-          nominal: obj.NOMINAL_UANG,
+          nominal: obj.NOMINAL,
           tanggal: formatDate(obj.DTM_CRT),
           tipe: obj.type.TYPE_NAME,
-          angsuran: obj.type.ANGSURAN_MONTH,
-          bunga: obj.type.BUNGA_PERCENTAGE,
+          tenor: obj.TENOR,
+          bunga: obj.INTEREST_RATE,
           status_code: obj.status.STATUS_CODE,
           status_name: obj.status.STATUS_NAME,
-          alasan: obj.DESKRIPSI
+          alasan: obj.REASON
         };
         setData(formattedData)
       } catch (error) {
@@ -408,7 +429,7 @@ const Information = () => {
               <PengajuanInformation data={data} />
             </div>
             <div className='my-6'>
-              <PengajuanButton status={data.status_code} id={data.id} />
+              <PengajuanButton status={data.status_code} id={data.id} pengajuan={data.pengajuan} />
             </div>
           </div>
         </div>
@@ -418,7 +439,7 @@ const Information = () => {
 };
 
 
-const PengajuanPinjam = () => {
+const ProsesPengajuan = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="w-full">
@@ -426,7 +447,7 @@ const PengajuanPinjam = () => {
       </div>
 
       <div className='container mx-auto my-4 p-4 justify-center h-auto'>
-        <BackButton nav="/listPengajuanUser"/>
+        <BackButton nav="/ListPengajuan"/>
         <Information />
       </div>
 
@@ -437,4 +458,4 @@ const PengajuanPinjam = () => {
   );
 };
 
-export default PengajuanPinjam;
+export default ProsesPengajuan;

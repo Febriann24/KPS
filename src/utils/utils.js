@@ -36,7 +36,7 @@ export const sumDate = (string, num) => {
   }
   
 
-export const countDeduksiBulan = (nominal, bunga, totalBulan) => {
+export const countAngsuran = (nominal, bunga, totalBulan) => {
     const formula = Math.round((nominal / totalBulan) + ((nominal * bunga/100)/totalBulan))
     if (formula == 0) {
         return '0';
@@ -46,29 +46,25 @@ export const countDeduksiBulan = (nominal, bunga, totalBulan) => {
 }
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 export const getCurrentLoggedInID = () => {
-    const navigate = useNavigate();
     const [ID, setID] = useState(null); // Initially null to indicate loading
 
     useEffect(() => {
         const refreshToken = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/token");
-                localStorage.setItem('accessToken', response.data.accessToken);
-                const decoded = jwtDecode(response.data.accessToken);
+                const accessToken = localStorage.getItem('accessToken');
+                const decoded = jwtDecode(accessToken);
+                
                 setID(decoded.userId); // Update the state with userId
             } catch (error) {
-                if (error.response) {
-                    navigate("/"); // Redirect if there's an error with the token
-                }
+                console.log(error);
             }
         };
 
         refreshToken(); // Call the refreshToken function when the hook is called
-    }, [navigate]);
+    }, []);
 
     return ID; // Return the userId (which can be null if not yet fetched)
 };
@@ -93,5 +89,8 @@ export const getCurrentLoggedInData = () => {
 }
 
 export function isBetween(num, min, max) {
+    if (min==0 && max==0) {
+        return true;
+    }
     return num >= min && num <= max;
   }

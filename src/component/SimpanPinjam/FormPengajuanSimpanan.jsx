@@ -9,34 +9,30 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 import { 
   formatRupiah,
   deformatRupiah,
-  countDeduksiBulan,
   getCurrentLoggedInData,
   isBetween,
  } from "../../utils/utils"
 import axios from "axios";
 
-function FormAjukanSimpan() {
+function FormPengajuanSimpanan() {
  const navigate = useNavigate(); // Create navigate function for navigation
  const userData = getCurrentLoggedInData();
  const [formData, setFormData] = useState({
   maksimalSimpanan: '0',
   minimalSimpanan: '0',
   nominalSimpanan: '0',
-  tipeSimpanan: '',
-  angsuran: '0',
-  tagihanBulanan: '100000',
-  bunga: '0',
-  deduksiBulanan: '0',
-  keperluanSimpanan: '',
+  typeSimpanan: '',
   setuju: false,
-  tipeSimpananID: '',
+  typeSimpananID: '',
  });
 
  const [typeSimpanan, setTypeSimpanan] = useState([]);
  useEffect(() => {
   const fetchTypeSimpanan = async () => {
       try {
-          const response = await axios.get('http://localhost:5000/MS_TYPE_SIMPANAN/getTypeSimpanan'); // Update with your actual endpoint
+          const response = await axios.post('http://localhost:5000/getType/SIMPANAN', {
+            "IS_MANDATORY": "0"
+          }); // Update with your actual endpoint
           setTypeSimpanan(response.data);
       } catch (error) {
           console.error('Error fetching type simpanan:', error);
@@ -69,16 +65,14 @@ function FormAjukanSimpan() {
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
     const selectedOption = typeSimpanan.find(item => item.TYPE_NAME === selectedValue);
-    console.log(selectedValue)
     setFormData((prevData) => ({
       ...prevData,
-      tipeSimpanan: selectedValue, // Update formData with selected type
-      angsuran: selectedOption ? selectedOption.ANGSURAN_MONTH : '0',
-      minimalSimpanan: selectedOption ? formatRupiah(selectedOption.MINIMUM_SIMPANAN) : '0',
-      maksimalSimpanan: selectedOption ? formatRupiah(selectedOption.MAXIMUM_SIMPANAN) : '0',
-      bunga: selectedOption ? selectedOption.BUNGA_PERCENTAGE : '0',
-      tipeSimpananID: selectedOption ? selectedOption.UUID_TYPE_SIMPANAN : '',
-    }));
+      typeSimpanan: selectedValue, // Update formData with selected type
+      minimalSimpanan: selectedOption && selectedOption.MINIMUM_SIMPANAN ? formatRupiah(selectedOption.MINIMUM_SIMPANAN) : '0',
+      maksimalSimpanan: selectedOption && selectedOption.MAXIMUM_SIMPANAN ? formatRupiah(selectedOption.MAXIMUM_SIMPANAN) : '0',
+      typeSimpananID: selectedOption ? selectedOption.UUID_TYPE_SIMPANAN : '',
+      autoApprove: selectedOption ? selectedOption.IS_AUTO_APPROVE : '',
+    }))
   };
 
   const [invalidFields, setInvalidFields] = useState({});
@@ -96,15 +90,21 @@ function FormAjukanSimpan() {
     {
       "UUID_MS_USER": userData?.UUID_MS_USER,
       "UUID_MS_STATUS_SIMPANAN": 1,
-      "UUID_MS_TYPE_SIMPANAN": formData.tipeSimpananID,
+      "UUID_MS_TYPE_SIMPANAN": formData.typeSimpananID,
       "USR_CRT": userData?.EMAIL,
-      "NOMINAL_UANG": deformatRupiah(formData.nominalSimpanan),
-      "DESKRIPSI": formData.keperluanSimpanan
+      "NOMINAL": deformatRupiah(formData.nominalSimpanan)
     }
     try {
-      const response = await axios.post('http://localhost:5000/TR_PENGAJUAN_SIMPANAN/createPengajuanSimpanan', dataSubmit);
+      const response = await axios.post('http://localhost:5000/createPengajuan/SIMPANAN', dataSubmit);
+      if (formData.autoApprove == "1") {
+        const autoApprove = await axios.patch("http://localhost:5000/updateStatusPengajuan", {
+          "PENGAJUAN": "SIMPANAN",
+          "id": response.data.UUID_PENGAJUAN_SIMPANAN,
+          "status": "APPROVED"
+        });
+      }
       console.log('Form Submitted:', dataSubmit);
-      navigate(`/PengajuanSimpanan/${response.data.UUID_PENGAJUAN_SIMPANAN}`);
+      navigate(`/ProsesPengajuan/SIMPANAN/${response.data.UUID_PENGAJUAN_SIMPANAN}`);
     } catch (error) {
       console.log('Error submitting form:', error);
       alert(error.response ? error.response.data.message : 'An unexpected error occurred.');
@@ -118,10 +118,8 @@ function FormAjukanSimpan() {
       parseInt(deformatRupiah(formData.minimalSimpanan)),
       parseInt(deformatRupiah(formData.maksimalSimpanan))
     )
-  console.log(checkNominal)
-  if (formData.tipeSimpanan === '') invalidFields.tipeSimpanan = true;
-  if ((formData.nominalSimpanan.trim() === '') || checkNominal) invalidFields.nominalSimpanan = true;
-  if (formData.keperluanSimpanan.trim() === '') invalidFields.keperluanSimpanan = true;
+  if (formData.typeSimpanan === '') invalidFields.typeSimpanan = true;
+  if ((formData.nominalSimpanan.trim() === '0') || checkNominal) invalidFields.nominalSimpanan = true;
   if (formData.setuju === false) invalidFields.setuju = true;
 
   return invalidFields; // Return the invalid fields
@@ -129,9 +127,9 @@ function FormAjukanSimpan() {
 
  return (
   <>
-  <div>
+  <div className='min-h-screen flex flex-col'>
   <H />
-  <div className="flex justify-center space-x-8 mt-10 my-4">
+  <div className="flex justify-center space-x-8 mt-10 my-4 container mx-auto p-4 flex-grow">
     <div className="w-2/3">
     <h2 className="text-2xl font-semibold text-center mb-6">Formulir Pengajuan Simpanan</h2>
 
@@ -156,7 +154,7 @@ function FormAjukanSimpan() {
         <div>
         <label className="block mb-1 font-medium">Nomor Telepon</label>
         <input
-          type="number"
+          type="text"
           name="nomorTelepon"
           value={userData?.NOMOR_TELP}
           onChange={handleChange}
@@ -212,13 +210,15 @@ function FormAjukanSimpan() {
         />
         </div>
         
-      <div>
-        <label className="block mb-1 font-medium">Tipe Simpanan</label>
+      <div className='flex flex-col justify-end'>
+        <label className="block mb-1 font-medium">Tipe Simpanan 
+          {invalidFields.typeSimpanan && (<p className='text-red-500 text-sm'>Mohon pilih tipe simpanan.</p>)}
+        </label>
         <select
-        name="tipeSimpanan"
-        value={formData.tipeSimpanan}
+        name="typeSimpanan"
+        value={formData.typeSimpanan}
         onChange={handleSelectChange}
-        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-lg ${invalidFields.tipeSimpanan ? 'bg-red-100' : ''}`}
+        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-md ${invalidFields.typeSimpanan ? 'bg-red-100' : ''}`}
         required
         >
         <option value="">Pilih Tipe Simpanan</option>
@@ -231,45 +231,11 @@ function FormAjukanSimpan() {
 
         </select>
       </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Angsuran (Bulan)</label>
-        <input
-        type="number"
-        name="angsuran"
-        value={formData.angsuran}
-        onChange={handleChange}
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-        readOnly
-        required
-        />
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Minimal Nominal Simpanan (Rupiah)</label>
-        <div className='flex items-center'>
-        <input
-        type="text"
-        value={formData.minimalSimpanan}
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-        readOnly
-        />
-        </div>
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Maksimal Nominal Simpanan (Rupiah)</label>
-        <div className='flex items-center'>
-        <input
-        type="text"
-        value={formData.maksimalSimpanan}
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-        readOnly
-        />
-        </div>
-      </div>
-      <div>
-        <label className="block mb-1 font-medium">Nominal Uang Simpanan (Rupiah)</label>
+      <div className='flex flex-col justify-end'>
+        <label className="block mb-1 font-medium">Nominal Uang <br /> {formData.maksimalSimpanan != 0 && (<span className='font-normal'>(minimal: Rp {formData.minimalSimpanan}, 
+          maksimal: Rp {formData.maksimalSimpanan})</span>)}
+          {invalidFields.nominalSimpanan && (<p className='text-red-500 text-sm'>Mohon isi nominal dengan benar.</p>)}
+        </label>
         <div className='flex items-center'>
         <input
         type="text"
@@ -277,41 +243,10 @@ function FormAjukanSimpan() {
         value={formData.nominalSimpanan}
         onChange={handleChange}
         placeholder="Nominal Uang Simpanan"
-        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-lg ${invalidFields.nominalSimpanan ? 'bg-red-100' : ''}`}
+        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-md ${invalidFields.nominalSimpanan ? 'bg-red-100' : ''}`}
         required
         />
         </div>
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Deduksi Bulanan (Bunga: {formData.bunga}%)</label>
-        <div className='flex items-center'>
-        <input
-        type="text"
-        name="deduksiBulanan"
-        value={formatRupiah(countDeduksiBulan(
-          deformatRupiah(formData.nominalSimpanan),
-          formData.bunga,
-          formData.angsuran
-        ))}
-        onChange={handleChange}
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-        readOnly
-        required
-        />
-        </div>
-      </div>
-
-      <div className="col-span-2">
-        <label className="block mb-1 font-medium">Keperluan Simpanan</label>
-        <textarea
-        name="keperluanSimpanan"
-        value={formData.keperluanSimpanan}
-        onChange={handleChange}
-        placeholder="Keperluan Simpanan"
-        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-lg ${invalidFields.keperluanSimpanan ? 'bg-red-100' : ''}`}
-        required
-        />
       </div>
       </form>
     </div>
@@ -319,7 +254,7 @@ function FormAjukanSimpan() {
 
     <div className=" flex flex-col space-y-6">
       <div className="justify-start mt-10">
-        <label className={`flex items-center space-x-2 ${invalidFields.setuju ? 'bg-red-100' : ''}`}>
+        <label className={`flex items-center space-x-2 ${invalidFields.setuju ? 'bg-red-200 p-2 rounded-sm  ' : ''}`}>
         <input
           type="checkbox"
           name="setuju"
@@ -342,7 +277,7 @@ function FormAjukanSimpan() {
         </button>
         <button
         type="button"
-        onClick={() => navigate('/SimpanSimpan')} // Navigate back to SimpanSimpan
+        onClick={() => navigate('/HalamanAwalSimpanPinjam')} // Navigate back to SimpanPinjam
         className="bg-gray-300 text-black w-full px-6 py-2 rounded shadow hover:bg-gray-400 transition duration-200 mt-2"
         >
         Kembali
@@ -364,4 +299,4 @@ function FormAjukanSimpan() {
 );
 }
 
-export default FormAjukanSimpan;
+export default FormPengajuanSimpanan;

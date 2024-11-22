@@ -9,34 +9,34 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 import { 
   formatRupiah,
   deformatRupiah,
-  countDeduksiBulan,
+  countAngsuran,
   getCurrentLoggedInData,
   isBetween,
  } from "../../utils/utils"
 import axios from "axios";
 
-function FormAjukanPinjam() {
+function FormPengajuanPinjaman() {
  const navigate = useNavigate(); // Create navigate function for navigation
  const userData = getCurrentLoggedInData();
  const [formData, setFormData] = useState({
   maksimalPinjaman: '0',
   minimalPinjaman: '0',
   nominalPinjaman: '0',
-  tipePinjaman: '',
-  angsuran: '0',
+  typePinjaman: '',
+  tenor: '0',
   tagihanBulanan: '100000',
   bunga: '0',
   deduksiBulanan: '0',
   keperluanPinjaman: '',
   setuju: false,
-  tipePinjamanID: '',
+  typePinjamanID: '',
  });
 
  const [typePinjaman, setTypePinjaman] = useState([]);
  useEffect(() => {
   const fetchTypePinjaman = async () => {
       try {
-          const response = await axios.get('http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman'); // Update with your actual endpoint
+          const response = await axios.post('http://localhost:5000/getType/PINJAMAN'); // Update with your actual endpoint
           setTypePinjaman(response.data);
       } catch (error) {
           console.error('Error fetching type pinjaman:', error);
@@ -72,12 +72,12 @@ function FormAjukanPinjam() {
     console.log(selectedValue)
     setFormData((prevData) => ({
       ...prevData,
-      tipePinjaman: selectedValue, // Update formData with selected type
-      angsuran: selectedOption ? selectedOption.ANGSURAN_MONTH : '0',
+      typePinjaman: selectedValue, // Update formData with selected type
+      tenor: selectedOption ? selectedOption.TENOR : '0',
       minimalPinjaman: selectedOption ? formatRupiah(selectedOption.MINIMUM_PINJAMAN) : '0',
       maksimalPinjaman: selectedOption ? formatRupiah(selectedOption.MAXIMUM_PINJAMAN) : '0',
-      bunga: selectedOption ? selectedOption.BUNGA_PERCENTAGE : '0',
-      tipePinjamanID: selectedOption ? selectedOption.UUID_TYPE_PINJAMAN : '',
+      bunga: selectedOption ? selectedOption.INTEREST_RATE : '0',
+      typePinjamanID: selectedOption ? selectedOption.UUID_TYPE_PINJAMAN : '',
     }));
   };
 
@@ -96,15 +96,17 @@ function FormAjukanPinjam() {
     {
       "UUID_MS_USER": userData?.UUID_MS_USER,
       "UUID_MS_STATUS_PINJAMAN": 1,
-      "UUID_MS_TYPE_PINJAMAN": formData.tipePinjamanID,
+      "UUID_MS_TYPE_PINJAMAN": formData.typePinjamanID,
       "USR_CRT": userData?.EMAIL,
-      "NOMINAL_UANG": deformatRupiah(formData.nominalPinjaman),
-      "DESKRIPSI": formData.keperluanPinjaman
+      "NOMINAL": deformatRupiah(formData.nominalPinjaman),
+      "REASON": formData.keperluanPinjaman,
+      "TENOR": formData.tenor,
+      "INTEREST_RATE": formData.bunga
     }
     try {
-      const response = await axios.post('http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman', dataSubmit);
+      const response = await axios.post('http://localhost:5000/createPengajuan/PINJAMAN', dataSubmit);
       console.log('Form Submitted:', dataSubmit);
-      navigate(`/PengajuanPinjaman/${response.data.UUID_PENGAJUAN_PINJAMAN}`);
+      navigate(`/ProsesPengajuan/PINJAMAN/${response.data.UUID_PENGAJUAN_PINJAMAN}`);
     } catch (error) {
       console.log('Error submitting form:', error);
       alert(error.response ? error.response.data.message : 'An unexpected error occurred.');
@@ -118,9 +120,8 @@ function FormAjukanPinjam() {
       parseInt(deformatRupiah(formData.minimalPinjaman)),
       parseInt(deformatRupiah(formData.maksimalPinjaman))
     )
-  console.log(checkNominal)
-  if (formData.tipePinjaman === '') invalidFields.tipePinjaman = true;
-  if ((formData.nominalPinjaman.trim() === '') || checkNominal) invalidFields.nominalPinjaman = true;
+  if (formData.typePinjaman === '') invalidFields.typePinjaman = true;
+  if ((formData.nominalPinjaman.trim() === '0') || checkNominal) invalidFields.nominalPinjaman = true;
   if (formData.keperluanPinjaman.trim() === '') invalidFields.keperluanPinjaman = true;
   if (formData.setuju === false) invalidFields.setuju = true;
 
@@ -129,9 +130,9 @@ function FormAjukanPinjam() {
 
  return (
   <>
-  <div>
+  <div className='min-h-screen flex flex-col'>
   <H />
-  <div className="flex justify-center space-x-8 mt-10 my-4">
+  <div className="flex justify-center space-x-8 mt-10 my-4 container mx-auto p-4 flex-grow">
     <div className="w-2/3">
     <h2 className="text-2xl font-semibold text-center mb-6">Formulir Pengajuan Pinjaman</h2>
 
@@ -156,7 +157,7 @@ function FormAjukanPinjam() {
         <div>
         <label className="block mb-1 font-medium">Nomor Telepon</label>
         <input
-          type="number"
+          type="text"
           name="nomorTelepon"
           value={userData?.NOMOR_TELP}
           onChange={handleChange}
@@ -213,12 +214,14 @@ function FormAjukanPinjam() {
         </div>
         
       <div>
-        <label className="block mb-1 font-medium">Tipe Pinjaman</label>
+        <label className="block mb-1 font-medium">Tipe Pinjaman 
+          {invalidFields.typePinjaman && (<p className='text-red-500 text-sm'>Mohon pilih tipe pinjaman.</p>)}
+        </label>
         <select
-        name="tipePinjaman"
-        value={formData.tipePinjaman}
+        name="typePinjaman"
+        value={formData.typePinjaman}
         onChange={handleSelectChange}
-        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-lg ${invalidFields.tipePinjaman ? 'bg-red-100' : ''}`}
+        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-md ${invalidFields.typePinjaman ? 'bg-red-100' : ''}`}
         required
         >
         <option value="">Pilih Tipe Pinjaman</option>
@@ -232,44 +235,23 @@ function FormAjukanPinjam() {
         </select>
       </div>
 
-      <div>
-        <label className="block mb-1 font-medium">Angsuran (Bulan)</label>
+      <div className='flex flex-col justify-end'>
+        <label className="block mb-1 font-medium">Tenor (Bulan)</label>
         <input
-        type="number"
-        name="angsuran"
-        value={formData.angsuran}
+        type="text"
+        name="tenor"
+        value={formData.tenor}
         onChange={handleChange}
         className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
         readOnly
         required
         />
       </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Minimal Nominal Pinjaman (Rupiah)</label>
-        <div className='flex items-center'>
-        <input
-        type="text"
-        value={formData.minimalPinjaman}
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-        readOnly
-        />
-        </div>
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Maksimal Nominal Pinjaman (Rupiah)</label>
-        <div className='flex items-center'>
-        <input
-        type="text"
-        value={formData.maksimalPinjaman}
-        className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-        readOnly
-        />
-        </div>
-      </div>
-      <div>
-        <label className="block mb-1 font-medium">Nominal Uang Pinjaman (Rupiah)</label>
+      <div className='flex flex-col justify-end'>
+        <label className="block mb-1 font-medium">Nominal Uang <br />{formData.maksimalPinjaman != 0 && (<span className='font-normal'>(minimal: Rp {formData.minimalPinjaman}, 
+          maksimal: Rp {formData.maksimalPinjaman})</span>)}
+          {invalidFields.nominalPinjaman && (<p className='text-red-500 text-sm'>Mohon isi nominal dengan benar.</p>)}
+        </label>
         <div className='flex items-center'>
         <input
         type="text"
@@ -277,22 +259,22 @@ function FormAjukanPinjam() {
         value={formData.nominalPinjaman}
         onChange={handleChange}
         placeholder="Nominal Uang Pinjaman"
-        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-lg ${invalidFields.nominalPinjaman ? 'bg-red-100' : ''}`}
+        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-md ${invalidFields.nominalPinjaman ? 'bg-red-100' : ''}`}
         required
         />
         </div>
       </div>
 
-      <div>
+      <div className='flex flex-col justify-end'>
         <label className="block mb-1 font-medium">Deduksi Bulanan (Bunga: {formData.bunga}%)</label>
         <div className='flex items-center'>
         <input
         type="text"
         name="deduksiBulanan"
-        value={formatRupiah(countDeduksiBulan(
+        value={formatRupiah(countAngsuran(
           deformatRupiah(formData.nominalPinjaman),
           formData.bunga,
-          formData.angsuran
+          formData.tenor
         ))}
         onChange={handleChange}
         className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
@@ -303,13 +285,13 @@ function FormAjukanPinjam() {
       </div>
 
       <div className="col-span-2">
-        <label className="block mb-1 font-medium">Keperluan Pinjaman</label>
+        <label className="block mb-1 font-medium">Keperluan Pinjaman {invalidFields.keperluanPinjaman && (<p className='text-red-500 text-sm'>Mohon isi keperluan pinjaman.</p>)}</label>
         <textarea
         name="keperluanPinjaman"
         value={formData.keperluanPinjaman}
         onChange={handleChange}
         placeholder="Keperluan Pinjaman"
-        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-lg ${invalidFields.keperluanPinjaman ? 'bg-red-100' : ''}`}
+        className={`w-full p-2 border rounded bg-white focus:outline-none focus:ring focus:ring-blue-300 shadow-md ${invalidFields.keperluanPinjaman ? 'bg-red-100' : ''}`}
         required
         />
       </div>
@@ -319,7 +301,7 @@ function FormAjukanPinjam() {
 
     <div className=" flex flex-col space-y-6">
       <div className="justify-start mt-10">
-        <label className={`flex items-center space-x-2 ${invalidFields.setuju ? 'bg-red-100' : ''}`}>
+        <label className={`flex items-center space-x-2 ${invalidFields.setuju ? 'bg-red-100 p-2 rounded-sm  ' : ''}`}>
         <input
           type="checkbox"
           name="setuju"
@@ -342,7 +324,7 @@ function FormAjukanPinjam() {
         </button>
         <button
         type="button"
-        onClick={() => navigate('/SimpanPinjam')} // Navigate back to SimpanPinjam
+        onClick={() => navigate('/HalamanAwalSimpanPinjam')} // Navigate back to SimpanPinjam
         className="bg-gray-300 text-black w-full px-6 py-2 rounded shadow hover:bg-gray-400 transition duration-200 mt-2"
         >
         Kembali
@@ -364,4 +346,4 @@ function FormAjukanPinjam() {
 );
 }
 
-export default FormAjukanPinjam;
+export default FormPengajuanPinjaman;

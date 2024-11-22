@@ -80,7 +80,7 @@ const DataTable = ({ data, onSort }) => {
             <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
             <td className="border p-2 text-center">
               {row.TR_PENGAJUAN_PINJAMANs.length > 0
-                ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG)
+                ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL)
                 : 'N/A'}
             </td>
             <td className="border p-2 text-center">{row.savings || 'N/A'}</td>
@@ -135,7 +135,7 @@ const ListUser = () => {
         return row.createdAt && new Date(row.createdAt).toLocaleDateString().includes(searchTerm);
       } else if (selectedField === "TR_PENGAJUAN_PINJAMANs") {
         return row.TR_PENGAJUAN_PINJAMANs.length > 0
-          && row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG.toString().includes(searchTerm);
+          && row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL.toString().includes(searchTerm);
       } else if (selectedField === "savings") {
         return row.savings && row.savings.toString().includes(searchTerm);
       } else if (selectedField === "principalSavings") {
@@ -158,8 +158,8 @@ const ListUser = () => {
       let aValue, bValue;
 
       if (column === 'TR_PENGAJUAN_PINJAMANs') {
-        aValue = a.TR_PENGAJUAN_PINJAMANs.length > 0 ? a.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 0;
-        bValue = b.TR_PENGAJUAN_PINJAMANs.length > 0 ? b.TR_PENGAJUAN_PINJAMANs[0].NOMINAL_UANG : 0;
+        aValue = a.TR_PENGAJUAN_PINJAMANs.length > 0 ? a.TR_PENGAJUAN_PINJAMANs[0].NOMINAL : 0;
+        bValue = b.TR_PENGAJUAN_PINJAMANs.length > 0 ? b.TR_PENGAJUAN_PINJAMANs[0].NOMINAL : 0;
       } else {
         aValue = a[column];
         bValue = b[column];

@@ -13,7 +13,7 @@ import {
     getOneUser
 } from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
-import { refreshToken } from "../controllers/RefreshToken.js";
+import { refreshToken, getServerStatus } from "../controllers/RefreshToken.js";
 
 const router = express.Router();
 
@@ -28,5 +28,6 @@ router.put("/approve/:id", approveUser);
 router.delete("/reject/:id", rejectUser);
 router.get("/approval", UserApproval);
 router.get("/getOneUser/:id", getOneUser);
+router.get("/getServerStatus", getServerStatus);
 
 export default router;

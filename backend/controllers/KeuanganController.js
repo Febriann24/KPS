@@ -48,7 +48,7 @@ export const getTotalPengeluaranAnggota = async (req, res) => {
         }
 
         // Execute the query and get the sum of total_UANG
-        const total = await PengajuanPinjaman.sum("NOMINAL_UANG", {
+        const total = await PengajuanPinjaman.sum("NOMINAL", {
             where: filter
         });
 
@@ -57,7 +57,7 @@ export const getTotalPengeluaranAnggota = async (req, res) => {
         });
         let totalEachType = [];
         for (let type of typePinjaman) {
-            const total = await PengajuanPinjaman.sum("NOMINAL_UANG", {
+            const total = await PengajuanPinjaman.sum("NOMINAL", {
                 where: {
                     ...filter,
                     UUID_MS_TYPE_PINJAMAN: type.UUID_TYPE_PINJAMAN,

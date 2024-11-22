@@ -1,6 +1,14 @@
 import Users from "../models/MS_USER.js";
 import jwt from "jsonwebtoken";
 
+export const getServerStatus = async (req, res) => {
+    try {
+        res.status(200).json("ONLINE");
+    } catch (error) {
+        res.status(500).json("OFFLINE");
+    }
+}
+
 export const refreshToken = async (req, res) => {
     try {
         const refreshToken = req.cookies.refreshToken;

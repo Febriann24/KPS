@@ -1,33 +1,28 @@
 import express from "express";
 import { 
     getPengajuan,
-    getStatusPinjaman,
-    getTypePinjaman,
-    getDetailPengajuanPinjaman,
-    getOneDetailPengajuanPinjaman,
-    createStatusPinjaman,
-    createTypePinjaman,
-    createPengajuanPinjaman,
-    updateStatusPengajuanPinjaman,
-    getOneTypePinjaman,
+    getStatus,
+    getType,
+    createStatus,
+    createType,
+    createPengajuan,
+    updateStatusPengajuan,
     getActivePengajuanPinjamanAnggota,
+    getActivePengajuanSimpananAnggota,
  } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
 
 router.post("/getPengajuan", getPengajuan);
-router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/", getDetailPengajuanPinjaman);
-router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/:id", getOneDetailPengajuanPinjaman);
-router.get("/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/anggotaId/:id", getDetailPengajuanPinjaman);
-router.get("/MS_STATUS_PINJAMAN/getStatusPinjaman", getStatusPinjaman);
-router.get("/MS_TYPE_PINJAMAN/getTypePinjaman", getTypePinjaman);
-router.get("/getOneTypePinjaman", getOneTypePinjaman);
-router.get("/getActivePengajuanPinjamanAnggota/:id/:month/:year", getActivePengajuanPinjamanAnggota);
+router.get("/getStatus/:PENGAJUAN", getStatus);
+router.post("/getType/:PENGAJUAN", getType);
+router.post("/getActivePengajuanPinjamanAnggota", getActivePengajuanPinjamanAnggota);
+router.post("/getActivePengajuanSimpananAnggota", getActivePengajuanSimpananAnggota);
 
-router.post("/MS_STATUS_PINJAMAN/createStatusPinjaman", createStatusPinjaman);
-router.post("/MS_TYPE_PINJAMAN/createTypePinjaman", createTypePinjaman);
-router.post("/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman", createPengajuanPinjaman);
-router.patch("/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman", updateStatusPengajuanPinjaman);
+router.post("/createStatus/:PENGAJUAN", createStatus);
+router.post("/createType/:PENGAJUAN", createType);
+router.post("/createPengajuan/:PENGAJUAN", createPengajuan);
+router.patch("/updateStatusPengajuan", updateStatusPengajuan);
 
 
 export default router;

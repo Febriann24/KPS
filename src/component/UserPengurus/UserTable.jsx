@@ -65,11 +65,11 @@ const UserTable = () => {
     : null;
 
   const totalLoanAmount = userData.TR_PENGAJUAN_PINJAMANs
-    ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.NOMINAL_UANG, 0)
+    ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.NOMINAL, 0)
     : 0;
 
   const totalInterestPaid = userData.TR_PENGAJUAN_PINJAMANs
-    ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.BUNGA, 0)
+    ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.INTEREST_RATE, 0)
     : 0;
 
   const loanStatus = latestLoan && latestLoan.status
@@ -99,7 +99,7 @@ const UserTable = () => {
               <span className="font-semibold">Jumlah Pinjaman Terakhir:</span>
               <p className="ml-2">
                 {latestLoan
-                  ? 'Rp ' + formatRupiah(latestLoan.NOMINAL_UANG) + ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
+                  ? 'Rp ' + formatRupiah(latestLoan.NOMINAL) + ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
                   : 'N/A'}
               </p>
             </div>

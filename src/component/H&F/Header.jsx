@@ -19,6 +19,7 @@ function Header() {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        console.log(token)
         if (token) {
             setIsLoggedIn(true);  // Menandakan pengguna sudah login
         } else {
@@ -69,8 +70,8 @@ function Header() {
 
                         {(role === '1' || role === "2") && isLoggedIn && (
                             <li className="ml-[30px] mx-[-40px]">
-                                <div className={`text-white ${location.pathname === '/SimpanPinjam' ? 'border-b-2 border-white' : ''} whitespace-nowrap`}>
-                                    <Link to='/SimpanPinjam'>Simpan Pinjam</Link>
+                                <div className={`text-white ${location.pathname === '/HalamanAwalSimpanPinjam' ? 'border-b-2 border-white' : ''} whitespace-nowrap`}>
+                                    <Link to='/HalamanAwalSimpanPinjam'>Simpan Pinjam</Link>
                                 </div>
                             </li>
                         )}

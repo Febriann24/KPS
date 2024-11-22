@@ -46,21 +46,23 @@ const LoanData = () => {
           if (userData?.MS_JOB.JOB_CODE !== 'PENGURUS') {
             UUID_MS_USER = userData?.UUID_MS_USER;
           }
+          console.log(userData?.MS_JOB.JOB_CODE)
           const response = await axios.post(`http://localhost:5000/getPengajuan`, {
-            PENGAJUAN: "PINJAMAN",
+            PENGAJUAN: "ALL",
             UUID_MS_TYPE: "", 
             UUID_MS_USER: UUID_MS_USER, 
             UUID_MS_STATUS: "" 
           });
           const formattedData = response.data.map(item => ({
-            id: item.UUID_PENGAJUAN_PINJAMAN,
+            id: item.UUID_PENGAJUAN_PINJAMAN || item.UUID_PENGAJUAN_SIMPANAN,
+            pengajuan: item.UUID_PENGAJUAN_PINJAMAN ? "PINJAMAN" : "SIMPANAN",
             name: item.user.NAMA_LENGKAP,
-            nominal: 'Rp ' + formatRupiah(item.NOMINAL_UANG),
+            nominal: 'Rp ' + formatRupiah(item.NOMINAL),
             date: formatDate(item.DTM_CRT),
             type: item.type.TYPE_NAME,
             status_code: item.status.STATUS_CODE,
             status_name: item.status.STATUS_NAME,
-            deskripsi: item.DESKRIPSI
+            deskripsi: item.REASON
           }));
           setData(formattedData);
         } catch (error) {
@@ -75,7 +77,7 @@ const LoanData = () => {
   }, [userData]);
 
   if (loading) {
-    return <td colSpan="8" className='p-2 text-center font-bold'>Loading...</td>;
+    return <td colSpan="8" className='p-2 text-center font-bold'>Mencari data pengajuan...</td>;
   }
 
   if (error) {
@@ -104,7 +106,7 @@ const LoanData = () => {
           <td className="border p-2 text-center">
             <button 
               className="text-blue-500 hover:underline"
-              onClick={() => navigate(`/PengajuanPinjaman/${loan.id}`)}
+              onClick={() => navigate(`/ProsesPengajuan/${loan.pengajuan}/${loan.id}`)}
             >
               Buka
             </button>
@@ -166,7 +168,7 @@ const DataTable = () => {
   );
 };
 
-const ListPengajuanUser = () => {
+const ListPengajuan = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="w-full">
@@ -174,7 +176,6 @@ const ListPengajuanUser = () => {
       </div>
 
       <div className='container mx-auto my-4 p-4 flex-grow justify-center'>
-        <BackButton nav="/SimpanPinjam"/>
         <SearchFilterBar />
         <DataTable />
       </div>
@@ -186,4 +187,4 @@ const ListPengajuanUser = () => {
   );
 };
 
-export default ListPengajuanUser;
+export default ListPengajuan;
