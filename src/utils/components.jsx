@@ -6,7 +6,7 @@ export const BackButton = ({nav}) => {
     return (
       <button 
       className='mx-auto shadow-lg p-3 rounded-lg bg-gray-600 text-white
-      hover:shadow-xl hover:bg-gray-500 transition-all duration-300 w-[150px]'
+      hover:shadow-xl hover:bg-gray-800 transition-all duration-300 w-[150px]'
       style={{marginBottom:"20px"}}
       onClick={() => navigate(nav)}>
         <div className='flex justify-between'>

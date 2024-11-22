@@ -3,7 +3,7 @@ import db from "../config/database.js";
 
 const { DataTypes } = Sequelize;
 
-const TypePinjaman = db.define("MS_TYPE_PINJAMAN", {
+const MS_TYPE_SIMPANAN = db.define("MS_TYPE_PINJAMAN", {
     UUID_TYPE_PINJAMAN: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
@@ -50,11 +50,11 @@ const TypePinjaman = db.define("MS_TYPE_PINJAMAN", {
         type: DataTypes.BIGINT,
         allowNull: true
     },
-    ANGSURAN_MONTH: {
+    TENOR: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    BUNGA_PERCENTAGE: {
+    INTEREST_RATE: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -62,6 +62,6 @@ const TypePinjaman = db.define("MS_TYPE_PINJAMAN", {
     freezeTableName: true
 })
 
-export default TypePinjaman;
+export default MS_TYPE_SIMPANAN;
 
 console.log("Creating MS_TYPE_PINJAMAN");

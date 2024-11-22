@@ -3,7 +3,7 @@ import db from "../config/database.js";
 
 const { DataTypes } = Sequelize;
 
-const TypeSimpanan = db.define("MS_TYPE_SIMPANAN", {
+const MS_TYPE_SIMPANAN = db.define("MS_TYPE_SIMPANAN", {
     UUID_TYPE_SIMPANAN: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
@@ -50,11 +50,11 @@ const TypeSimpanan = db.define("MS_TYPE_SIMPANAN", {
         type: DataTypes.BIGINT,
         allowNull: true
     },
-    BUNGA_PERCENTAGE: {
+    INTEREST_RATE: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    IS_OBLIGATORY: {
+    IS_MANDATORY: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -70,6 +70,6 @@ const TypeSimpanan = db.define("MS_TYPE_SIMPANAN", {
     freezeTableName: true
 })
 
-export default TypeSimpanan;
+export default MS_TYPE_SIMPANAN;
 
 console.log("Creating MS_TYPE_SIMPANAN");

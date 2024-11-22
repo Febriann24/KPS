@@ -1,5 +1,5 @@
-import H from "../H&F/Header"
-import F from "../H&F/Footer"
+import H from "../H&F/Header.jsx"
+import F from "../H&F/Footer.jsx"
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -10,8 +10,10 @@ import {
 import axios from "axios";
 
 const KeuanganAnggota = ({userData}) => { 
-  const [data, setData] = useState([])
-  const [keuangan, setKeuangan] = useState([])
+  const [dataPinjaman, setDataPinjaman] = useState([])
+  const [dataSimpanan, setDataSimpanan] = useState([])
+  const [keuanganPinjaman, setKeuanganPinjaman] = useState([])
+  const [keuanganSimpanan, setKeuanganSimpanan] = useState([])
     useEffect(() => {
       if (!isNaN(userData?.UUID_MS_USER)){
         const fetchDataType = async () => {
@@ -19,8 +21,15 @@ const KeuanganAnggota = ({userData}) => {
               const now = new Date();
               const month = now.getMonth() + 1;
               const year = now.getFullYear();
-              const DATA = await axios.get(`http://localhost:5000/getActivePengajuanPinjamanAnggota/${userData?.UUID_MS_USER}/${month}/${year}`);
-              setData(DATA.data)
+              const dataFilter = {
+                "id": userData?.UUID_MS_USER,
+                "month": month,
+                "year": year
+              }
+              const dataPinjaman = await axios.post(`http://localhost:5000/getActivePengajuanPinjamanAnggota`, dataFilter);
+              const dataSimpanan = await axios.post(`http://localhost:5000/getActivePengajuanSimpananAnggota`, dataFilter);
+              setDataPinjaman(dataPinjaman.data)
+              setDataSimpanan(dataSimpanan.data)
             } catch (error) {
                 console.log(error);
             }
@@ -31,67 +40,84 @@ const KeuanganAnggota = ({userData}) => {
     }, [userData])
 
     useEffect(() => {
-      if(data.processedData) {
-        const fetchDataKeuangan = async () => {
+      if(dataPinjaman.processedData) {
+        const fetchDataPinjaman = async () => {
           try {
-            const details = data.processedData.map((item) => {
+            const details = dataPinjaman.processedData.map((item) => {
               if (item) {
                 return (
                     <div className="flex justify-between">
-                      <p className="text-lg">Pinjaman {item.TYPE_NAME}</p>
-                      <p className="text-lg">{"Rp " + formatRupiah(String(item.DEDUKSI_BULANAN))}</p>
+                      <p className="text-lg">{item.TYPE_NAME}</p>
+                      <p className="text-lg">{"Rp " + formatRupiah(String(item.ANGSURAN))}</p>
                     </div>
                   );
               } else {
                 return
               }
             });
-            setKeuangan(details);
+            setKeuanganPinjaman(details);
           } catch (error) {
             console.log(error);
           }
         }
       
-        fetchDataKeuangan();
+        fetchDataPinjaman();
       }
-    }, [data])
+
+      if(dataSimpanan.processedData) {
+        const fetchDataSimpanan = async () => {
+          try {
+            const details = dataSimpanan.processedData.map((item) => {
+              if (item) {
+                return (
+                    <div className="flex justify-between">
+                      <p className="text-lg">{item.TYPE_NAME}</p>
+                      <p className="text-lg">{"Rp " + formatRupiah(String(item.total_nominal))}</p>
+                    </div>
+                  );
+              } else {
+                return
+              }
+            });
+            setKeuanganSimpanan(details);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      
+        fetchDataSimpanan();
+      }
+    }, [dataSimpanan, dataSimpanan])
 
   return (
     <div className="col-span-1 row-span-3 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
     <div>
       <div className="text-xl font-semibold text-gray-700 mb-2 text-center">Total Deduksi Anggota Akhir Bulan</div>
-      <h1 className="text-5xl font-bold text-red-800 mb-4 text-center">Rp 1.488.666,00</h1> {/* DEDUKSI PERBULAN ANGGOTA */}
+      <h1 className="text-5xl font-bold text-red-800 mb-4 text-center">{"Rp " + formatRupiah(String(dataSimpanan.TOTAL_SIMPANAN + dataPinjaman.TOTAL_ANGSURAN))}</h1>
     </div>
     {/* TOTAL SIMPANAN */}
     <div className="mt-8">
       <div className="flex font-bold justify-between">
         <p className="text-lg">Total Simpanan</p>
-        <p className="text-lg text-red-800">Rp 1.000.000,00</p>
+        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(dataSimpanan.TOTAL_SIMPANAN))}</p>
       </div>
 
-      <div className="flex justify-between">
-        <p className="text-lg">Simpanan Wajib</p>
-        <p className="text-lg">Rp 100.000,00</p>
-      </div>
-      <div className="flex justify-between">
-        <p className="text-lg">Simpanan Sukarela</p>
-        <p className="text-lg">Rp 900.000,00</p>
-      </div>
+      {keuanganSimpanan}
 
       {/* TOTAL PINJAMAN */}
       <div className="flex font-bold mt-4 justify-between">
         <p className="text-lg">Total Pinjaman</p>
-        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(data.TOTAL_DEDUKSI_BULANAN))}</p>
+        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(dataPinjaman.TOTAL_ANGSURAN))}</p>
       </div>
 
-      {keuangan}
+      {keuanganPinjaman}
 
     </div>
   </div>
   )
 }
 
-function SimpanPinjam() {
+function HalamanAwalSImpanPinjam() {
   const userData = getCurrentLoggedInData();
     return (
       <>
@@ -104,7 +130,7 @@ function SimpanPinjam() {
             <div className="grid grid-cols-2 grid-rows-3 gap-4 max-w-7xl w-full p-12 h-full" style={{width:"1300px"}}>
               <div className="col-span-1 row-span-1 bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center text-center">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Total Tabungan Koperasi</h2>
-                <h1 className="text-5xl font-bold text-green-600 mb-4">Rp 2.399.832.200,00</h1> {/* TABUNGAN KOPERASI */}
+                <h1 className="text-5xl font-bold text-green-600 mb-4">Rp 2.399.832.200,00</h1>
               </div>
 
               <div className="col-span-1 row-span-4">
@@ -147,12 +173,12 @@ function SimpanPinjam() {
                       <div className="flex flex-col items-center gap-4 w-full justify-center">
                         <span className="text-lg font-semibold">Ajukan Pengajuan</span>
                         <div className="flex justify-between gap-4 w-full">
-                          <Link to='/FormAjukanPinjam' className="w-full">
+                          <Link to='/FormPengajuanPinjaman' className="w-full">
                           <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
                             Pinjaman
                           </button>
                           </Link>
-                          <Link to='/FormAjukanSimpan' className="w-full">
+                          <Link to='/FormPengajuanSimpanan' className="w-full">
                           <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
                             Simpanan
                           </button>
@@ -161,7 +187,7 @@ function SimpanPinjam() {
                       </div>
                       
                       
-                      <Link to='/ListPengajuanUser' className="w-full">
+                      <Link to='/ListPengajuan' className="w-full">
                       <button className="h-full w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
                         Lihat Pengajuan
                       </button>
@@ -188,4 +214,4 @@ function SimpanPinjam() {
     );
 }
 
-export default SimpanPinjam
+export default HalamanAwalSImpanPinjam

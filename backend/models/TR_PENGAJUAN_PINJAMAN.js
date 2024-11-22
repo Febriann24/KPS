@@ -50,17 +50,25 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
             key: "UUID_MS_USER"
         }
     },
-    NOMINAL_UANG: {
+    NOMINAL: {
         allowNull:false,
         type: DataTypes.BIGINT,
     },
-    DESKRIPSI: {
+    REASON: {
         type: DataTypes.TEXT,
     },
     DTM_APPROVED: {
         type: DataTypes.DATE,
         allowNull: true
-    }
+    },
+    TENOR: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    INTEREST_RATE: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
 }, {
     freezeTableName: true
 });

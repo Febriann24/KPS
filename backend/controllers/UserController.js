@@ -44,7 +44,7 @@ export const UserData = async (req, res) => {
             },
             include: [{
                 model: PengajuanPinjaman,
-                attributes: ['NOMINAL_UANG'],
+                attributes: ['NOMINAL'],
                 required: false,
             }],
         });
@@ -66,7 +66,7 @@ export const UserDataById = async (req, res) => {
         include: [
           {
             model: PengajuanPinjaman,
-            attributes: ['NOMINAL_UANG', 'updatedAt'],
+            attributes: ['NOMINAL', 'updatedAt'],
             required: false,
             include: [
               {

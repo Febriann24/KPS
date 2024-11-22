@@ -3,7 +3,7 @@ import db from "../config/database.js";
 
 const { DataTypes } = Sequelize;
 
-const PengajuanSimpanan = db.define("TR_PENGAJUAN_SIMPANAN", {
+const TR_PENGAJUAN_SIMPANAN = db.define("TR_PENGAJUAN_SIMPANAN", {
     UUID_PENGAJUAN_SIMPANAN: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
@@ -54,12 +54,16 @@ const PengajuanSimpanan = db.define("TR_PENGAJUAN_SIMPANAN", {
         allowNull:true,
         type: DataTypes.STRING,
     },
-    NOMINAL_UANG: {
+    NOMINAL: {
         allowNull:false,
         type: DataTypes.BIGINT,
     },
-    DESKRIPSI: {
+    REASON: {
         type: DataTypes.TEXT,
+    },
+    DTM_APPROVED: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
 }, {
     freezeTableName: true
@@ -70,25 +74,25 @@ const PengajuanSimpanan = db.define("TR_PENGAJUAN_SIMPANAN", {
     const { default: MS_STATUS_SIMPANAN } = await import('./MS_STATUS_SIMPANAN.js');
     const { default: MS_TYPE_SIMPANAN } = await import('./MS_TYPE_SIMPANAN.js');
 
-    PengajuanSimpanan.belongsTo(MS_USER, {
+    TR_PENGAJUAN_SIMPANAN.belongsTo(MS_USER, {
         foreignKey: 'UUID_MS_USER',
         targetKey: 'UUID_MS_USER',
         as: 'user'
     });
 
-    PengajuanSimpanan.belongsTo(MS_STATUS_SIMPANAN, {
+    TR_PENGAJUAN_SIMPANAN.belongsTo(MS_STATUS_SIMPANAN, {
         foreignKey: 'UUID_MS_STATUS_SIMPANAN',
         targetKey: 'UUID_STATUS_SIMPANAN',
         as: 'status'
     });
 
-    PengajuanSimpanan.belongsTo(MS_TYPE_SIMPANAN, {
+    TR_PENGAJUAN_SIMPANAN.belongsTo(MS_TYPE_SIMPANAN, {
         foreignKey: 'UUID_MS_TYPE_SIMPANAN',
         targetKey: 'UUID_TYPE_SIMPANAN',
         as: 'type'
     });
 })();
 
-export default PengajuanSimpanan;
+export default TR_PENGAJUAN_SIMPANAN;
 
 console.log("Creating TR_PENGAJUAN_SIMPANAN");

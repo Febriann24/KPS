@@ -4,26 +4,17 @@ Content-Type: application/json
 {
     "PENGAJUAN": "PINJAMAN",
     "UUID_MS_TYPE": "", 
-    "UUID_MS_USER": "", 
+    "UUID_MS_USER": 1, 
     "UUID_MS_STATUS": "" 
 }
 
-### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/1
-
-### More readable json output includes MS_STATUS_PINJAMAN & MS_TYPE_PINJAMAN
-GET http://localhost:5000/TR_PENGAJUAN_PINJAMAN/getDetailPengajuanPinjaman/anggotaId/1
-
 ###
-GET http://localhost:5000/getOneTypePinjaman
+GET http://localhost:5000/getType/SIMPANAN
 Content-Type: application/json
 
 {
-    "TYPE_NAME": "KPKA"
+    "IS_MANDATORY": "0"
 }
-
-###
-GET http://localhost:5000/MS_STATUS_PINJAMAN/getStatusPinjaman
 
 ###
 GET http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman
@@ -45,14 +36,32 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/getActivePengajuanPinjamanAnggota/1/12/2024
-
-### Update STATUS Pengajuan Pinjaman TESTING
-PATCH http://localhost:5000/TR_PENGAJUAN_PINJAMAN/updateStatusPengajuanPinjaman
+POST http://localhost:5000/getActivePengajuanPinjamanAnggota
 Content-Type: application/json
 
 {
-    "id": 3,
+    "id": 1,
+    "month": 11,
+    "year": 2024
+}
+
+###
+POST http://localhost:5000/getActivePengajuanSimpananAnggota
+Content-Type: application/json
+
+{
+    "id": 1,
+    "month": 11,
+    "year": 2024
+}
+
+### Update STATUS Pengajuan Pinjaman TESTING
+PATCH http://localhost:5000/updateStatusPengajuan
+Content-Type: application/json
+
+{
+    "PENGAJUAN": "SIMPANAN",
+    "id": 1,
     "status": "APPROVED"
 }
 
@@ -106,6 +115,9 @@ GET http://localhost:5000/token
 
 ###
 GET http://localhost:5000/getOneUser/1
+
+###
+GET http://localhost:5000/getServerStatus
 
 ###
 DELETE http://localhost:5000/logout
