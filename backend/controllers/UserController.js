@@ -4,6 +4,7 @@ import Users from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
+import TypePinjaman from "../models/MS_TYPE_PINJAMAN.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -73,6 +74,12 @@ export const UserDataById = async (req, res) => {
                 model: StatusPinjaman,
                 as: 'status',
                 attributes: ['STATUS_CODE'],
+                required: false
+              },
+              {
+                model: TypePinjaman,
+                as: 'type',
+                attributes: ['BUNGA_PERCENTAGE'],
                 required: false
               }
             ]
