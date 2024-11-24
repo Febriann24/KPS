@@ -36,6 +36,16 @@ const UserTable = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (userData && userData.TR_PENGAJUAN_PINJAMANs) {
+      const totalLoanAmount = userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.NOMINAL_UANG, 0);
+      setUserData((prevData) => ({
+        ...prevData,
+        totalLoanAmount: totalLoanAmount 
+      }));
+    }
+  }, [userData]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -60,25 +70,24 @@ const UserTable = () => {
     );
   }
 
-  const latestLoan = userData.TR_PENGAJUAN_PINJAMANs && userData.TR_PENGAJUAN_PINJAMANs.length > 0
-    ? userData.TR_PENGAJUAN_PINJAMANs[0]
-    : null;
+  const latestLoan = userData.TR_PENGAJUAN_PINJAMANs?.[0] || null;
 
-  const totalLoanAmount = userData.TR_PENGAJUAN_PINJAMANs
-    ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.NOMINAL, 0)
-    : 0;
+  const totalLoanAmount = userData.totalLoanAmount || 0;
 
-  const totalInterestPaid = userData.TR_PENGAJUAN_PINJAMANs
-    ? userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => acc + loan.INTEREST_RATE, 0)
-    : 0;
-
-  const loanStatus = latestLoan && latestLoan.status
-    ? latestLoan.status.STATUS_CODE
-    : 'N/A';
+  const loanStatus = latestLoan?.status?.STATUS_CODE || 'N/A';
   
   const formattedJoinDate = userData.createdAt
     ? new Date(userData.createdAt).toLocaleDateString()
     : 'N/A';
+
+  const totalInterestPaid = userData.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
+    const nominalUang = parseFloat(loan.NOMINAL_UANG) || 0;
+    const bungaPercentage = parseFloat(loan.type?.BUNGA_PERCENTAGE) || 0;
+    const interest = nominalUang * (bungaPercentage / 100); 
+    return acc + interest;
+  }, 0) || 0;
+    
+  const formattedTotalInterestPaid = formatRupiah(totalInterestPaid.toString());
 
   return (
     <div>
@@ -87,45 +96,63 @@ const UserTable = () => {
         <h2 className="text-2xl font-bold mb-4">User Details</h2>
         <div className="bg-white shadow-lg rounded-lg p-6">
           <div className="grid grid-cols-2 gap-6">
-            <div className="flex items-center">
-              <span className="font-semibold">Nama:</span>
-              <p className="ml-2">{userData.NAMA_LENGKAP || 'N/A'}</p>
+            <div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Nama:</span>
+                <p className="ml-2">{userData.NAMA_LENGKAP || 'N/A'}</p>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Jumlah Pinjaman Terakhir:</span>
+                <p className="ml-2">
+                  {latestLoan
+                    ? 'Rp ' + formatRupiah(latestLoan.NOMINAL_UANG) + 
+                      ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
+                    : 'N/A'}
+                </p>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Total Pinjaman:</span>
+                <p className="ml-2">
+                  {totalLoanAmount > 0 ? 'Rp ' + formatRupiah(totalLoanAmount) : 'N/A'}
+                </p>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Jumlah Pengajuan Pinjaman:</span>
+                <p className="ml-2">
+                  {userData.TR_PENGAJUAN_PINJAMANs?.length || 'N/A'} kali
+                </p>
+              </div>
+              <div className="flex items-center">
+                  <span className="font-semibold">Total Bunga Pinjaman:</span>
+                  <p className="ml-2">
+                    {formattedTotalInterestPaid !== '0' ? `Rp ${formattedTotalInterestPaid}` : 'N/A'}
+                  </p>
+              </div>
             </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Tanggal Bergabung:</span>
-              <p className="ml-2">{formattedJoinDate}</p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Jumlah Pinjaman Terakhir:</span>
-              <p className="ml-2">
-                {latestLoan
-                  ? 'Rp ' + formatRupiah(latestLoan.NOMINAL) + ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
-                  : 'N/A'}
-              </p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Total Pinjaman:</span>
-              <p className="ml-2">{totalLoanAmount > 0 ? 'Rp ' + formatRupiah(totalLoanAmount) : 'N/A'}</p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Jumlah Pengajuan Pinjaman:</span>
-              <p className="ml-2">{userData.TR_PENGAJUAN_PINJAMANs?.length || 'N/A'} kali</p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Total Bunga Dibayar:</span>
-              <p className="ml-2">{totalInterestPaid > 0 ? 'Rp ' + formatRupiah(totalInterestPaid) : 'N/A'}</p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Status Pinjaman:</span>
-              <p className="ml-2">{loanStatus || 'N/A'}</p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Tabungan:</span>
-              <p className="ml-2">{userData.savings || 'N/A'}</p>
-            </div>
-            <div className="flex items-center">
-              <span className="font-semibold">Simpanan Pokok:</span>
-              <p className="ml-2">{userData.principalSavings || 'N/A'}</p>
+
+            <div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Tanggal Bergabung:</span>
+                <p className="ml-2">{formattedJoinDate}</p>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Status Pinjaman:</span>
+                <p className="ml-2">{loanStatus || 'N/A'}</p>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Tabungan:</span>
+                <p className="ml-2">{userData.savings || 'N/A'}</p>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="font-semibold">Simpanan Pokok:</span>
+                <p className="ml-2">{userData.principalSavings || 'N/A'}</p>
+              </div>
+              <div className="flex items-center">
+                <span className="font-semibold">Total Bunga Simpanan:</span>
+                <p className="ml-2">
+                  {userData.principalSavings || 'N/A'}
+                </p>
+              </div>
             </div>
           </div>
         </div>

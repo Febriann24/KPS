@@ -15,6 +15,7 @@ const LaporanKeuangan = () => {
   const [endDate, setEndDate] = useState("");
   const [category, setCategory] = useState("");
   const [filteredData, setFilteredData] = useState(reportData);
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
 
   const exportToExcel = async (startDate, endDate) => {
     const XLSX = await import("xlsx");
@@ -171,6 +172,7 @@ const handleFilter = (e) => {
   });
 
   setFilteredData(filtered);
+  setIsFilterApplied(true);
 };
 
   return (
@@ -237,27 +239,27 @@ const handleFilter = (e) => {
 
           <div className="flex space-x-2 mb-4">
           <button
-            onClick={() => exportToPDF(startDate, endDate)}
-            disabled={!startDate || !endDate}
-            className={`py-2 px-4 rounded ${
-              !startDate || !endDate
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-green-500 hover:bg-green-600 text-white"
-            }`}
-          >
-            Cetak PDF
-          </button>
-          <button
-            onClick={() => exportToExcel(startDate, endDate)}
-            disabled={!startDate || !endDate}
-            className={`py-2 px-4 rounded ${
-              !startDate || !endDate
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600 text-white"
-            }`}
-          >
-            Cetak Excel
-          </button>
+              onClick={() => exportToPDF(startDate, endDate)}
+              disabled={!isFilterApplied}
+              className={`py-2 px-4 rounded ${
+                !isFilterApplied
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600 text-white"
+              }`}
+            >
+              Cetak PDF
+            </button>
+            <button
+              onClick={() => exportToExcel(startDate, endDate)}
+              disabled={!isFilterApplied}
+              className={`py-2 px-4 rounded ${
+                !isFilterApplied
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600 text-white"
+              }`}
+            >
+              Cetak Excel
+            </button>
         </div>
 
           <table className="w-full border border-gray-200 text-center text-sm">
