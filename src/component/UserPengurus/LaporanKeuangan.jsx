@@ -63,7 +63,7 @@ const formatDate = (date) => {
             if (worksheet[cell]) worksheet[cell].s = headerStyle;
         }
     });
-    XLSX.writeFile(workbook, "LaporanLabaRugi.xlsx");
+    XLSX.writeFile(workbook, "LaporanKeuangan.xlsx");
 };
 const exportToPDF = (startDate, endDate) => {
   const doc = new jsPDF();
@@ -136,44 +136,34 @@ const exportToPDF = (startDate, endDate) => {
 const handleFilter = (e) => {
   e.preventDefault();
 
-  if (!startDate && !endDate) {
-    console.log("All Data History");
-    setFilteredData(reportData);
+  if (!startDate || !endDate) {
+    console.error("Start Date and End Date must be provided");
     return;
   }
 
   if (
-    (startDate && isNaN(new Date(startDate).getTime())) ||
-    (endDate && isNaN(new Date(endDate).getTime()))
+    (isNaN(new Date(startDate).getTime())) ||
+    (isNaN(new Date(endDate).getTime()))
   ) {
     console.error("Invalid dates");
     return;
   }
 
-  console.log("Start Date:", startDate || "N/A");
-  console.log("End Date:", endDate || "N/A");
-
   const filtered = reportData.filter((item) => {
-    if (!item.tanggal) {
-      console.warn(`Item is missing 'tanggal':`, item);
-      return false;
-    }
-
-    const startDateObj = startDate ? new Date(startDate) : null;
-    const endDateObj = endDate ? new Date(endDate) : null;
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
     const itemDate = new Date(item.tanggal);
 
-    const isAfterStart = !startDate || itemDate >= startDateObj;
-    const isBeforeEnd = !endDate || itemDate <= endDateObj;
+    const isAfterStart = itemDate >= startDateObj;
+    const isBeforeEnd = itemDate <= endDateObj;
 
-    const isWithinRange = isAfterStart && isBeforeEnd;
-
-    return isWithinRange;
+    return isAfterStart && isBeforeEnd;
   });
 
   setFilteredData(filtered);
-  setIsFilterApplied(true);
+  setIsFilterApplied(true); 
 };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">

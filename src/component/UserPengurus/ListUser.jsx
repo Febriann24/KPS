@@ -18,8 +18,8 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
           <option value="NAMA_LENGKAP">Nama</option>
           <option value="createdAt">Waktu Bergabung</option>
           <option value="TR_PENGAJUAN_PINJAMANs">Pinjaman</option>
-          <option value="savings">Tabungan</option>
-          <option value="principalSavings">Simpanan Pokok</option>
+          <option value="TR_PENGAJUAN_SIMPANANs">Tabungan</option>
+          <option value="principalSavings">Simpanan</option>
         </select>
         <input
           type="text"
@@ -68,36 +68,70 @@ const DataTable = ({ data, onSort }) => {
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('NAMA_LENGKAP')}>Nama</th>
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('createdAt')}>Waktu Bergabung</th>
           <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('TR_PENGAJUAN_PINJAMANs')}>Pinjaman</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('savings')}>Tabungan</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('principalSavings')}>Simpanan Pokok</th>
+          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('TR_PENGAJUAN_SIMPANANs')}>Simpanan</th>
+          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('principalSavings')}>Tabungan</th>
           <th className="border p-2 text-center"></th>
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-            <td className="border p-2">{row.NAMA_LENGKAP}</td>
-            <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
-            <td className="border p-2 text-center">
-              {row.TR_PENGAJUAN_PINJAMANs.length > 0
-                ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL)
-                : 'N/A'}
-            </td>
-            <td className="border p-2 text-center">{row.savings || 'N/A'}</td>
-            <td className="border p-2 text-center">{row.principalSavings || 'N/A'}</td>
-            <td className="border p-2 text-center">
-              {row.UUID_MS_USER ? (
-                <Link to={`/userTable/${row.UUID_MS_USER}`} className="text-blue-500 hover:underline">Buka</Link>
-              ) : (
-                <span className="text-gray-500">No UUID Available</span>
-              )}
-            </td>
-          </tr>
-        ))}
+        {data.map((row, index) => {
+          // Calculate total interest for loans
+          const totalInterestPaidloan = row.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
+            const nominalUang = parseFloat(loan.NOMINAL) || 0;
+            const bungaPercentage = parseFloat(loan.type?.INTEREST_RATE) || 0;
+            const interest = nominalUang * (bungaPercentage / 100);
+            return acc + interest;
+          }, 0) || 0;
+
+          // Calculate total interest for savings
+          const totalInterestPaidsaving = row.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
+            const nominalUang = parseFloat(saving.NOMINAL) || 0;
+            const bungaPercentage = parseFloat(saving.type?.INTEREST_RATE) || 0;
+            const interest = nominalUang * (bungaPercentage / 100);
+            return acc + interest;
+          }, 0) || 0;
+
+          // Calculate principal savings
+          const firstLoanNominal = row.TR_PENGAJUAN_PINJAMANs?.[0]?.NOMINAL || 0;
+          const firstSavingNominal = row.TR_PENGAJUAN_SIMPANANs?.[0]?.NOMINAL || 0;
+          const principalSavings =
+            parseFloat(firstLoanNominal) +
+            parseFloat(firstSavingNominal) +
+            totalInterestPaidsaving -
+            totalInterestPaidloan;
+
+          const formattedPrincipalSavings = formatRupiah(principalSavings.toString());
+
+          return (
+            <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
+              <td className="border p-2">{row.NAMA_LENGKAP}</td>
+              <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
+              <td className="border p-2 text-center">
+                {row.TR_PENGAJUAN_PINJAMANs.length > 0
+                  ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL)
+                  : 'N/A'}
+              </td>
+              <td className="border p-2 text-center">
+                {row.TR_PENGAJUAN_SIMPANANs.length > 0
+                  ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_SIMPANANs[0].NOMINAL)
+                  : 'N/A'}
+              </td>
+              <td className="border p-2 text-center">{formattedPrincipalSavings || 'N/A'}</td>
+              <td className="border p-2 text-center">
+                {row.UUID_MS_USER ? (
+                  <Link to={`/userTable/${row.UUID_MS_USER}`} className="text-blue-500 hover:underline">Buka</Link>
+                ) : (
+                  <span className="text-gray-500">No UUID Available</span>
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 };
+
 
 const ListUser = () => {
   const [data, setData] = useState([]);
@@ -136,8 +170,9 @@ const ListUser = () => {
       } else if (selectedField === "TR_PENGAJUAN_PINJAMANs") {
         return row.TR_PENGAJUAN_PINJAMANs.length > 0
           && row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL.toString().includes(searchTerm);
-      } else if (selectedField === "savings") {
-        return row.savings && row.savings.toString().includes(searchTerm);
+        } else if (selectedField === "TR_PENGAJUAN_SIMPANANs") {
+          return row.TR_PENGAJUAN_SIMPANANs.length > 0
+            && row.TR_PENGAJUAN_SIMPANANs[0].NOMINAL.toString().includes(searchTerm);
       } else if (selectedField === "principalSavings") {
         return row.principalSavings && row.principalSavings.toString().includes(searchTerm);
       }

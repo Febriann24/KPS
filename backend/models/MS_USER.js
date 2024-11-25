@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
 import PengajuanPinjaman from './TR_PENGAJUAN_PINJAMAN.js';
+import PengajuanSimpanan from './TR_PENGAJUAN_SIMPANAN.js';
 import MS_JOB from './MS_JOB.js';
 const { DataTypes } = Sequelize;
 
@@ -72,6 +73,11 @@ const MS_USER = db.define("MS_USER", {
 });
 
 MS_USER.hasMany(PengajuanPinjaman, {
+    foreignKey: 'UUID_MS_USER',
+    sourceKey: 'UUID_MS_USER',
+ });
+
+ MS_USER.hasMany(PengajuanSimpanan, {
     foreignKey: 'UUID_MS_USER',
     sourceKey: 'UUID_MS_USER',
  });

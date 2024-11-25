@@ -3,8 +3,11 @@ import jwt from 'jsonwebtoken';
 import Users from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
+import PengajuanSimpanan from "../models/TR_PENGAJUAN_SIMPANAN.js";
 import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
+import StatusSimpanan from "../models/MS_STATUS_SIMPANAN.js";
 import TypePinjaman from "../models/MS_TYPE_PINJAMAN.js";
+import TypeSimpanan from "../models/MS_TYPE_SIMPANAN.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -43,12 +46,35 @@ export const UserData = async (req, res) => {
             where: {
                 IS_ACTIVE: 1
             },
-            include: [{
-                model: PengajuanPinjaman,
-                attributes: ['NOMINAL'],
-                required: false,
-            }],
-        });
+            include: [
+                {
+                  model: PengajuanPinjaman,
+                  attributes: ['NOMINAL'],
+                  required: false,
+                  include: [
+                    {
+                      model: TypePinjaman,
+                      as: 'type',
+                      attributes: ['INTEREST_RATE'],
+                      required: false
+                    }
+                  ]
+                },
+                {
+                  model: PengajuanSimpanan,
+                  attributes: ['NOMINAL'],
+                  required: false,
+                  include: [
+                    {
+                        model: TypeSimpanan,
+                        as: 'type',
+                        attributes: ['INTEREST_RATE'],
+                        required: false
+                    }
+                  ]
+                }
+              ],
+            });
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching users:", error.message);
@@ -79,9 +105,28 @@ export const UserDataById = async (req, res) => {
               {
                 model: TypePinjaman,
                 as: 'type',
-                attributes: ['BUNGA_PERCENTAGE'],
+                attributes: ['INTEREST_RATE'],
                 required: false
               }
+            ]
+          },
+          {
+            model: PengajuanSimpanan,
+            attributes: ['NOMINAL', 'updatedAt'],
+            required: false,
+            include: [
+                {
+                    model: StatusSimpanan,
+                    as: 'status',
+                    attributes: ['STATUS_CODE'],
+                    required: false
+                  },
+                  {
+                    model: TypeSimpanan,
+                    as: 'type',
+                    attributes: ['INTEREST_RATE'],
+                    required: false
+                  }
             ]
           }
         ],
