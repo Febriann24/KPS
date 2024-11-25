@@ -49,7 +49,7 @@ export const UserData = async (req, res) => {
             include: [
                 {
                   model: PengajuanPinjaman,
-                  attributes: ['NOMINAL'],
+                  attributes: ['NOMINAL', 'createdAt'],
                   required: false,
                   include: [
                     {
@@ -68,7 +68,7 @@ export const UserData = async (req, res) => {
                 },
                 {
                   model: PengajuanSimpanan,
-                  attributes: ['NOMINAL'],
+                  attributes: ['NOMINAL', 'createdAt'],
                   required: false,
                   include: [
                     {
@@ -104,7 +104,7 @@ export const UserDataById = async (req, res) => {
         include: [
           {
             model: PengajuanPinjaman,
-            attributes: ['NOMINAL', 'updatedAt'],
+            attributes: ['NOMINAL', 'updatedAt', 'createdAt'],
             required: false,
             include: [
               {
@@ -123,7 +123,7 @@ export const UserDataById = async (req, res) => {
           },
           {
             model: PengajuanSimpanan,
-            attributes: ['NOMINAL', 'updatedAt'],
+            attributes: ['NOMINAL', 'updatedAt', 'createdAt'],
             required: false,
             include: [
                 {

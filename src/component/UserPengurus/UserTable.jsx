@@ -67,10 +67,18 @@ const UserTable = () => {
         <p>No data found.</p>
       </div>
     );
-  }
+  } 
+  
+  const findLatestByDate = (array) => {
+    return array?.reduce((latest, current) => {
+      const currentDate = new Date(current.createdAt);
+      const latestDate = latest ? new Date(latest.createdAt) : null;
+      return !latestDate || currentDate > latestDate ? current : latest;
+    }, null);
+  };
 
-  const latestLoan = userData.TR_PENGAJUAN_PINJAMANs?.[0] || null;
-  const latestSaving = userData.TR_PENGAJUAN_SIMPANANs?.[0] || null;
+  const latestLoan = findLatestByDate(userData.TR_PENGAJUAN_PINJAMANs || []);
+  const latestSaving = findLatestByDate(userData.TR_PENGAJUAN_SIMPANANs || []);
 
   const totalLoanAmount = userData.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
     const statusCode = loan.status?.STATUS_CODE;
@@ -96,7 +104,6 @@ const UserTable = () => {
   
   const loanStatusPinjaman = latestLoan?.status?.STATUS_CODE || 'N/A';
   const loanStatusSimpanan = latestSaving?.status?.STATUS_CODE || 'N/A';
-  const principalSavings = userData.TR_PENGAJUAN_SIMPANANs?.[0] || null;
 
   const formattedJoinDate = userData.createdAt
     ? new Date(userData.createdAt).toLocaleDateString()
@@ -148,11 +155,11 @@ const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, sa
                 <p className="ml-2">{userData.NAMA_LENGKAP || 'N/A'}</p>
               </div>
               <div className="flex items-center mb-4">
-                <span className="font-semibold">Jumlah Pinjaman Terakhir:</span>
+                <span className="font-semibold">Data Pinjaman Terakhir:</span>
                 <p className="ml-2">
                   {latestLoan
                     ? 'Rp ' + formatRupiah(latestLoan.NOMINAL) + 
-                      ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
+                       ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
                     : 'N/A'}
                 </p>
               </div>
@@ -186,11 +193,11 @@ const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, sa
                 <p className="ml-2">{formattedJoinDate}</p>
               </div>
               <div className="flex items-center mb-4">
-                <span className="font-semibold">Jumlah Simpanan Terakhir:</span>
+                <span className="font-semibold">Data Simpanan Terakhir:</span>
                 <p className="ml-2">
-                  {principalSavings
-                    ? 'Rp ' + formatRupiah(principalSavings.NOMINAL) + 
-                      ' (tanggal ' + new Date(principalSavings.updatedAt).toLocaleDateString() + ')'
+                  {latestSaving
+                    ? 'Rp ' + formatRupiah(latestSaving.NOMINAL) + 
+                      ' (tanggal ' + new Date(latestSaving.updatedAt).toLocaleDateString() + ')'
                     : 'N/A'}
                 </p>
               </div>
