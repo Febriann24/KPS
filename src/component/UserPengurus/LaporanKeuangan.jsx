@@ -8,7 +8,10 @@ const LaporanKeuangan = () => {
     { no: 1, tipe: "KPKA", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-10-19" },
     { no: 2, tipe: "USP", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-09-19" },
     { no: 3, tipe: "UKTP", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-08-19" },
-    { no: 4, tipe: "Simpanan Sukarela", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-07-19" },
+    { no: 4, tipe: "Simpanan Pokok", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-07-19" },
+    { no: 5, tipe: "Simpanan Wajib", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-08-19" },
+    { no: 6, tipe: "Simpanan Hari Raya", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-11-19" },
+    { no: 7, tipe: "Simpanan Sukarela", masuk: "Rp. 1,000", keluar: "Rp. 2,000", tanggal: "2024-10-19" }
 ];
 
   const [startDate, setStartDate] = useState("");

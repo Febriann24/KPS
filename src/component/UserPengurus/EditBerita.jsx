@@ -3,7 +3,10 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
-
+import {
+    BackButton
+  } from '../../utils/components'
+  
 const EditBerita = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -105,6 +108,7 @@ const EditBerita = () => {
             <div className="flex justify-center space-x-8 mt-10">
                 <div className="w-2/3 pl-10">
                     <h2 className="text-2xl font-semibold text-center mb-6">Edit Berita</h2>
+                <BackButton nav="/BeritaMenu"/>
                     <div className="bg-gray-200 p-10 rounded-lg shadow-md">
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
                             <div>

@@ -53,11 +53,17 @@ export const UserData = async (req, res) => {
                   required: false,
                   include: [
                     {
-                      model: TypePinjaman,
-                      as: 'type',
-                      attributes: ['INTEREST_RATE'],
-                      required: false
-                    }
+                        model: StatusPinjaman,
+                        as: 'status',
+                        attributes: ['STATUS_CODE'],
+                        required: false
+                      },
+                      {
+                        model: TypePinjaman,
+                        as: 'type',
+                        attributes: ['INTEREST_RATE', 'TENOR'],
+                        required: false
+                      }
                   ]
                 },
                 {
@@ -65,6 +71,12 @@ export const UserData = async (req, res) => {
                   attributes: ['NOMINAL'],
                   required: false,
                   include: [
+                    {
+                        model: StatusSimpanan,
+                        as: 'status',
+                        attributes: ['STATUS_CODE'],
+                        required: false
+                    },
                     {
                         model: TypeSimpanan,
                         as: 'type',
@@ -81,7 +93,6 @@ export const UserData = async (req, res) => {
         res.status(500).json({ message: "Error fetching users", error: error.message });
     }
 };
-
 export const UserDataById = async (req, res) => {
     try {
       const { id } = req.params;
@@ -105,7 +116,7 @@ export const UserDataById = async (req, res) => {
               {
                 model: TypePinjaman,
                 as: 'type',
-                attributes: ['INTEREST_RATE'],
+                attributes: ['INTEREST_RATE', 'TENOR'],
                 required: false
               }
             ]
@@ -120,13 +131,13 @@ export const UserDataById = async (req, res) => {
                     as: 'status',
                     attributes: ['STATUS_CODE'],
                     required: false
-                  },
-                  {
+                },
+                {
                     model: TypeSimpanan,
                     as: 'type',
                     attributes: ['INTEREST_RATE'],
                     required: false
-                  }
+                }
             ]
           }
         ],
@@ -143,6 +154,7 @@ export const UserDataById = async (req, res) => {
     }
   };  
   
+
 export const Register = async (req, res) => {
     const { name, email, password, confPassword, noTelp, role } = req.body;
  

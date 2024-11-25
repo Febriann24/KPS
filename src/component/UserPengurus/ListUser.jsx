@@ -17,9 +17,6 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
           <option value="semua">Semua Data</option>
           <option value="NAMA_LENGKAP">Nama</option>
           <option value="createdAt">Waktu Bergabung</option>
-          <option value="TR_PENGAJUAN_PINJAMANs">Pinjaman</option>
-          <option value="TR_PENGAJUAN_SIMPANANs">Tabungan</option>
-          <option value="principalSavings">Simpanan</option>
         </select>
         <input
           type="text"
@@ -75,48 +72,76 @@ const DataTable = ({ data, onSort }) => {
       </thead>
       <tbody>
         {data.map((row, index) => {
-          // Calculate total interest for loans
+
+          const totalLoanAmount = row.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
+            const statusCode = loan.status?.STATUS_CODE;
+            const nominalValue = parseFloat(loan.NOMINAL) || 0;
+            if (statusCode === 'APPROVED') {
+              return acc + nominalValue;
+            }
+            
+            return acc;
+          }, 0);
+          row.totalLoanAmount = totalLoanAmount;
+        
+          const totalSavingAmount = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+            const statusCode = saving.status?.STATUS_CODE;
+            const nominalValue = parseFloat(saving.NOMINAL) || 0;
+            if (statusCode === 'APPROVED') {
+              return acc + nominalValue;
+            }
+        
+            return acc;
+          }, 0);
+          row.totalSavingAmount = totalSavingAmount;
+
           const totalInterestPaidloan = row.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
+            const statusCode = loan.status?.STATUS_CODE;
             const nominalUang = parseFloat(loan.NOMINAL) || 0;
             const bungaPercentage = parseFloat(loan.type?.INTEREST_RATE) || 0;
             const interest = nominalUang * (bungaPercentage / 100);
-            return acc + interest;
+            if (statusCode === 'APPROVED') {
+              return acc + interest;
+            }
+          
+            return acc;
           }, 0) || 0;
-
-          // Calculate total interest for savings
+          
           const totalInterestPaidsaving = row.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
+            const statusCode = saving.status?.STATUS_CODE;
             const nominalUang = parseFloat(saving.NOMINAL) || 0;
             const bungaPercentage = parseFloat(saving.type?.INTEREST_RATE) || 0;
             const interest = nominalUang * (bungaPercentage / 100);
-            return acc + interest;
+            if (statusCode === 'APPROVED') {
+              return acc + interest;
+            }
+          
+            return acc;
           }, 0) || 0;
 
-          // Calculate principal savings
-          const firstLoanNominal = row.TR_PENGAJUAN_PINJAMANs?.[0]?.NOMINAL || 0;
-          const firstSavingNominal = row.TR_PENGAJUAN_SIMPANANs?.[0]?.NOMINAL || 0;
           const principalSavings =
-            parseFloat(firstLoanNominal) +
-            parseFloat(firstSavingNominal) +
+            parseFloat(totalLoanAmount) +
+            parseFloat(totalSavingAmount) +
             totalInterestPaidsaving -
             totalInterestPaidloan;
 
           const formattedPrincipalSavings = formatRupiah(principalSavings.toString());
-
+          const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());
+          const formattedTotalSavingAmount = formatRupiah(totalSavingAmount.toString());
+          
           return (
             <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
               <td className="border p-2">{row.NAMA_LENGKAP}</td>
               <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
               <td className="border p-2 text-center">
-                {row.TR_PENGAJUAN_PINJAMANs.length > 0
-                  ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL)
-                  : 'N/A'}
+              {formattedTotalLoanAmount !== '0' ? `Rp ${formattedTotalLoanAmount}` : 0}
               </td>
               <td className="border p-2 text-center">
-                {row.TR_PENGAJUAN_SIMPANANs.length > 0
-                  ? 'Rp ' + formatRupiah(row.TR_PENGAJUAN_SIMPANANs[0].NOMINAL)
-                  : 'N/A'}
+              {formattedTotalSavingAmount !== '0' ? `Rp ${formattedTotalSavingAmount}` : 0}
               </td>
-              <td className="border p-2 text-center">{formattedPrincipalSavings || 'N/A'}</td>
+              <td className="border p-2 text-center">
+              {formattedPrincipalSavings !== '0' ? `Rp ${formattedPrincipalSavings}` : 0}
+              </td>
               <td className="border p-2 text-center">
                 {row.UUID_MS_USER ? (
                   <Link to={`/userTable/${row.UUID_MS_USER}`} className="text-blue-500 hover:underline">Buka</Link>
