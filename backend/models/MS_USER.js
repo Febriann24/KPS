@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../config/database.js";
 import PengajuanPinjaman from './TR_PENGAJUAN_PINJAMAN.js';
 import MS_JOB from './MS_JOB.js';
+import TrMonthlyFinanceAnggota from "./TR_MONTHLY_FINANCE_ANGGOTA.JS";
 const { DataTypes } = Sequelize;
 
 const MS_USER = db.define("MS_USER", { 
@@ -79,6 +80,10 @@ MS_USER.hasMany(PengajuanPinjaman, {
 MS_USER.belongsTo(MS_JOB, {
     foreignKey: 'UUID_MS_JOB',
     targetKey: 'UUID_MS_JOB'
+});
+
+MS_USER.hasMany(TrMonthlyFinanceAnggota, {
+    foreignKey: 'UUID_MS_USER'
 });
 
 export default MS_USER;
