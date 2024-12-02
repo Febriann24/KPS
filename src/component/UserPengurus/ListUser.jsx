@@ -7,30 +7,46 @@ import { formatRupiah } from '../../utils/utils';
 
 const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, handleFilter }) => {
   return (
-    <div className="flex justify-between items-center p-4 bg-gray-100 shadow-sm">
-      <div className="flex items-center space-x-4 w-full">
+    <div className="flex flex-col md:flex-row md:justify-between items-center p-4 bg-gray-100 shadow-sm space-y-4 md:space-y-0">
+      <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-3/4">
         <select
-          className="border p-2 rounded-md bg-white"
+          className="border p-2 rounded-md bg-white flex-grow sm:flex-grow-0 w-full sm:w-auto"
           value={filterCriteria.selectedOption}
-          onChange={(e) => setFilterCriteria({ ...filterCriteria, selectedOption: e.target.value })}
+          onChange={(e) =>
+            setFilterCriteria({ ...filterCriteria, selectedOption: e.target.value })
+          }
         >
           <option value="semua">Semua Data</option>
           <option value="NAMA_LENGKAP">Nama</option>
           <option value="createdAt">Waktu Bergabung</option>
         </select>
+
         <input
           type="text"
           placeholder="Search..."
           value={filterCriteria.searchTerm}
-          onChange={(e) => setFilterCriteria({ ...filterCriteria, searchTerm: e.target.value })}
-          className="border p-2 rounded-md w-1/2"
+          onChange={(e) =>
+            setFilterCriteria({ ...filterCriteria, searchTerm: e.target.value })
+          }
+          className="border p-2 rounded-md flex-grow w-full sm:w-1/2"
         />
-        <button onClick={handleSearch} className="p-2 bg-teal-500 text-white rounded-md">Search</button>
+
+        <button
+          onClick={handleSearch}
+          className="p-2 bg-teal-500 text-white rounded-md w-full sm:w-auto"
+        >
+          Search
+        </button>
       </div>
-      <FilterButton handleFilter={handleFilter} />
+
+      <div className="mt-4 md:mt-0 md:ml-6">
+        <FilterButton handleFilter={handleFilter} />
+      </div>
     </div>
   );
 };
+
+
 
 const FilterButton = ({ handleFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,103 +75,112 @@ const FilterButton = ({ handleFilter }) => {
 
 const DataTable = ({ data, onSort }) => {
   return (
-    <table className="min-w-full bg-white border rounded-md mt-4">
-      <thead>
-        <tr>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('NAMA_LENGKAP')}>Nama</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('createdAt')}>Waktu Bergabung</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('TR_PENGAJUAN_PINJAMANs')}>Pinjaman</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('TR_PENGAJUAN_SIMPANANs')}>Simpanan</th>
-          <th className="border p-2 text-center cursor-pointer" onClick={() => onSort('principalSavings')}>Tabungan</th>
-          <th className="border p-2 text-center"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => {
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border rounded-md mt-4">
+        <thead>
+          <tr className="bg-gray-200">
+            <th
+              className="border p-2 text-center cursor-pointer"
+              onClick={() => onSort('NAMA_LENGKAP')}
+            >
+              Nama
+            </th>
+            <th
+              className="border p-2 text-center cursor-pointer"
+              onClick={() => onSort('createdAt')}
+            >
+              Waktu Bergabung
+            </th>
+            <th
+              className="border p-2 text-center cursor-pointer"
+              onClick={() => onSort('TR_PENGAJUAN_PINJAMANs')}
+            >
+              Pinjaman
+            </th>
+            <th
+              className="border p-2 text-center cursor-pointer"
+              onClick={() => onSort('TR_PENGAJUAN_SIMPANANs')}
+            >
+              Simpanan
+            </th>
+            <th
+              className="border p-2 text-center cursor-pointer"
+              onClick={() => onSort('principalSavings')}
+            >
+              Tabungan
+            </th>
+            <th className="border p-2 text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, index) => {
+            const totalLoanAmount = row.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
+              const statusCode = loan.status?.STATUS_CODE;
+              const nominalValue = parseFloat(loan.NOMINAL) || 0;
+              return statusCode === 'APPROVED' ? acc + nominalValue : acc;
+            }, 0);
 
-          const totalLoanAmount = row.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
-            const statusCode = loan.status?.STATUS_CODE;
-            const nominalValue = parseFloat(loan.NOMINAL) || 0;
-            if (statusCode === 'APPROVED') {
-              return acc + nominalValue;
-            }
-            
-            return acc;
-          }, 0);
-          row.totalLoanAmount = totalLoanAmount;
-        
-          const totalSavingAmount = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
-            const statusCode = saving.status?.STATUS_CODE;
-            const nominalValue = parseFloat(saving.NOMINAL) || 0;
-            if (statusCode === 'APPROVED') {
-              return acc + nominalValue;
-            }
-        
-            return acc;
-          }, 0);
-          row.totalSavingAmount = totalSavingAmount;
+            const totalSavingAmount = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+              const statusCode = saving.status?.STATUS_CODE;
+              const nominalValue = parseFloat(saving.NOMINAL) || 0;
+              return statusCode === 'APPROVED' ? acc + nominalValue : acc;
+            }, 0);
 
-          const totalInterestPaidloan = row.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
-            const statusCode = loan.status?.STATUS_CODE;
-            const nominalUang = parseFloat(loan.NOMINAL) || 0;
-            const bungaPercentage = parseFloat(loan.type?.INTEREST_RATE) || 0;
-            const interest = nominalUang * (bungaPercentage / 100);
-            if (statusCode === 'APPROVED') {
-              return acc + interest;
-            }
-          
-            return acc;
-          }, 0) || 0;
-          
-          const totalInterestPaidsaving = row.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
-            const statusCode = saving.status?.STATUS_CODE;
-            const nominalUang = parseFloat(saving.NOMINAL) || 0;
-            const bungaPercentage = parseFloat(saving.type?.INTEREST_RATE) || 0;
-            const interest = nominalUang * (bungaPercentage / 100);
-            if (statusCode === 'APPROVED') {
-              return acc + interest;
-            }
-          
-            return acc;
-          }, 0) || 0;
+            const totalInterestPaidLoan = row.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
+              const statusCode = loan.status?.STATUS_CODE;
+              const nominalValue = parseFloat(loan.NOMINAL) || 0;
+              const interestRate = parseFloat(loan.type?.INTEREST_RATE) || 0;
+              const interest = nominalValue * (interestRate / 100);
+              return statusCode === 'APPROVED' ? acc + interest : acc;
+            }, 0);
 
-          const principalSavings =
-            parseFloat(totalLoanAmount) +
-            parseFloat(totalSavingAmount) +
-            totalInterestPaidsaving -
-            totalInterestPaidloan;
+            const totalInterestPaidSaving = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+              const statusCode = saving.status?.STATUS_CODE;
+              const nominalValue = parseFloat(saving.NOMINAL) || 0;
+              const interestRate = parseFloat(saving.type?.INTEREST_RATE) || 0;
+              const interest = nominalValue * (interestRate / 100);
+              return statusCode === 'APPROVED' ? acc + interest : acc;
+            }, 0);
 
-          const formattedPrincipalSavings = formatRupiah(principalSavings.toString());
-          const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());
-          const formattedTotalSavingAmount = formatRupiah(totalSavingAmount.toString());
-          
-          return (
-            <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
-              <td className="border p-2">{row.NAMA_LENGKAP}</td>
-              <td className="border p-2 text-center">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}</td>
-              <td className="border p-2 text-center">
-              {formattedTotalLoanAmount !== '0' ? `Rp ${formattedTotalLoanAmount}` : 0}
-              </td>
-              <td className="border p-2 text-center">
-              {formattedTotalSavingAmount !== '0' ? `Rp ${formattedTotalSavingAmount}` : 0}
-              </td>
-              <td className="border p-2 text-center">
-              {formattedPrincipalSavings !== '0' ? `Rp ${formattedPrincipalSavings}` : 0}
-              </td>
-              <td className="border p-2 text-center">
-                {row.UUID_MS_USER ? (
-                  <Link to={`/userTable/${row.UUID_MS_USER}`} className="text-blue-500 hover:underline">Buka</Link>
-                ) : (
-                  <span className="text-gray-500">No UUID Available</span>
-                )}
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+            const principalSavings = totalLoanAmount + totalSavingAmount + totalInterestPaidSaving - totalInterestPaidLoan;
+
+            const formattedPrincipalSavings = formatRupiah(principalSavings.toString());
+            const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());
+            const formattedTotalSavingAmount = formatRupiah(totalSavingAmount.toString());
+
+            return (
+              <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
+                <td className="border p-2">{row.NAMA_LENGKAP}</td>
+                <td className="border p-2 text-center">
+                  {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}
+                </td>
+                <td className="border p-2 text-center">
+                  {formattedTotalLoanAmount !== '0' ? `Rp ${formattedTotalLoanAmount}` : 0}
+                </td>
+                <td className="border p-2 text-center">
+                  {formattedTotalSavingAmount !== '0' ? `Rp ${formattedTotalSavingAmount}` : 0}
+                </td>
+                <td className="border p-2 text-center">
+                  {formattedPrincipalSavings !== '0' ? `Rp ${formattedPrincipalSavings}` : 0}
+                </td>
+                <td className="border p-2 text-center">
+                  {row.UUID_MS_USER ? (
+                    <Link to={`/userTable/${row.UUID_MS_USER}`} className="text-blue-500 hover:underline">
+                      Buka
+                    </Link>
+                  ) : (
+                    <span className="text-gray-500">No UUID Available</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };
+
 
 
 const ListUser = () => {
@@ -180,32 +205,47 @@ const ListUser = () => {
 
   const handleSearch = () => {
     if (filterCriteria.selectedOption === "semua") {
-      setData(originalData);
+      setData(originalData);  // Reset data when 'Semua Data' is selected
       return;
     }
-
+  
     const filteredData = originalData.filter((row) => {
       const searchTerm = filterCriteria.searchTerm.toLowerCase();
       const selectedField = filterCriteria.selectedOption;
-
+  
       if (selectedField === "NAMA_LENGKAP") {
         return row.NAMA_LENGKAP.toLowerCase().includes(searchTerm);
       } else if (selectedField === "createdAt") {
-        return row.createdAt && new Date(row.createdAt).toLocaleDateString().includes(searchTerm);
+        return (
+          row.createdAt &&
+          new Date(row.createdAt).toLocaleDateString().toLowerCase().includes(searchTerm)
+        );
       } else if (selectedField === "TR_PENGAJUAN_PINJAMANs") {
-        return row.TR_PENGAJUAN_PINJAMANs.length > 0
-          && row.TR_PENGAJUAN_PINJAMANs[0].NOMINAL.toString().includes(searchTerm);
-        } else if (selectedField === "TR_PENGAJUAN_SIMPANANs") {
-          return row.TR_PENGAJUAN_SIMPANANs.length > 0
-            && row.TR_PENGAJUAN_SIMPANANs[0].NOMINAL.toString().includes(searchTerm);
+        return row.TR_PENGAJUAN_PINJAMANs.some((loan) =>
+          loan.NOMINAL.toString().toLowerCase().includes(searchTerm)
+        );
+      } else if (selectedField === "TR_PENGAJUAN_SIMPANANs") {
+        return row.TR_PENGAJUAN_SIMPANANs.some((saving) =>
+          saving.NOMINAL.toString().toLowerCase().includes(searchTerm)
+        );
       } else if (selectedField === "principalSavings") {
-        return row.principalSavings && row.principalSavings.toString().includes(searchTerm);
+        return (
+          row.principalSavings &&
+          row.principalSavings.toString().toLowerCase().includes(searchTerm)
+        );
       }
+  
       return false;
     });
-
+  
+    if (filteredData.length === 0) {
+      // Handle no data found condition, e.g., reset or show a message
+      console.log("No data found for the search term");
+    }
+  
     setData(filteredData);
   };
+  
 
   const handleSort = (column) => {
     let direction = 'asc';

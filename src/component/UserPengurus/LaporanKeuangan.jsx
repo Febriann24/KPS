@@ -255,27 +255,30 @@ const handleFilter = (e) => {
             </button>
         </div>
 
-          <table className="w-full border border-gray-200 text-center text-sm">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="p-2 border">No</th>
-                <th className="p-2 border">Tipe</th>
-                <th className="p-2 border">Masuk</th>
-                <th className="p-2 border">Keluar</th>
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto bg-white">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-2 text-left">No</th>
+                <th className="px-4 py-2 text-left">Tipe</th>
+                <th className="px-4 py-2 text-left">Tanggal</th>
+                <th className="px-4 py-2 text-left">Masuk</th>
+                <th className="px-4 py-2 text-left">Keluar</th>
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((item) => (
-                <tr key={item.no} className="hover:bg-gray-100">
-                  <td className="p-2 border text-center">{item.no}</td>
-                  <td className="p-2 border text-center">{item.tipe}</td>
-                  <td className="p-2 border text-center">{item.masuk}</td>
-                  <td className="p-2 border text-center">{item.keluar}</td>
+              {filteredData.map((item, index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="px-4 py-2">{item.no}</td>
+                  <td className="px-4 py-2">{item.tipe}</td>
+                  <td className="px-4 py-2">{item.tanggal}</td>
+                  <td className="px-4 py-2">{item.masuk}</td>
+                  <td className="px-4 py-2">{item.keluar}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-
+          </div>
         </div>
       </main>
       <F />

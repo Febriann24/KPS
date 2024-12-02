@@ -5,10 +5,9 @@ import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import {  
   formatRupiah,
-  countAngsuran} from '../../utils/utils';
-import {
-  BackButton
-} from '../../utils/components'
+  countAngsuran
+} from '../../utils/utils';
+import { BackButton } from '../../utils/components';
 
 const UserTable = () => {
   const { id } = useParams();
@@ -48,7 +47,7 @@ const UserTable = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
+        <div className="text-xl font-semibold">Loading...</div>
       </div>
     );
   }
@@ -56,7 +55,7 @@ const UserTable = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Error: {error}</p>
+        <div className="text-xl text-red-500">Error: {error}</div>
       </div>
     );
   }
@@ -64,11 +63,11 @@ const UserTable = () => {
   if (!userData) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>No data found.</p>
+        <div className="text-xl">No data found.</div>
       </div>
     );
-  } 
-  
+  }
+
   const findLatestByDate = (array) => {
     return array?.reduce((latest, current) => {
       const currentDate = new Date(current.createdAt);
@@ -86,7 +85,7 @@ const UserTable = () => {
     if (statusCode === 'APPROVED') {
       return acc + nominalValue;
     }
-    
+
     return acc;
   }, 0);
   userData.totalLoanAmount = totalLoanAmount;
@@ -109,30 +108,29 @@ const UserTable = () => {
     ? new Date(userData.createdAt).toLocaleDateString()
     : 'N/A';
   
-const totalInterestPaidloan = userData.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
-  const statusCode = loan.status?.STATUS_CODE;
-  const nominalUang = parseFloat(loan.NOMINAL) || 0;
-  const bungaPercentage = parseFloat(loan.type?.INTEREST_RATE) || 0;
-  const interest = nominalUang * (bungaPercentage / 100);
-  if (statusCode === 'APPROVED') {
-    return acc + interest;
-  }
+  const totalInterestPaidloan = userData.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
+    const statusCode = loan.status?.STATUS_CODE;
+    const nominalUang = parseFloat(loan.NOMINAL) || 0;
+    const bungaPercentage = parseFloat(loan.type?.INTEREST_RATE) || 0;
+    const interest = nominalUang * (bungaPercentage / 100);
+    if (statusCode === 'APPROVED') {
+      return acc + interest;
+    }
 
-  return acc;
-}, 0) || 0;
+    return acc;
+  }, 0) || 0;
 
+  const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
+    const statusCode = saving.status?.STATUS_CODE;
+    const nominalUang = parseFloat(saving.NOMINAL) || 0;
+    const bungaPercentage = parseFloat(saving.type?.INTEREST_RATE) || 0;
+    const interest = nominalUang * (bungaPercentage / 100);
+    if (statusCode === 'APPROVED') {
+      return acc + interest;
+    }
 
-const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
-  const statusCode = saving.status?.STATUS_CODE;
-  const nominalUang = parseFloat(saving.NOMINAL) || 0;
-  const bungaPercentage = parseFloat(saving.type?.INTEREST_RATE) || 0;
-  const interest = nominalUang * (bungaPercentage / 100);
-  if (statusCode === 'APPROVED') {
-    return acc + interest;
-  }
-
-  return acc;
-}, 0) || 0;
+    return acc;
+  }, 0) || 0;
 
   const totalTabungan = totalLoanAmount + totalSavingAmount + totalInterestPaidsaving - totalInterestPaidloan;
   const formattedtotalTabungan = formatRupiah(totalTabungan.toString());
@@ -145,77 +143,63 @@ const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, sa
     <div>
       <H />
       <div className="container mx-auto p-6">
-      <BackButton nav="/ListUser"/>
-        <h2 className="text-2xl font-bold mb-4">User Details</h2>
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Nama:</span>
+        <BackButton nav="/ListUser"/>
+        <h2 className="text-3xl font-bold mb-6 text-center">User Details</h2>
+        <div className="bg-white shadow-lg rounded-lg p-6 space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Nama:</span>
                 <p className="ml-2">{userData.NAMA_LENGKAP || 'N/A'}</p>
               </div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Data Pinjaman Terakhir:</span>
-                <p className="ml-2">
-                  {latestLoan
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Data Pinjaman Terakhir:</span>
+                <p className="ml-2 truncate">{latestLoan
                     ? 'Rp ' + formatRupiah(latestLoan.NOMINAL) + 
                        ' (tanggal ' + new Date(latestLoan.updatedAt).toLocaleDateString() + ')'
-                    : 'N/A'}
-                </p>
+                    : 'N/A'}</p>
               </div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Status Pinjaman Terakhir:</span>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Status Pinjaman Terakhir:</span>
                 <p className="ml-2">{loanStatusPinjaman || 'N/A'}</p>
               </div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Total Pinjaman:</span>
-                <p className="ml-2">
-                {formattedTotalLoanAmount !== '0' ? `Rp ${formattedTotalLoanAmount}` : 0}
-                </p>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Total Pinjaman:</span>
+                <p className="ml-2">{formattedTotalLoanAmount !== '0' ? `Rp ${formattedTotalLoanAmount}` : 0}</p>
               </div>
-              <div className="flex items-center mb-4">
-                  <span className="font-semibold">Total Bunga Pinjaman:</span>
-                  <p className="ml-2">
-                {formattedtotalInterestPaidloan !== '0' ? `Rp ${formattedtotalInterestPaidloan}` : 0}
-                  </p>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Total Bunga Pinjaman:</span>
+                <p className="ml-2">{formattedtotalInterestPaidloan !== '0' ? `Rp ${formattedtotalInterestPaidloan}` : 0}</p>
               </div>
-              <div className="flex items-center mb-4">
-                  <span className="font-semibold">Total Tabungan:</span>
-                  <p className="ml-2">
-                  {formattedtotalTabungan !== '0' ? `Rp ${formattedtotalTabungan}` : 0}
-                  </p>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Total Tabungan:</span>
+                <p className="ml-2">{formattedtotalTabungan !== '0' ? `Rp ${formattedtotalTabungan}` : 0}</p>
               </div>
             </div>
 
-            <div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Tanggal Bergabung:</span>
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Tanggal Bergabung:</span>
                 <p className="ml-2">{formattedJoinDate}</p>
               </div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Data Simpanan Terakhir:</span>
-                <p className="ml-2">
-                  {latestSaving
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Data Simpanan Terakhir:</span>
+                <p className="ml-2 truncate">{latestSaving
                     ? 'Rp ' + formatRupiah(latestSaving.NOMINAL) + 
                       ' (tanggal ' + new Date(latestSaving.updatedAt).toLocaleDateString() + ')'
-                    : 'N/A'}
-                </p>
+                    : 'N/A'}</p>
               </div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Status Simpanan Terakhir:</span>
-                <p className="ml-2">{loanStatusSimpanan || 0}</p>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Status Simpanan Terakhir:</span>
+                <p className="ml-2">{loanStatusSimpanan || 'N/A'}</p>
               </div>
-              <div className="flex items-center mb-4">
-                <span className="font-semibold">Total Simpanan:</span>
-                <p className="ml-2">
-                {formattedtotalSavingAmount !== '0' ? `Rp ${formattedtotalSavingAmount}` : 0}
-                </p>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Total Simpanan:</span>
+                <p className="ml-2">{formattedtotalSavingAmount !== '0' ? `Rp ${formattedtotalSavingAmount}` : 0}</p>
               </div>
-              <div className="flex items-center mb-4">
-                  <span className="font-semibold">Total Bunga Simpanan:</span>
-                  <p className="ml-2">
-                    {formattedtotalInterestPaidsaving !== '0' ? `Rp ${formattedtotalInterestPaidsaving}` : 0}
-                  </p>
+              <div className="flex items-center">
+                <span className="font-semibold text-lg">Total Bunga Simpanan:</span>
+                <p className="ml-2">{formattedtotalInterestPaidsaving !== '0' ? `Rp ${formattedtotalInterestPaidsaving}` : 0}</p>
               </div>
             </div>
           </div>

@@ -3,10 +3,8 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
-import {
-    BackButton
-  } from '../../utils/components'
-  
+import { BackButton } from '../../utils/components'
+
 const EditBerita = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -19,12 +17,12 @@ const EditBerita = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showConfirmation, setShowConfirmation] = useState(false); // state for showing the popup
 
     useEffect(() => {
         const fetchBerita = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/showBerita/${id}`);
-                console.log('Fetched berita:', response.data); 
                 setFormData({
                     judulBerita: response.data.JUDUL_BERITA,
                     penulis: response.data.USER_UPD,
@@ -65,34 +63,37 @@ const EditBerita = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
+    const handleConfirmSubmit = async () => {
         const beritaData = {
             judulBerita: formData.judulBerita,
             penulis: formData.penulis,
             kontenBerita: formData.kontenBerita,
             fotoBerita: formData.fotoBeritaBase64,
         };
-    
-        console.log('Form Data Being Sent:', beritaData);
-        
+
         try {
             const response = await axios.patch(`http://localhost:5000/updateBerita/${id}`, beritaData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log('Berita Updated:', response.data);
             alert('Berita Updated Successfully');
             navigate('/BeritaMenu');
         } catch (error) {
-            console.error('Error updating berita:', error.response?.data || error.message);
-            alert(`Failed to update Berita: ${error.response?.data.message || error.message}`);
+            alert(`Failed to update Berita: ${error.message}`);
         }
+
+        setShowConfirmation(false); // Close the popup after submission
     };
-    
-    
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setShowConfirmation(true); // Show the confirmation popup
+    };
+
+    const handleCancel = () => {
+        setShowConfirmation(false); // Close the popup without submitting
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -105,12 +106,12 @@ const EditBerita = () => {
     return (
         <div>
             <H />
-            <div className="flex justify-center space-x-8 mt-10">
-                <div className="w-2/3 pl-10">
+            <div className="flex justify-center mt-10">
+                <div className="w-full sm:w-2/3 md:w-2/3 lg:w-1/2 xl:w-2/3 px-4">
                     <h2 className="text-2xl font-semibold text-center mb-6">Edit Berita</h2>
-                <BackButton nav="/BeritaMenu"/>
-                    <div className="bg-gray-200 p-10 rounded-lg shadow-md">
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
+                    <BackButton nav="/BeritaMenu"/>
+                    <div className="bg-gray-200 p-6 sm:p-8 rounded-lg shadow-md">
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
                                 <label className="block mb-1">Judul Berita</label>
                                 <input
@@ -119,7 +120,7 @@ const EditBerita = () => {
                                     value={formData.judulBerita}
                                     onChange={handleChange}
                                     placeholder="Judul Berita"
-                                    className="w-full p-2 border rounded bg-white"
+                                    className="w-full p-3 border rounded bg-white"
                                     required
                                 />
                             </div>
@@ -131,7 +132,7 @@ const EditBerita = () => {
                                     value={formData.penulis}
                                     onChange={handleChange}
                                     placeholder="Penulis"
-                                    className="w-full p-2 border rounded bg-white"
+                                    className="w-full p-3 border rounded bg-white"
                                     required
                                 />
                             </div>
@@ -142,7 +143,7 @@ const EditBerita = () => {
                                     value={formData.kontenBerita}
                                     onChange={handleChange}
                                     placeholder="Konten Berita"
-                                    className="w-full p-2 border rounded bg-white h-48"
+                                    className="w-full p-3 border rounded bg-white h-48"
                                     required
                                 />
                             </div>
@@ -153,12 +154,13 @@ const EditBerita = () => {
                                     name="fotoBerita"
                                     accept="image/*"
                                     onChange={handleChange}
+                                    className="w-full p-3 border rounded bg-white"
                                 />
                             </div>
-                            <div className="flex space-x-4 mt-6">
+                            <div className="mt-6">
                                 <button
                                     type="submit"
-                                    className="bg-teal-500 text-white w-full px-6 py-2 rounded shadow hover:bg-teal-600"
+                                    className="bg-teal-500 text-white w-full px-6 py-3 rounded shadow hover:bg-teal-600"
                                 >
                                     Update Berita
                                 </button>
@@ -167,6 +169,31 @@ const EditBerita = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Modal */}
+            {showConfirmation && (
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/3 max-w-full">
+                        <h3 className="text-lg font-semibold">Konfirmasi Pengiriman</h3>
+                        <p className="mt-4">Apakah Anda yakin ingin memperbarui berita ini?</p>
+                        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
+                            <button
+                                onClick={handleConfirmSubmit}
+                                className="bg-teal-500 text-white px-6 py-2 rounded w-full sm:w-auto"
+                            >
+                                Konfirmasi
+                            </button>
+                            <button
+                                onClick={handleCancel}
+                                className="bg-gray-400 text-white px-6 py-2 rounded w-full sm:w-auto"
+                            >
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <F />
         </div>
     );

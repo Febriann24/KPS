@@ -10,6 +10,9 @@ const PengurusApprove = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: 'NAMA_LENGKAP', direction: 'asc' });
     const [jobFilter, setJobFilter] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [actionType, setActionType] = useState('');
 
     const fetchApprovals = async () => {
         try {
@@ -21,30 +24,31 @@ const PengurusApprove = () => {
         }
     };
 
-    const handleApprove = async (id) => {
+    const handleApprove = async () => {
         try {
-            await axios.put(`http://localhost:5000/approve/${id}`);
+            await axios.put(`http://localhost:5000/approve/${selectedUser}`);
             alert("User approved successfully!");
-            setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== id));
-            setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== id));
+            setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== selectedUser));
+            setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== selectedUser));
+            setShowModal(false);
         } catch (error) {
             console.error("Error approving user:", error);
-            if (error.response && error.response.data) {
-                alert(`Failed to approve user: ${error.response.data.error}`);
-            } else {
-                alert("Failed to approve user. Please try again.");
-            }
+            alert("Failed to approve user. Please try again.");
+            setShowModal(false);
         }
     };
 
-    const handleReject = async (id) => {
+    const handleReject = async () => {
         try {
-            await axios.delete(`http://localhost:5000/reject/${id}`);
+            await axios.delete(`http://localhost:5000/reject/${selectedUser}`);
             alert("User rejected successfully!");
-            setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== id));
-            setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== id));
+            setApprovals(prev => prev.filter(user => user.UUID_MS_USER !== selectedUser));
+            setSearchResults(prev => prev.filter(user => user.UUID_MS_USER !== selectedUser));
+            setShowModal(false);
         } catch (error) {
             console.error("Error rejecting user:", error);
+            alert("Failed to reject user. Please try again.");
+            setShowModal(false);
         }
     };
 
@@ -110,9 +114,9 @@ const PengurusApprove = () => {
             <H />
             <main className="flex-grow container mx-auto p-6">
                 <h2 className="text-2xl font-bold mb-4 text-gray-700 text-center">Manajemen Persetujuan Pengguna</h2>
-                <form onSubmit={handleSearch} className="mb-6 flex items-center justify-center space-x-4">
+                <form onSubmit={handleSearch} className="mb-6 flex flex-col md:flex-row items-center justify-center space-x-4">
                     <select
-                        className="border border-gray-300 rounded-lg px-4 py-2"
+                        className="border border-gray-300 rounded-lg px-4 py-2 mb-4 md:mb-0"
                         value={jobFilter}
                         onChange={handleJobFilter}
                     >
@@ -123,7 +127,7 @@ const PengurusApprove = () => {
 
                     <input
                         type="text"
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-md"
+                        className="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-md mb-4 md:mb-0"
                         placeholder="Search users..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -136,74 +140,106 @@ const PengurusApprove = () => {
                     </button>
                 </form>
 
-                <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg text-center">
-                    <thead>
-                        <tr className="bg-gray-100">
-                            <th
-                                className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
-                                onClick={() => handleSort('NAMA_LENGKAP')}
-                            >
-                                Nama
-                            </th>
-                            <th
-                                className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
-                                onClick={() => handleSort('EMAIL')}
-                            >
-                                Email
-                            </th>
-                            <th
-                                className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
-                                onClick={() => handleSort('NOMOR_TELP')}
-                            >
-                                Phone
-                            </th>
-                            <th
-                                className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
-                                onClick={() => handleSort('UUID_MS_JOB')}
-                            >
-                                Pekerjaan
-                            </th>
-                            <th className="px-4 py-2 border-b font-semibold text-gray-700 text-center">
-                                Aksi
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {displayedData.length > 0 ? (
-                            displayedData.map((user) => (
-                                <tr key={user.UUID_MS_USER} className="hover:bg-gray-50">
-                                    <td className="px-4 py-2 border-b text-gray-800 text-center">{user.NAMA_LENGKAP}</td>
-                                    <td className="px-4 py-2 border-b text-gray-800 text-center">{user.EMAIL}</td>
-                                    <td className="px-4 py-2 border-b text-gray-800 text-center">{user.NOMOR_TELP}</td>
-                                    <td className="px-4 py-2 border-b text-gray-800 text-center">
-                                        {Number(user.UUID_MS_JOB) === 1 ? "Anggota" : "Pengurus"}
-                                    </td>
-                                    <td className="px-4 py-2 border-b text-center">
-                                        <button
-                                            onClick={() => handleApprove(user.UUID_MS_USER)}
-                                            className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600 mr-2"
-                                        >
-                                            Terima
-                                        </button>
-                                        <button
-                                            onClick={() => handleReject(user.UUID_MS_USER)}
-                                            className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                                        >
-                                            Tolak
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="5" className="px-4 py-4 text-center text-gray-500">
-                                    {isSearching ? "No results found." : "No data available."}
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg text-center">
+                        <thead>
+                            <tr className="bg-gray-100">
+                                <th
+                                    className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
+                                    onClick={() => handleSort('NAMA_LENGKAP')}
+                                >
+                                    Nama
+                                </th>
+                                <th
+                                    className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
+                                    onClick={() => handleSort('EMAIL')}
+                                >
+                                    Email
+                                </th>
+                                <th
+                                    className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
+                                    onClick={() => handleSort('NOMOR_TELP')}
+                                >
+                                    Phone
+                                </th>
+                                <th
+                                    className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
+                                    onClick={() => handleSort('UUID_MS_JOB')}
+                                >
+                                    Pekerjaan
+                                </th>
+                                <th className="px-4 py-2 border-b font-semibold text-gray-700 text-center">
+                                    Aksi
+                                </th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {displayedData.length > 0 ? (
+                                displayedData.map((user) => (
+                                    <tr key={user.UUID_MS_USER} className="hover:bg-gray-50">
+                                        <td className="px-4 py-2 border-b text-gray-800 text-center">{user.NAMA_LENGKAP}</td>
+                                        <td className="px-4 py-2 border-b text-gray-800 text-center">{user.EMAIL}</td>
+                                        <td className="px-4 py-2 border-b text-gray-800 text-center">{user.NOMOR_TELP}</td>
+                                        <td className="px-4 py-2 border-b text-gray-800 text-center">
+                                            {Number(user.UUID_MS_JOB) === 1 ? "Anggota" : "Pengurus"}
+                                        </td>
+                                        <td className="px-4 py-2 border-b text-center">
+                                            <div className="flex flex-col sm:flex-row justify-center">
+                                                <button
+                                                    onClick={() => { 
+                                                        setSelectedUser(user.UUID_MS_USER);
+                                                        setActionType('approve');
+                                                        setShowModal(true);
+                                                    }}
+                                                    className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600 mb-2 sm:mb-0 sm:mr-2"
+                                                >
+                                                    Terima
+                                                </button>
+                                                <button
+                                                    onClick={() => { 
+                                                        setSelectedUser(user.UUID_MS_USER);
+                                                        setActionType('reject');
+                                                        setShowModal(true);
+                                                    }}
+                                                    className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                                                >
+                                                    Tolak
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="px-4 py-2 border-b text-center text-gray-500">No users found</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </main>
+            {showModal && (
+                    <div className="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto sm:mt-12 sm:mb-12">
+                            <h3 className="text-lg font-semibold">Konfirmasi</h3>
+                            <p>Apakah Anda yakin ingin {actionType === 'approve' ? 'menerima' : 'menolak'} pengguna ini?</p>
+                            <div className="mt-4 flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+                                <button
+                                    onClick={actionType === 'approve' ? handleApprove : handleReject}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                >
+                                    {actionType === 'approve' ? 'Iya, Terima' : 'Iya, Tolak'}
+                                </button>
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                                >
+                                    Batalkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             <F />
         </div>
     );
