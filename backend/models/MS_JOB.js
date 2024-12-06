@@ -47,6 +47,8 @@ const MS_JOB = db.define("MS_JOB", {
 
 export default MS_JOB;
 
+console.log("Creating MS_JOB");
+
 
 
 
