@@ -48,3 +48,5 @@ const TrLobBerita = db.define("TR_LOB_BERITA", {
 })
 
 export default TrLobBerita;
+
+console.log("Creating TR_LOB_BERITA");

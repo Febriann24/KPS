@@ -42,9 +42,11 @@ const TrLobPfp = db.define("TR_LOB_PFP", {
 
 (async () => {
     const {default: MS_USER} = await import('./MS_USER.js');
-    TrLobPfp.belongsTo("MS_USER", {
+    TrLobPfp.belongsTo(MS_USER, {
         foreignKey: "UUID_MS_USER"
     });
 })
 
 export default TrLobPfp;
+
+console.log("Creating TR_LOB_PFP");

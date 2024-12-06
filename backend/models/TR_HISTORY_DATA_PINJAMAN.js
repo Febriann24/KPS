@@ -45,7 +45,7 @@ const TrHistoryDataPinjaman = db.define("TR_HISTORY_DATA_PINJAMAN", {
 });
 
 (async () => {
-    const { default: TR_PENGAJUAN_PINJAMAN } = await import('./TR_PENGAJUAN_SIMPANAN.js');
+    const { default: TR_PENGAJUAN_PINJAMAN } = await import('./TR_PENGAJUAN_PINJAMAN.js');
 
     TrHistoryDataPinjaman.belongsTo(TR_PENGAJUAN_PINJAMAN, {
         foreignKey: 'UUID_PENGAJUAN_PINJAMAN',
