@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import { jsPDF } from "jspdf";
@@ -11,6 +11,8 @@ const LaporanKeuangan = () => {
   const [endDate, setEndDate] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
 
   useEffect(() => {
     const fetchFinancialStatementData = async () => {
@@ -60,6 +62,12 @@ const LaporanKeuangan = () => {
 
     setFilteredData(filtered);
     setIsFilterApplied(true);
+  };
+
+  const handleDateClick = (inputRef) => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
   };
 
   const getTotalPinjaman = () => {
@@ -205,24 +213,28 @@ const LaporanKeuangan = () => {
                   Tanggal Awal
                 </label>
                 <input
-                  type="date"
-                  id="startDate"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
+                      type="date"
+                      id="startDate"
+                      ref={startDateRef}
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded"
+                      onFocus={() => startDateRef.current.showPicker()}
+                    />
               </div>
               <div>
                 <label htmlFor="endDate" className="block mb-2 font-semibold">
                   Tanggal Akhir
                 </label>
                 <input
-                  type="date"
-                  id="endDate"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
+                      type="date"
+                      id="endDate"
+                      ref={endDateRef}
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded"
+                      onFocus={() => endDateRef.current.showPicker()}
+                    />
               </div>
             </div>
             <button type="submit" className="bg-blue-600 text-white p-2 rounded-md">
@@ -268,7 +280,7 @@ const LaporanKeuangan = () => {
     className={`bg-green-500 text-white p-2 rounded-md mr-4 transition-opacity duration-300 ${
       isFilterApplied ? "opacity-100 cursor-pointer" : "opacity-50 cursor-not-allowed"
     }`}
-    disabled={!isFilterApplied} // Disable button when filter isn't applied
+    disabled={!isFilterApplied}
   >
     Export Excel
   </button>
@@ -277,7 +289,7 @@ const LaporanKeuangan = () => {
     className={`bg-blue-600 text-white p-2 rounded-md transition-opacity duration-300 ${
       isFilterApplied ? "opacity-100 cursor-pointer" : "opacity-50 cursor-not-allowed"
     }`}
-    disabled={!isFilterApplied} // Disable button when filter isn't applied
+    disabled={!isFilterApplied}
   >
     Export PDF
   </button>
