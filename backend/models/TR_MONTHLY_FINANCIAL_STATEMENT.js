@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../config/database.js";
 
-const TrMonthlyFinancialStatement = db.define("TR_MONTHLY_FINANCE_ANGOGTA", {
+const TrMonthlyFinancialStatement = db.define("TR_MONTHLY_FINANCE_STATEMENT", {
     UUID_MONTHLY_FINANCIAL_STATEMENT: {
         type: DataTypes.BIGINT,
         autoIncrement: true,

@@ -1,6 +1,7 @@
 import PengajuanPinjaman from "../models/TR_PENGAJUAN_PINJAMAN.js";
 import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
 import TypePinjaman from "../models/MS_TYPE_PINJAMAN.js";
+import TrMonthlyFinancialStatement from "../models/TR_MONTHLY_FINANCIAL_STATEMENT.js";
 import { Op, Sequelize } from "sequelize";
 
 export const getTotalPengeluaranAnggota = async (req, res) => {
@@ -82,5 +83,26 @@ export const getTotalPengeluaranAnggota = async (req, res) => {
     } catch (error) {
         console.log("Error found: ", error);
         res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+};
+
+
+export const getFinancialStatementData = async (req, res) => {
+    try {
+        const financialStatements = await TrMonthlyFinancialStatement.findAll({
+            attributes: ['TOTAL_AMOUNT_SIMPANAN', 'TOTAL_AMOUNT_PINJAMAN', 'TOTAL_INCOME', 'TOTAL_EXPENDITURE', 'createdAt'],
+            logging: console.log,
+        });
+
+        if (!financialStatements || financialStatements.length === 0) {
+            return res.status(404).json({ error: "No financial data found" });
+        }
+
+        res.status(200).json({
+            financialData: financialStatements,
+        });
+    } catch (error) {
+        console.log("Error found: ", error);
+        res.status(500).json({ error: "An error occurred while fetching financial data." });
     }
 };
