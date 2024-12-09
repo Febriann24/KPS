@@ -126,27 +126,18 @@ const DataTable = ({ data, onSort }) => {
               return statusCode === 'APPROVED' ? acc + nominalValue : acc;
             }, 0);
 
-            const totalInterestPaidLoan = row.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
-              const statusCode = loan.status?.STATUS_CODE;
-              const nominalValue = parseFloat(loan.NOMINAL) || 0;
-              const interestRate = parseFloat(loan.type?.INTEREST_RATE) || 0;
-              const interest = nominalValue * (interestRate / 100);
-              return statusCode === 'APPROVED' ? acc + interest : acc;
-            }, 0);
-
-            const totalInterestPaidSaving = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+            const totalTabungan = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
               const statusCode = saving.status?.STATUS_CODE;
+              const typeName = saving.type?.TYPE_NAME;;
               const nominalValue = parseFloat(saving.NOMINAL) || 0;
-              const interestRate = parseFloat(saving.type?.INTEREST_RATE) || 0;
-              const interest = nominalValue * (interestRate / 100);
-              return statusCode === 'APPROVED' ? acc + interest : acc;
+              return statusCode === 'APPROVED' && typeName === 'Simpanan Sukarela' 
+                ? acc + nominalValue 
+                : acc;
             }, 0);
 
-            const principalSavings = totalLoanAmount + totalSavingAmount + totalInterestPaidSaving - totalInterestPaidLoan;
-
-            const formattedPrincipalSavings = formatRupiah(principalSavings.toString());
             const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());
             const formattedTotalSavingAmount = formatRupiah(totalSavingAmount.toString());
+            const formattedTotalTabungan = formatRupiah(totalTabungan.toString());
 
             return (
               <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
@@ -161,7 +152,7 @@ const DataTable = ({ data, onSort }) => {
                   {formattedTotalSavingAmount !== '0' ? `Rp ${formattedTotalSavingAmount}` : 0}
                 </td>
                 <td className="border p-2 text-center">
-                  {formattedPrincipalSavings !== '0' ? `Rp ${formattedPrincipalSavings}` : 0}
+                  {formattedTotalTabungan !== '0' ? `Rp ${formattedTotalTabungan}` : 0}
                 </td>
                 <td className="border p-2 text-center">
                   {row.UUID_MS_USER ? (
@@ -205,7 +196,7 @@ const ListUser = () => {
 
   const handleSearch = () => {
     if (filterCriteria.selectedOption === "semua") {
-      setData(originalData);  // Reset data when 'Semua Data' is selected
+      setData(originalData);
       return;
     }
   
@@ -239,7 +230,6 @@ const ListUser = () => {
     });
   
     if (filteredData.length === 0) {
-      // Handle no data found condition, e.g., reset or show a message
       console.log("No data found for the search term");
     }
   

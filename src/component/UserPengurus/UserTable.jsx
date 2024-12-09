@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 import {  
-  formatRupiah,
-  countAngsuran
+  formatRupiah
 } from '../../utils/utils';
 import { BackButton } from '../../utils/components';
 
@@ -132,7 +131,15 @@ const UserTable = () => {
     return acc;
   }, 0) || 0;
 
-  const totalTabungan = totalLoanAmount + totalSavingAmount + totalInterestPaidsaving - totalInterestPaidloan;
+  const totalTabungan = userData.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+    const statusCode = saving.status?.STATUS_CODE;
+    const typeName = saving.type?.TYPE_NAME;;
+    const nominalValue = parseFloat(saving.NOMINAL) || 0;
+    return statusCode === 'APPROVED' && typeName === 'Simpanan Sukarela' 
+      ? acc + nominalValue 
+      : acc;
+  }, 0);
+
   const formattedtotalTabungan = formatRupiah(totalTabungan.toString());
   const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());
   const formattedtotalSavingAmount = formatRupiah(totalSavingAmount.toString());

@@ -80,7 +80,7 @@ export const UserData = async (req, res) => {
                     {
                         model: TypeSimpanan,
                         as: 'type',
-                        attributes: ['INTEREST_RATE'],
+                        attributes: ['INTEREST_RATE', 'TYPE_NAME'],
                         required: false
                     }
                   ]
@@ -135,7 +135,7 @@ export const UserDataById = async (req, res) => {
                 {
                     model: TypeSimpanan,
                     as: 'type',
-                    attributes: ['INTEREST_RATE'],
+                    attributes: ['INTEREST_RATE', 'TYPE_NAME'],
                     required: false
                 }
             ]
