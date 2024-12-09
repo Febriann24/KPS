@@ -11,6 +11,7 @@ const LaporanKeuangan = () => {
   const [endDate, setEndDate] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+  const [error, setError] = useState(""); 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
 
@@ -49,6 +50,13 @@ const LaporanKeuangan = () => {
         return;
     }
 
+    if (endDateObj < startDateObj) {  // Check if end date is less than start date
+      setError("End date cannot be earlier than start date.");  // Set error message
+      return;
+    } else {
+      setError("");  // Clear error message if dates are valid
+    }
+
     startDateObj.setHours(0, 0, 0, 0);
     endDateObj.setHours(23, 59, 59, 999);
 
@@ -62,12 +70,6 @@ const LaporanKeuangan = () => {
 
     setFilteredData(filtered);
     setIsFilterApplied(true);
-  };
-
-  const handleDateClick = (inputRef) => {
-    if (inputRef.current) {
-      inputRef.current.click();
-    }
   };
 
   const getTotalPinjaman = () => {
@@ -237,6 +239,7 @@ const LaporanKeuangan = () => {
                     />
               </div>
             </div>
+            {error && <div className="text-red-500 mb-4">{error}</div>}
             <button type="submit" className="bg-blue-600 text-white p-2 rounded-md">
               Filter Data
             </button>
