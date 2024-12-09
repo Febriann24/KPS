@@ -1,4 +1,4 @@
-import { PersonIcon, EnvelopeClosedIcon } from "@radix-ui/react-icons";
+import { PersonIcon, EnvelopeClosedIcon, MixerVerticalIcon } from "@radix-ui/react-icons";
 import { Link, useLocation } from "react-router-dom";
 import foto from '../Foto/Koperasi_Logo.png';
 import React, { useState, useEffect, useNavigate } from 'react';
@@ -68,7 +68,7 @@ function Header() {
                             </div>
                         </li>
 
-                        {(role === '1' || role === "2") && isLoggedIn && (
+                        {(role === '1' || role === "2" || role === "3") && isLoggedIn && (
                             <li className="ml-[30px] mx-[-40px]">
                                 <div className={`text-white ${location.pathname === '/HalamanAwalSimpanPinjam' ? 'border-b-2 border-white' : ''} whitespace-nowrap`}>
                                     <Link to='/HalamanAwalSimpanPinjam'>Simpan Pinjam</Link>
@@ -76,7 +76,7 @@ function Header() {
                             </li>
                         )}
 
-                        {role === '2' && isLoggedIn && (
+                        {(role === '2' || role === "3") && isLoggedIn && (
                             <li className="relative ml-[30px] mx-[-60px]">
                             <div 
                                 className={`text-white ${location.pathname === '/Pengurus' ? 'border-b-2 border-white' : ''} whitespace-nowrap`}
@@ -107,13 +107,14 @@ function Header() {
                     </ul>
                 </nav>
                 <div className="flex items-center mr-4 space-x-4">
+                    
     {isLoggedIn ? (
         <>
             {/* Envelope Icon untuk notifikasi */}
             <EnvelopeClosedIcon 
-                className="text-white text-2xl cursor-pointer ml-[500px]" 
+                className="text-white text-2xl cursor-pointer ml-[450px]" 
                 onClick={handleNotificationClick} 
-                style={{ width: '25px', height: '35px' }}
+                style={{ width: '30px', height: '35px' }}
             />
 
             {/* Dropdown notifikasi jika aktif */}
@@ -146,6 +147,17 @@ function Header() {
             <Link to="/Profile" className="inline-block">
                 <PersonIcon className="text-white text-2xl ml-[20px]" style={{ width: '30px', height: '40px' }} />
             </Link>
+
+            {role === '3' && (
+                <button
+                    className="text-white text-2xl ml-[20px] cursor-pointer"
+                    
+                    onClick={() => alert("DUAR MEMEKKKKKKKKKKK!")} // Sesuaikan aksi di sini
+                >
+                    <MixerVerticalIcon style={{ width: '30px', height: '40px' }}/>
+                </button>
+            )}
+
         </>
     ) : (
         // Jika belum login, tampilkan button "Masuk"

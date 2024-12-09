@@ -12,7 +12,7 @@ import TypeSimpanan from "../models/MS_TYPE_SIMPANAN.js";
 export const getUsers = async (req, res) => {
     try {
         const users = await Users.findAll({
-            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'NOMOR_TELP', 'UUID_MS_JOB']
+            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'NOMOR_TELP', 'UUID_MS_JOB', 'ALAMAT', 'TANGGAL_LAHIR']
     });
         res.json(users);
     } catch (error) {    
@@ -156,7 +156,7 @@ export const UserDataById = async (req, res) => {
   
 
 export const Register = async (req, res) => {
-    const { name, email, password, confPassword, noTelp, role } = req.body;
+    const { name, email, password, confPassword, noTelp, role, alamat, tanggalLahir  } = req.body;
  
     if (password !== confPassword) {    
         return res.status(400).json({ message: "Passwords do not match with confirm password!" });    
@@ -177,6 +177,8 @@ export const Register = async (req, res) => {
             EMAIL: email,
             PASSWORD: hashPassword,
             NOMOR_TELP: noTelp,
+            ALAMAT: alamat,
+            TANGGAL_LAHIR: tanggalLahir,
             UUID_MS_JOB: job.UUID_MS_JOB
         });
         
@@ -193,7 +195,7 @@ export const Login = async (req, res) => {
     try {
         const user = await Users.findAll({
             where: { EMAIL: req.body.email },
-            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'PASSWORD', 'UUID_MS_JOB']
+            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'PASSWORD', 'UUID_MS_JOB', 'NOMOR_TELP', 'ALAMAT', 'TANGGAL_LAHIR']
         });
 
         const match  = await bcrypt.compare(req.body.password, user[0].PASSWORD);

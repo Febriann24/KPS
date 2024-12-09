@@ -36,7 +36,13 @@ function Login() {
         //     setMsg("Role tidak dikenali");
         // }
     } catch (error) {
-        console.log(error)
+      if (error.response && error.response.data && error.response.data.msg) {
+        setMsg(error.response.data.msg); // "Wrong Password"
+    } else if (error.response && error.response.data && error.response.data.message) {
+        setMsg(error.response.data.message); // "Email not found"
+    } else {
+        setMsg("Terjadi kesalahan pada server");
+    }
     }
 };
 

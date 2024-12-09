@@ -14,6 +14,8 @@ export default function Profile() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [alamat, setAlamat] = useState('');
+    const [lahir, setLahir] = useState('');
     const [expire, setExpire] = useState('');
 
     useEffect(() => {
@@ -29,8 +31,10 @@ export default function Profile() {
             // Misalnya di dalam fungsi Anda
             const decoded = jwtDecode(response.data.accessToken);
             setName(decoded.name);
-            setPhone(decoded.phone);
+            setPhone(decoded.noTelp);
             setEmail(decoded.email);
+            setAlamat(decoded.alamat);
+            setLahir(decoded.tanggalLahir);
             setExpire(decoded.exp);
         } catch (error) {
             if(error.response){
@@ -102,7 +106,7 @@ export default function Profile() {
                 <span className="text-lg">📍</span>
                 <div className="flex-grow bg-white rounded-lg shadow px-4 py-2">
                   <p className="text-gray-700 font-medium">Alamat</p>
-                  <p>Tangerang, Dalton Selatan IV</p>
+                  <p>{alamat}</p>
                 </div>
               </div>
 
@@ -110,7 +114,7 @@ export default function Profile() {
                 <span className="text-lg">📅</span>
                 <div className="flex-grow bg-white rounded-lg shadow px-4 py-2">
                   <p className="text-gray-700 font-medium">Tanggal Lahir</p>
-                  <p>20/01/1642</p>
+                  <p>{lahir}</p>
                 </div>
               </div>
             </div>

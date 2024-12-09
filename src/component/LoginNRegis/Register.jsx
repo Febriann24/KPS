@@ -9,6 +9,8 @@ function Register(){
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [alamat, setAlamat] = useState('');
+    const [lahir, setLahir] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState('');
@@ -34,6 +36,8 @@ function Register(){
                 password: password,
                 confPassword: confirmPassword,
                 noTelp: phone,
+                alamat: alamat,
+                tanggalLahir: lahir,
                 role: role 
             });
             navigate("/login");
@@ -82,6 +86,15 @@ function Register(){
                         </svg>
                         <span className="mx-2">Pengurus</span>
                     </button>
+                    <button 
+                    value={role}
+                        onClick={() => setRole('ADMIN')}  
+                        className={`flex justify-center w-full px-6 py-3 mt-4 rounded-lg md:mt-0 md:w-auto md:mx-2 focus:outline-none ${role === 'ADMIN' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-blue-500'}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span className="mx-2">Admin</span>
+                    </button>
                 </div>
             </div>
 
@@ -100,6 +113,7 @@ function Register(){
                     <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Phone number</label>
                     <input 
                     value={phone} 
+                    type="text"
                     onChange={(e) => setPhone( e.target.value)} 
                     placeholder="XXX-XX-XXXX-XXX" 
                     class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
@@ -131,6 +145,26 @@ function Register(){
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         type="password" 
                         placeholder="Enter your password" 
+                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Alamat</label>
+                    <input 
+                        name="Alamat"
+                        value={alamat}   // Gunakan state confirmPassword
+                        onChange={(e) => setAlamat(e.target.value)} 
+                        type="text" 
+                        placeholder="Masukkan Alamat Anda" 
+                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Tanggal Lahir</label>
+                    <input 
+                        name="Lahir"
+                        value={lahir}   // Gunakan state confirmPassword
+                        onChange={(e) => setLahir(e.target.value)}
+                        type="date"
+                        placeholder="Masukkan Tanggal Lahir Anda" 
                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
                     <button

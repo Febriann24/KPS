@@ -5,11 +5,15 @@ Content-Type: application/json
 [
     {
         "JOB_CODE": "ANGGOTA",
-        "JOB_DESC": "Anggota Adalah KOperasi"
+        "JOB_DESC": "Anggota Adalah Anggota Koperasi"
     },
     {
         "JOB_CODE": "PENGURUS",
-        "JOB_DESC": "Pengurus Adalah KOperasi"
+        "JOB_DESC": "Pengurus Adalah Yang Ngurus"
+    },
+    {
+        "JOB_CODE": "ADMIN",
+        "JOB_DESC": "Admin Adalah Yang Atur"
     }
 ]
 
