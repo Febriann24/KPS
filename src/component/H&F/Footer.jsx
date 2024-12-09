@@ -3,7 +3,7 @@ import foto from '../Foto/Koperasi_Logo.png'
 function Footer(){
     return(
         <>
-            <footer className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] mt-[10px] ">
+            <footer className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] ">
                 <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
                     <div className="sm:flex sm:items-center sm:justify-between">
                         <a href="/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
@@ -28,7 +28,7 @@ function Footer(){
                             </li>
                         </ul>
                     </div>
-                    <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+                    <hr className="my-6 border-white border-t-2 sm:mx-auto lg:my-8 opacity-50" />
                     <span className="block text-sm text-white sm:text-center">© 2024 <a href="https://flowbite.com/" class="hover:underline mr-[5px]">Ketoprak Developer</a>Universitas Multimedia Nusantara</span>
                 </div>
             </footer>

@@ -2,7 +2,7 @@ import H from "../H&F/Header"
 import F from "../H&F/Footer"
 import Sidebar from  "./SideBar"
 
-export default function ListBerita(){
+export default function ListUserAdmin(){
     return (
         <div>
             <H />

@@ -1,8 +1,7 @@
 import { Sequelize } from "sequelize";
-import  SequelizePrettyLogger  from 'sequelize-pretty-logger';
 
 const customLogger = (msg) => {
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().toLocaleString('sv-SE', { timeZoneName: 'short' });
     const timestampColored = `\x1b[32m[${timestamp}]\x1b[0m`;
     console.log(`${timestampColored} - ${msg}`);
 };

@@ -22,6 +22,11 @@ import FormPengajuanSimpanan from './component/SimpanPinjam/FormPengajuanSimpana
 import HalamanAwalSimpanPinjam from './component/SimpanPinjam/HalamanAwalSimpanPinjam'
 import ListPengajuan from './component/SimpanPinjam/ListPengajuan'
 import ProsesPengajuan from './component/SimpanPinjam/ProsesPengajuan'
+import GeneralSettings from './component/UserAdmin/GeneralSettings'
+import ConfigCMS from './component/UserAdmin/ConfigCMS.jsx';
+import ListBerita from './component/UserAdmin/ListBerita.jsx';
+import ListUserAdmin from './component/UserAdmin/LIstUserAdmin.jsx';
+
 import axios from 'axios';
 import {
   getCurrentLoggedInID
@@ -80,9 +85,13 @@ function App() {
               <Route exact path='/showBerita/:id' element ={<ShowBerita/>} />
               <Route exact path='/editBerita/:id' element ={<EditBerita/>} />
               <Route exact path='/ListPengajuan' element = {<ListPengajuan/>} />
+              <Route exact path='/generalsettings' element = {<GeneralSettings/>} />
+              <Route exact path='/cmsconfig' element = {<ConfigCMS/>} />
+              <Route exact path='/accountmanagement' element = {<ListUserAdmin/>} />
+              <Route exact path='/newsmanagement' element = {<ListBerita/>} />
+
             </Routes>
             )}
-          
         </Router>
         )} 
     </>

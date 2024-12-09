@@ -2,12 +2,16 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import db from "./config/database.js";
+
+//ROUTES
 import UserRoute from "./routes/UserRoute.js";
 import PengajuanRoute from "./routes/PengajuanRoute.js";
 import BeritaRoute from "./routes/BeritaRoute.js";
 import KeuanganRoute from "./routes/KeuanganRoute.js";
 import JobRoute from "./routes/JobRoute.js";
-import db from "./config/database.js";
+import AdminRoute from  "./routes/AdminRoute.js"
+
 
 //IMPORT ALL MODELS FOR SYNCING
 import MsGeneralSetting from './models/MS_GENERALSETTING.js';
@@ -55,6 +59,7 @@ app.use(PengajuanRoute);
 app.use(BeritaRoute);
 app.use(KeuanganRoute);
 app.use(JobRoute);
+app.use(AdminRoute)
 
 // Start the server
 app.listen(5000, () => console.log("Server is running..."));

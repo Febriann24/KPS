@@ -10,6 +10,10 @@ Content-Type: application/json
     {
         "JOB_CODE": "PENGURUS",
         "JOB_DESC": "Pengurus Adalah KOperasi"
+    },
+        {
+        "JOB_CODE": "ADMIN",
+        "JOB_DESC": "Pengelola konfigurasi web"
     }
 ]
 
