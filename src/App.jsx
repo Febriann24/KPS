@@ -75,7 +75,7 @@ function App() {
         <Route
           path="/HalamanAwalSimpanPinjam"
           element={
-            <ProtectedRoute allowedRoles={[1,3]}>
+            <ProtectedRoute allowedRoles={[1,2,3]}>
               <HalamanAwalSimpanPinjam />
             </ProtectedRoute>
           }
@@ -91,7 +91,7 @@ function App() {
         <Route
           path="/ProsesPengajuan/:pengajuan/:id"
           element={
-            <ProtectedRoute allowedRoles={[1,3]}>
+            <ProtectedRoute allowedRoles={[1,2,3]}>
               <ProsesPengajuan />
             </ProtectedRoute>
           }
@@ -115,7 +115,7 @@ function App() {
         <Route
           path="/ListPengajuan"
           element={
-            <ProtectedRoute allowedRoles={[1,3]}>
+            <ProtectedRoute allowedRoles={[1,2,3]}>
               <ListPengajuan />
             </ProtectedRoute>
           }

@@ -77,7 +77,8 @@ const PengurusApprove = () => {
         if (!jobFilter) return data;
         return data.filter((user) => {
             return (Number(user.UUID_MS_JOB) === 1 && jobFilter === 'Anggota') || 
-                   (Number(user.UUID_MS_JOB) !== 1 && jobFilter === 'Pengurus');
+                   (Number(user.UUID_MS_JOB) === 2 && jobFilter === 'Pengurus') ||
+                   (Number(user.UUID_MS_JOB) === 3 && jobFilter === 'Admin');
         });
     };
 
@@ -123,6 +124,7 @@ const PengurusApprove = () => {
                         <option value="">All Jobs</option>
                         <option value="Anggota">Anggota</option>
                         <option value="Pengurus">Pengurus</option>
+                        <option value="Admin">Admin</option>
                     </select>
 
                     <input
@@ -166,7 +168,7 @@ const PengurusApprove = () => {
                                     className="px-4 py-2 border-b font-semibold text-gray-700 cursor-pointer"
                                     onClick={() => handleSort('UUID_MS_JOB')}
                                 >
-                                    Pekerjaan
+                                    Role
                                 </th>
                                 <th className="px-4 py-2 border-b font-semibold text-gray-700 text-center">
                                     Aksi
@@ -181,7 +183,7 @@ const PengurusApprove = () => {
                                         <td className="px-4 py-2 border-b text-gray-800 text-center">{user.EMAIL}</td>
                                         <td className="px-4 py-2 border-b text-gray-800 text-center">{user.NOMOR_TELP}</td>
                                         <td className="px-4 py-2 border-b text-gray-800 text-center">
-                                            {Number(user.UUID_MS_JOB) === 1 ? "Anggota" : "Pengurus"}
+                                        {Number(user.UUID_MS_JOB) === 1 ? "Anggota" : Number(user.UUID_MS_JOB) === 2 ? "Pengurus" : "Admin"}
                                         </td>
                                         <td className="px-4 py-2 border-b text-center">
                                             <div className="flex flex-col sm:flex-row justify-center">
