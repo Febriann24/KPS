@@ -14,15 +14,12 @@ Content-Type: application/json
 
 {
     "UUID_MS_USER": "",
-    "orderBy": "NOMINAL",
-    "sort": "DESC",
+    "PENGAJUAN": "PINJAMAN",
+    "sortBy": "DATE",
+    "orderBy": "ASC",
     "isFiltered": true,
-    "filterAllPinj": true,
-    "filterAllSimp": false,
-    "filterTypePinj": ["3", "2"],
-    "filterTypeSimp": [],
-    "filterStatusPinj": [1],
-    "filterStatusSimp": [1,2]
+    "filterAllType": true,
+    "filterAllStatus": true
 }
 
 ###
