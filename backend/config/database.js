@@ -1,5 +1,4 @@
 import { Sequelize } from "sequelize";
-import  SequelizePrettyLogger  from 'sequelize-pretty-logger';
 
 const customLogger = (msg) => {
     const timestamp = new Date().toISOString();
