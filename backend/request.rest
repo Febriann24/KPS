@@ -9,6 +9,22 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:5000/getFilteredPengajuan
+Content-Type: application/json
+
+{
+    "UUID_MS_USER": "",
+    "PENGAJUAN": "PINJAMAN",
+    "lastId": "2061",
+    "lastColumn": "2024-12-11T15:04:05.184Z",
+    "sortBy": "DATE",
+    "orderBy": "ASC",
+    "isFiltered": true,
+    "filterAllType": true,
+    "filterAllStatus": true
+}
+
+###
 GET http://localhost:5000/getType/SIMPANAN
 Content-Type: application/json
 
@@ -16,6 +32,8 @@ Content-Type: application/json
     "IS_MANDATORY": "0"
 }
 
+###
+GET http://localhost:5000/getStatus
 ###
 GET http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman
 

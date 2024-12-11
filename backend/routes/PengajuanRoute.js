@@ -9,12 +9,14 @@ import {
     updateStatusPengajuan,
     getActivePengajuanPinjamanAnggota,
     getActivePengajuanSimpananAnggota,
+    getFilteredPengajuan,
  } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
 
 router.post("/getPengajuan", getPengajuan);
-router.get("/getStatus/:PENGAJUAN", getStatus);
+router.post("/getFilteredPengajuan", getFilteredPengajuan);
+router.post("/getStatus", getStatus);
 router.post("/getType/:PENGAJUAN", getType);
 router.post("/getActivePengajuanPinjamanAnggota", getActivePengajuanPinjamanAnggota);
 router.post("/getActivePengajuanSimpananAnggota", getActivePengajuanSimpananAnggota);

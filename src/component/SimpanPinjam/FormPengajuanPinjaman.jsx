@@ -69,7 +69,6 @@ function FormPengajuanPinjaman() {
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
     const selectedOption = typePinjaman.find(item => item.TYPE_NAME === selectedValue);
-    console.log(selectedValue)
     setFormData((prevData) => ({
       ...prevData,
       typePinjaman: selectedValue, // Update formData with selected type
