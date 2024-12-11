@@ -73,6 +73,7 @@ const TR_PENGAJUAN_SIMPANAN = db.define("TR_PENGAJUAN_SIMPANAN", {
     const { default: MS_USER } = await import('./MS_USER.js');
     const { default: MS_STATUS_SIMPANAN } = await import('./MS_STATUS_SIMPANAN.js');
     const { default: MS_TYPE_SIMPANAN } = await import('./MS_TYPE_SIMPANAN.js');
+    const { default: TR_History_Data_Simpanan} = await import('./TR_HISTORY_DATA_SIMPANAN.js');
 
     TR_PENGAJUAN_SIMPANAN.belongsTo(MS_USER, {
         foreignKey: 'UUID_MS_USER',
@@ -91,6 +92,13 @@ const TR_PENGAJUAN_SIMPANAN = db.define("TR_PENGAJUAN_SIMPANAN", {
         targetKey: 'UUID_TYPE_SIMPANAN',
         as: 'type'
     });
+
+    TR_PENGAJUAN_SIMPANAN.hasMany(TR_History_Data_Simpanan, {
+        foreignKey: 'UUID_PENGAJUAN_SIMPANAN',
+        sourceKey: 'UUID_PENGAJUAN_SIMPANAN',
+        as: 'historySimpanan'
+    });
+
 })();
 
 export default TR_PENGAJUAN_SIMPANAN;

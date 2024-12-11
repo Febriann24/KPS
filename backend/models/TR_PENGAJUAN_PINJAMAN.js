@@ -77,6 +77,7 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
     const { default: MS_USER } = await import('./MS_USER.js');
     const { default: MS_STATUS_PINJAMAN } = await import('./MS_STATUS_PINJAMAN.js');
     const { default: MS_TYPE_PINJAMAN } = await import('./MS_TYPE_PINJAMAN.js');
+    const { default: TR_History_Data_Pinjaman } = await import('./TR_HISTORY_DATA_PINJAMAN.js');
 
     PengajuanPinjaman.belongsTo(MS_USER, {
         foreignKey: 'UUID_MS_USER',
@@ -95,6 +96,13 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
         targetKey: 'UUID_TYPE_PINJAMAN',
         as: 'type'
     });
+
+    PengajuanPinjaman.hasMany(TR_History_Data_Pinjaman, {
+        foreignKey: 'UUID_PENGAJUAN_PINJAMAN',
+        sourceKey: 'UUID_PENGAJUAN_PINJAMAN',
+        as: 'historyPinjaman'
+    });
+
 })();
 
 export default PengajuanPinjaman;

@@ -51,7 +51,7 @@ const TrHistoryDataSimpanan = db.define("TR_HISTORY_DATA_SIMPANAN", {
         foreignKey: 'UUID_PENGAJUAN_SIMPANAN',
         as: 'TrPengajuanSimpanan'
     });
-
+    
 })();
 
 export default TrHistoryDataSimpanan;

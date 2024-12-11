@@ -8,6 +8,8 @@ import StatusPinjaman from "../models/MS_STATUS_PINJAMAN.js";
 import StatusSimpanan from "../models/MS_STATUS_SIMPANAN.js";
 import TypePinjaman from "../models/MS_TYPE_PINJAMAN.js";
 import TypeSimpanan from "../models/MS_TYPE_SIMPANAN.js";
+import HistoryPinjaman from "../models/TR_HISTORY_DATA_PINJAMAN.js";
+import HistorySimpanan from "../models/TR_HISTORY_DATA_SIMPANAN.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -118,9 +120,16 @@ export const UserDataById = async (req, res) => {
                 as: 'type',
                 attributes: ['INTEREST_RATE', 'TENOR'],
                 required: false
+              },
+              {
+                model: HistoryPinjaman,
+                as: "historyPinjaman",
+                attributes: ["ANGSURAN_BERBUNGA", "ANGSURAN_BERSIH"],
+                required: false
               }
             ]
           },
+          
           {
             model: PengajuanSimpanan,
             attributes: ['NOMINAL', 'updatedAt', 'createdAt'],
@@ -137,6 +146,12 @@ export const UserDataById = async (req, res) => {
                     as: 'type',
                     attributes: ['INTEREST_RATE', 'TYPE_NAME'],
                     required: false
+                },
+                {
+                  model: HistorySimpanan,
+                  as: "historySimpanan",
+                  attributes: ["SIMPANAN_BERBUNGA", "AMOUNT_SIMPANAN"],
+                  required: false
                 }
             ]
           }

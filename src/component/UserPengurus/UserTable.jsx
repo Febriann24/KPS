@@ -108,27 +108,21 @@ const UserTable = () => {
     : 'N/A';
   
   const totalInterestPaidloan = userData.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
-    const statusCode = loan.status?.STATUS_CODE;
-    const nominalUang = parseFloat(loan.NOMINAL) || 0;
-    const bungaPercentage = parseFloat(loan.type?.INTEREST_RATE) || 0;
-    const interest = nominalUang * (bungaPercentage / 100);
-    if (statusCode === 'APPROVED') {
-      return acc + interest;
-    }
-
-    return acc;
+    const totalHistoryInterest = loan.historyPinjaman?.reduce((historyAcc, history) => {
+      const angsuranBunga = parseFloat(history.ANGSURAN_BERBUNGA) || 0;
+      return historyAcc + angsuranBunga;
+    }, 0) || 0;
+  
+    return acc + totalHistoryInterest;
   }, 0) || 0;
 
   const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
-    const statusCode = saving.status?.STATUS_CODE;
-    const nominalUang = parseFloat(saving.NOMINAL) || 0;
-    const bungaPercentage = parseFloat(saving.type?.INTEREST_RATE) || 0;
-    const interest = nominalUang * (bungaPercentage / 100);
-    if (statusCode === 'APPROVED') {
-      return acc + interest;
-    }
+    const totalHistoryInterest = saving.historySimpanan?.reduce((historyAcc, history) => {
+      const simpananBunga = parseFloat(history.SIMPANAN_BERBUNGA) || 0;
+      return historyAcc + simpananBunga;
+    }, 0) || 0;
 
-    return acc;
+    return acc + totalHistoryInterest;
   }, 0) || 0;
 
   const totalTabungan = userData.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
