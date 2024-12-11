@@ -90,7 +90,13 @@ const LoanData = ({ filters, isFetchMore }) => {
   }, [userData, filters]);
 
   useEffect(() => {
-    if(!userData || !isFetchMore || !last.lastId) {
+    if (!last.lastId) {
+      console.log("CANNOT FETCH ANYMORE!");
+      return
+    } else {
+      console.log("FETCHING THIS NUTS", last.lastId)
+    }
+    if(!userData || !isFetchMore) {
       console.log("not fetching");
       return
     };
@@ -103,8 +109,6 @@ const LoanData = ({ filters, isFetchMore }) => {
       }
       const response = await axios.post(`http://localhost:5000/getFilteredPengajuan`, {
         UUID_MS_USER: UUID_MS_USER,
-        orderBy: "DESC",
-        sortBy: "DATE",
         lastId: last.lastId,
         lastColumn: last.lastColumn,
         ...filters, // Spread filters to the request body
@@ -126,7 +130,6 @@ const LoanData = ({ filters, isFetchMore }) => {
         ...prevData,
         ...formattedData
       ]);
-      console.log(data)
     };
 
     fetchMoreData();
@@ -531,6 +534,7 @@ const DataTable = ({ filters, isFetchMore, setIsFetchMore }) => {
   const handleScroll = (event) => {
     const container = event.target;
     if (container.scrollHeight - container.scrollTop === container.clientHeight) {
+      console.log("bottoms up!")
       setIsFetchMore(true)
     } else {
       setIsFetchMore(false)

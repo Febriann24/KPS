@@ -426,8 +426,8 @@ export const getFilteredPengajuan = async(req, res) => {
     }
 
     query += `
-        ORDER BY "UUID_PENGAJUAN" ${orderBy}
-        LIMIT 20
+        ORDER BY "${sort}" ${orderBy}, "UUID_PENGAJUAN" ${orderBy}
+        LIMIT 50
     `
 
     const repl = {
