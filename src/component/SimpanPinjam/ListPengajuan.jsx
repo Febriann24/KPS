@@ -48,12 +48,9 @@ const LoanData = ({ filters, isFetchMore }) => {
   const navigate = useNavigate();
   const userData = getCurrentLoggedInData();
 
-  console.log("is fetch more?: ",isFetchMore)
-
   useEffect(() => {
     if (!userData || isFetchMore) return;
     const fetchLoanData = async (filters = {}) => {
-      console.log("Fetching Data First TIme...")
       setLoading(true);
       try {
         let UUID_MS_USER = ``;
@@ -90,19 +87,10 @@ const LoanData = ({ filters, isFetchMore }) => {
   }, [userData, filters]);
 
   useEffect(() => {
-    if (!last.lastId) {
-      console.log("CANNOT FETCH ANYMORE!");
-      return
-    } else {
-      console.log("FETCHING THIS NUTS", last.lastId)
-    }
-    if(!userData || !isFetchMore) {
-      console.log("not fetching");
+    if(!userData || !isFetchMore || !last.lastId) {
       return
     };
     const fetchMoreData = async () => {
-      console.log("fetching more data..")
-      console.log("By: ", last.lastId, last.lastColumn)
       let UUID_MS_USER = ``;
       if (userData.MS_JOB.JOB_CODE !== 'PENGURUS') {
         UUID_MS_USER = userData.UUID_MS_USER;
@@ -113,7 +101,6 @@ const LoanData = ({ filters, isFetchMore }) => {
         lastColumn: last.lastColumn,
         ...filters, // Spread filters to the request body
       });
-      console.log("data found: ", response)
       const formattedData = response.data.data.map(item => ({
         id: item.UUID_PENGAJUAN,
         pengajuan: item.PENGAJUAN,
@@ -160,7 +147,7 @@ const LoanData = ({ filters, isFetchMore }) => {
           <td className="px-2 py-4 text-left">{loan.date}</td>
           <td className="px-2 py-4 text-left">{loan.type}</td>
           <td className="px-2 py-4 text-left">{loan.nominal}</td>
-          <td className="px-2 py-4 text-left truncate max-w-xs">{loan.id}</td>
+          <td className="px-2 py-4 text-left truncate max-w-xs">{loan.deskripsi}</td>
           <td className="px-2 py-4 text-left">
             <span className={`inline-block px-4 py-0.5 rounded-full ${getProcessColor(loan.status_code)}`}>
               {loan.status_name}
@@ -248,7 +235,6 @@ const SearchFilterBar = ({ setFilters, setIsFetchMore }) => {
   }, [filterData, pengajuan])
 
   const handleFilterCheck = () => {
-    console.log(warning)
     if (warning.TYPE_WARNING == false && warning.STATUS_WARNING == false) {
       handleButtonSearch();
     } 
@@ -295,7 +281,6 @@ const SearchFilterBar = ({ setFilters, setIsFetchMore }) => {
   }, [halPengajuan])
 
   useEffect(() => {
-    console.log("sorting")
     handleFilterFind();
   }, [filterData.SORT_BY, filterData.ORDER_BY, filterData.PENGAJUAN]);
 
@@ -534,7 +519,6 @@ const DataTable = ({ filters, isFetchMore, setIsFetchMore }) => {
   const handleScroll = (event) => {
     const container = event.target;
     if (container.scrollHeight - container.scrollTop === container.clientHeight) {
-      console.log("bottoms up!")
       setIsFetchMore(true)
     } else {
       setIsFetchMore(false)
