@@ -10,7 +10,7 @@ import PengajuanRoute from "./routes/PengajuanRoute.js";
 import BeritaRoute from "./routes/BeritaRoute.js";
 import KeuanganRoute from "./routes/KeuanganRoute.js";
 import JobRoute from "./routes/JobRoute.js";
-import AdminRoute from  "./routes/AdminRoute.js"
+import AdminRoute from  "./routes/AdminRoute.js";
 
 
 //IMPORT ALL MODELS FOR SYNCING
@@ -59,7 +59,7 @@ app.use(PengajuanRoute);
 app.use(BeritaRoute);
 app.use(KeuanganRoute);
 app.use(JobRoute);
-app.use(AdminRoute)
+app.use(AdminRoute);
 
 // Start the server
 app.listen(5000, () => console.log("Server is running..."));

@@ -2,7 +2,7 @@ import H from "../H&F/Header"
 import F from "../H&F/Footer"
 import Sidebar from  "./SideBar"
 
-export default function GeneralSettings(){
+export default function ConfigCMS(){
     return (
         <div>
             <H />

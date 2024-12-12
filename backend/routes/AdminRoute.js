@@ -1,13 +1,8 @@
 import e from "express";
-import { 
-    createJob,
-    getJobID,
- } from "../controllers/JobController.js"
-
+import {getAllGenset} from "../controllers/AdminController.js";
 const router = e.Router();
 
-router.get("/getJobID", getJobID);
-router.post("/createJob", createJob);
+router.get("/getAllGenset", getAllGenset);
 
 export default router;
 
