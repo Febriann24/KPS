@@ -46,8 +46,6 @@ const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, hand
   );
 };
 
-
-
 const FilterButton = ({ handleFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
@@ -78,34 +76,34 @@ const DataTable = ({ data, onSort }) => {
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border rounded-md mt-4">
         <thead>
-          <tr className="bg-gray-200">
+        <tr className="bg-gray-200">
             <th
               className="border p-2 text-center cursor-pointer"
-              onClick={() => onSort('NAMA_LENGKAP')}
+              onClick={() => onSort("NAMA_LENGKAP")}
             >
               Nama
             </th>
             <th
               className="border p-2 text-center cursor-pointer"
-              onClick={() => onSort('createdAt')}
+              onClick={() => onSort("createdAt")}
             >
               Waktu Bergabung
             </th>
             <th
               className="border p-2 text-center cursor-pointer"
-              onClick={() => onSort('TR_PENGAJUAN_PINJAMANs')}
+              onClick={() => onSort("TR_PENGAJUAN_PINJAMANs")}
             >
               Pinjaman
             </th>
             <th
               className="border p-2 text-center cursor-pointer"
-              onClick={() => onSort('TR_PENGAJUAN_SIMPANANs')}
+              onClick={() => onSort("TR_PENGAJUAN_SIMPANANs")}
             >
               Simpanan
             </th>
             <th
               className="border p-2 text-center cursor-pointer"
-              onClick={() => onSort('principalSavings')}
+              onClick={() => onSort("principalSavings")}
             >
               Tabungan
             </th>
@@ -211,19 +209,6 @@ const ListUser = () => {
           row.createdAt &&
           new Date(row.createdAt).toLocaleDateString().toLowerCase().includes(searchTerm)
         );
-      } else if (selectedField === "TR_PENGAJUAN_PINJAMANs") {
-        return row.TR_PENGAJUAN_PINJAMANs.some((loan) =>
-          loan.NOMINAL.toString().toLowerCase().includes(searchTerm)
-        );
-      } else if (selectedField === "TR_PENGAJUAN_SIMPANANs") {
-        return row.TR_PENGAJUAN_SIMPANANs.some((saving) =>
-          saving.NOMINAL.toString().toLowerCase().includes(searchTerm)
-        );
-      } else if (selectedField === "principalSavings") {
-        return (
-          row.principalSavings &&
-          row.principalSavings.toString().toLowerCase().includes(searchTerm)
-        );
       }
   
       return false;
@@ -236,37 +221,76 @@ const ListUser = () => {
     setData(filteredData);
   };
   
-
   const handleSort = (column) => {
     let direction = 'asc';
     if (sortConfig.key === column && sortConfig.direction === 'asc') {
       direction = 'desc';
     }
     setSortConfig({ key: column, direction });
-
+  
     const sortedData = [...data].sort((a, b) => {
-      let aValue, bValue;
-
-      if (column === 'TR_PENGAJUAN_PINJAMANs') {
-        aValue = a.TR_PENGAJUAN_PINJAMANs.length > 0 ? a.TR_PENGAJUAN_PINJAMANs[0].NOMINAL : 0;
-        bValue = b.TR_PENGAJUAN_PINJAMANs.length > 0 ? b.TR_PENGAJUAN_PINJAMANs[0].NOMINAL : 0;
-      } else {
-        aValue = a[column];
-        bValue = b[column];
+      if (column === 'NAMA_LENGKAP') {
+        const aName = a[column].toLowerCase();
+        const bName = b[column].toLowerCase();
+        return direction === 'asc' ? aName.localeCompare(bName) : bName.localeCompare(aName);
+      }
+  
+      if (column === 'createdAt') {
+        const aDate = new Date(a[column]);
+        const bDate = new Date(b[column]);
+        return direction === 'asc' ? aDate - bDate : bDate - aDate;
+      }
+  
+      if (column === 'principalSavings') {
+        const cleanNominal = (value) => parseFloat(value.replace(/[^0-9.-]+/g, ""));
+        const getTotalTabungan = (row) => {
+          return row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+            const statusCode = saving.status?.STATUS_CODE;
+            const typeName = saving.type?.TYPE_NAME;
+            const nominalValue = parseFloat(saving.NOMINAL) || 0;
+            return statusCode === 'APPROVED' && typeName === 'Simpanan Sukarela' 
+              ? acc + nominalValue 
+              : acc;
+          }, 0);
+        };
+  
+        const aValue = getTotalTabungan(a);
+        const bValue = getTotalTabungan(b);
+  
+        if (aValue < bValue) return direction === 'asc' ? 1 : -1;
+        if (aValue > bValue) return direction === 'asc' ? -1 : 1;
+        return 0;
       }
 
-      if (aValue < bValue) {
-        return direction === 'asc' ? -1 : 1;
-      }
-      if (aValue > bValue) {
-        return direction === 'asc' ? 1 : -1;
-      }
+      const cleanNominal = (value) => parseFloat(value.replace(/[^0-9.-]+/g, ""));
+      const getTotalAmount = (row, type) => {
+        if (type === 'TR_PENGAJUAN_PINJAMANs') {
+          return row.TR_PENGAJUAN_PINJAMANs.reduce((acc, loan) => {
+            return loan.status?.STATUS_CODE === 'APPROVED'
+              ? acc + cleanNominal(loan.NOMINAL)
+              : acc;
+          }, 0);
+        } else if (type === 'TR_PENGAJUAN_SIMPANANs') {
+          return row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
+            return saving.status?.STATUS_CODE === 'APPROVED'
+              ? acc + cleanNominal(saving.NOMINAL)
+              : acc;
+          }, 0);
+        }
+        return 0;
+      };
+  
+      const aValue = getTotalAmount(a, column);
+      const bValue = getTotalAmount(b, column);
+  
+      if (aValue < bValue) return direction === 'asc' ? 1 : -1;
+      if (aValue > bValue) return direction === 'asc' ? -1 : 1;
       return 0;
     });
-
+  
     setData(sortedData);
-  };
-
+  };  
+  
   const handleFilter = (order) => {
     const columnToSort = 'createdAt';
 
