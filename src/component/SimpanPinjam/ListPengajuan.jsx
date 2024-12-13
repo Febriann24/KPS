@@ -356,7 +356,10 @@ const SearchFilterBar = ({ setFilters, setIsFetchMore }) => {
           {openFilter && 
           
           (
-          <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
+          <div 
+          className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50"
+          
+          >
             <div className="bg-white p-6 rounded-lg shadow-lg w-[500px]">
               <h4 className="font-bold text-xl text-center">Opsi Filter Pengajuan</h4>
               <form className="my-4" onSubmit={handleButtonSearch}>

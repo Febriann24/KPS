@@ -145,13 +145,6 @@ const PengajuanButton = ({ id, status, pengajuan }) => {
           >
             TOLAK
           </button>
-    
-          <button 
-          className="bg-teal-500 text-white 
-          px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
-          hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
-            Cetak Dokumen
-          </button>
         </div>
       )
     } else {
