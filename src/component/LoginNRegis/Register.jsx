@@ -12,6 +12,8 @@ function Register(){
     const [alamat, setAlamat] = useState('');
     const [lahir, setLahir] = useState('');
     const [password, setPassword] = useState('');
+    const [unitKerja, setUnitKerja] = useState('');
+    const [noAnggota, setNoAnggota] = useState('');
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState('');
     const [msg, setMsg] = useState('');
@@ -19,12 +21,11 @@ function Register(){
 
     const Register = async(e) => {
         e.preventDefault();
-        if (!name || !email || !phone || !password || !confirmPassword || !role ) {
+        if (!name || !email || !phone || !password || !confirmPassword || !role || !alamat || !lahir || !unitKerja || !noAnggota) {
             setMsg("Semua field harus diisi");
             return;
         }
     
-        // Validasi password dan confirmPassword
         if (password !== confirmPassword) {
             setMsg("Password dan Confirm Password tidak cocok");
             return;
@@ -38,6 +39,8 @@ function Register(){
                 noTelp: phone,
                 alamat: alamat,
                 tanggalLahir: lahir,
+                unitKerja: unitKerja,
+                noAnggota: noAnggota,
                 role: role 
             });
             navigate("/login");
@@ -141,30 +144,51 @@ function Register(){
                     <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Confirm password</label>
                     <input 
                         name="confirmPassword"
-                        value={confirmPassword}   // Gunakan state confirmPassword
+                        value={confirmPassword} 
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         type="password" 
                         placeholder="Enter your password" 
                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
                 <div>
-                    <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Alamat</label>
-                    <input 
-                        name="Alamat"
-                        value={alamat}   // Gunakan state confirmPassword
-                        onChange={(e) => setAlamat(e.target.value)} 
-                        type="text" 
-                        placeholder="Masukkan Alamat Anda" 
-                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
-                </div>
+                    <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">Alamat</label>
+                    <textarea
+                        name="alamat"
+                        value={alamat}
+                        onChange={(e) => setAlamat(e.target.value)}
+                        placeholder="Masukkan Alamat Anda"
+                        className="block w-full h-[54px] px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                        />
+                    </div>  
+
                 <div>
                     <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Tanggal Lahir</label>
                     <input 
                         name="Lahir"
-                        value={lahir}   // Gunakan state confirmPassword
+                        value={lahir}   
                         onChange={(e) => setLahir(e.target.value)}
                         type="date"
                         placeholder="Masukkan Tanggal Lahir Anda" 
+                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Unit Kerja</label>
+                    <input 
+                        name="Unit Kerja"
+                        value={unitKerja}   
+                        onChange={(e) => setUnitKerja(e.target.value)}
+                        type="text"
+                        placeholder="Masukkan Unit Kerja Anda" 
+                        className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Nomor Anggota</label>
+                    <input 
+                        name="Nomor Anggota"
+                        value={noAnggota}   
+                        onChange={(e) => setNoAnggota(e.target.value)}
+                        type="text"
+                        placeholder="Masukkan Nomor Anggota Anda" 
                         className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
                     <button

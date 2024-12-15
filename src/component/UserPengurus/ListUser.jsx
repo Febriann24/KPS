@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatRupiah } from '../../utils/utils';
 
 const SearchFilterBar = ({ filterCriteria, setFilterCriteria, handleSearch, handleFilter }) => {
@@ -177,8 +177,14 @@ const ListUser = () => {
   const [originalData, setOriginalData] = useState([]);
   const [filterCriteria, setFilterCriteria] = useState({ selectedOption: '', searchTerm: '' });
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
+  const navigate = useNavigate();
+  const role = localStorage.getItem('UUID_MS_JOB');
+
 
   useEffect(() => {
+    if (role === '1') {  
+      navigate('/'); 
+  } else {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/user");
@@ -190,6 +196,7 @@ const ListUser = () => {
       }
     };
     fetchData();
+  }
   }, []);
 
   const handleSearch = () => {

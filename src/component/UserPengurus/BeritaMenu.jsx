@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
+import { useNavigate } from 'react-router-dom';
 
 const BeritaMenu = () => {
     const [berita, setBerita] = useState([]);
@@ -9,8 +10,14 @@ const BeritaMenu = () => {
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false); // state to show confirmation modal
     const [beritaToDelete, setBeritaToDelete] = useState(null); // store the berita to delete
+    const navigate = useNavigate();
+    const role = localStorage.getItem('UUID_MS_JOB');
 
+    
     useEffect(() => {
+        if (role === '1') {  
+            navigate('/'); 
+        } else {
         const fetchBerita = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/berita');
@@ -24,7 +31,8 @@ const BeritaMenu = () => {
         };
 
         fetchBerita();
-    }, []);
+    }
+    }, [role, navigate]);
 
     const getImageSrc = (fotoBerita) => {
         if (fotoBerita.startsWith("data:image/")) {

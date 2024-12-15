@@ -62,6 +62,14 @@ const MS_USER = db.define("MS_USER", {
         type: DataTypes.STRING(100), 
         allowNull: true
     },
+    UNIT_KERJA: {
+        type: DataTypes.STRING(100), 
+        allowNull: true
+    },
+    NOMOR_ANGGOTA: {
+        type: DataTypes.INTEGER, 
+        allowNull: true
+    },
     UUID_MS_JOB: {
         type: DataTypes.BIGINT,  // Sesuaikan tipe data dengan yang ada di MS_JOB
         allowNull: false,

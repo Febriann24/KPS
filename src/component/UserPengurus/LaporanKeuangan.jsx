@@ -4,6 +4,7 @@ import F from "../H&F/Footer";
 import { jsPDF } from "jspdf";
 import axios from "axios";
 import { formatRupiah } from '../../utils/utils';
+import { useNavigate } from 'react-router-dom';
 
 const LaporanKeuangan = () => {
   const [reportData, setReportData] = useState([]);
@@ -14,8 +15,13 @@ const LaporanKeuangan = () => {
   const [error, setError] = useState(""); 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
+  const role = localStorage.getItem('UUID_MS_JOB');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (role === '1') {  
+      navigate('/'); 
+  } else {
     const fetchFinancialStatementData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/getFinancialStatementData");
@@ -31,6 +37,7 @@ const LaporanKeuangan = () => {
     };
   
     fetchFinancialStatementData();
+  }
   }, []);   
 
   const handleFilter = (e) => {

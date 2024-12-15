@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
+import { useNavigate } from 'react-router-dom';
 
 const PengurusApprove = () => {
     const [approvals, setApprovals] = useState([]);
@@ -13,6 +14,13 @@ const PengurusApprove = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [actionType, setActionType] = useState('');
+    const navigate = useNavigate();
+    const role = localStorage.getItem('UUID_MS_JOB');
+
+    if (role === '1') {  
+        navigate('/'); 
+        return null; 
+      }
 
     const fetchApprovals = async () => {
         try {

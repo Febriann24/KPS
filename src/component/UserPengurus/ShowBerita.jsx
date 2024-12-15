@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import H from "../H&F/Header";
 import F from "../H&F/Footer";
 
@@ -9,8 +9,13 @@ const ShowBerita = () => {
     const [berita, setBerita] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const role = localStorage.getItem('UUID_MS_JOB');
 
     useEffect(() => {
+        if (role === '1') { 
+            navigate('/'); 
+        } else {
         const fetchBerita = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/showBerita/${id}`);
@@ -23,6 +28,7 @@ const ShowBerita = () => {
         };
 
         fetchBerita();
+    }
     }, [id]);
 
     if (loading) {

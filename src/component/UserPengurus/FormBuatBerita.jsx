@@ -19,6 +19,12 @@ function FormBuatBerita() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const role = localStorage.getItem('UUID_MS_JOB');
+
+  if (role === '1') {  
+    navigate('/'); 
+    return null; 
+  }
 
   const handleChange = async (e) => {
     const { name, value, type, files } = e.target;
