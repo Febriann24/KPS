@@ -10,6 +10,7 @@ import {
     getActivePengajuanPinjamanAnggota,
     getActivePengajuanSimpananAnggota,
     getFilteredPengajuan,
+    createMandatoryPengajuan,
  } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post("/createStatus/:PENGAJUAN", createStatus);
 router.post("/createType/:PENGAJUAN", createType);
 router.post("/createPengajuan/:PENGAJUAN", createPengajuan);
 router.patch("/updateStatusPengajuan", updateStatusPengajuan);
+router.post("/createMandatoryPengajuan", createMandatoryPengajuan);
 
 
 export default router;

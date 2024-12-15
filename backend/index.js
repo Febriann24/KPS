@@ -8,6 +8,7 @@ import BeritaRoute from "./routes/BeritaRoute.js";
 import KeuanganRoute from "./routes/KeuanganRoute.js";
 import JobRoute from "./routes/JobRoute.js";
 import db from "./config/database.js";
+import Scheduler from "./scheduler.js";
 
 //IMPORT ALL MODELS FOR SYNCING
 import MsGeneralSetting from './models/MS_GENERALSETTING.js';
@@ -55,6 +56,8 @@ app.use(PengajuanRoute);
 app.use(BeritaRoute);
 app.use(KeuanganRoute);
 app.use(JobRoute);
+
+Scheduler();
 
 // Start the server
 app.listen(5000, () => console.log("Server is running..."));

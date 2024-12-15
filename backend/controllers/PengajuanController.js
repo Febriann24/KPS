@@ -15,14 +15,14 @@ const getPengajuanIncludeAttribute = (PENGAJUAN) => {
         {
             model: MS_USER,
             as: 'user',
-            attributes: ['NAMA_LENGKAP', 'ALAMAT', 'DTM_CRT', 'NOMOR_TELP']
+            attributes: ['NAMA_LENGKAP', 'ALAMAT', 'createdAt', 'NOMOR_TELP']
         },
     ];
 
     let attributes = [
         'NOMINAL',
         'REASON',
-        'DTM_CRT',
+        'createdAt',
         "DTM_APPROVED"
     ];
 
@@ -129,7 +129,7 @@ export const getPengajuan = async (req, res) => {
 //     let query = `
 //         SELECT
 //             i."UUID_PENGAJUAN_PINJAMAN" as "UUID_PENGAJUAN",
-//             i."DTM_CRT",
+//             i."createdAt",
 //             t."TYPE_NAME",
 //             u."UUID_MS_USER",
 //             u."NAMA_LENGKAP",
@@ -149,8 +149,8 @@ export const getPengajuan = async (req, res) => {
 //     if(isFiltered) {
 //         query += `
 //             AND
-//             (i."DTM_CRT"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
-//             (i."DTM_CRT"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
+//             (i."createdAt"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
+//             (i."createdAt"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
 //             (:filterName IS NULL OR u."NAMA_LENGKAP" ILIKE '%' || :filterName || '%') AND
 //             (:filterMinimalNominal IS NULL OR i."NOMINAL" >= :filterMinimalNominal) AND
 //             (:filterMaksimalNominal IS NULL OR i."NOMINAL" <= :filterMaksimalNominal)
@@ -175,7 +175,7 @@ export const getPengajuan = async (req, res) => {
 
 //         SELECT
 //             i."UUID_PENGAJUAN_SIMPANAN" as "UUID_PENGAJUAN",
-//             i."DTM_CRT",
+//             i."createdAt",
 //             t."TYPE_NAME",
 //             u."UUID_MS_USER",
 //             u."NAMA_LENGKAP",
@@ -195,8 +195,8 @@ export const getPengajuan = async (req, res) => {
 //     if(isFiltered) {
 //         query += `
 //             AND
-//             (i."DTM_CRT"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
-//             (i."DTM_CRT"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
+//             (i."createdAt"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
+//             (i."createdAt"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
 //             (:filterName IS NULL OR u."NAMA_LENGKAP" ILIKE '%' || :filterName || '%') AND
 //             (:filterMinimalNominal IS NULL OR i."NOMINAL" >= :filterMinimalNominal) AND
 //             (:filterMaksimalNominal IS NULL OR i."NOMINAL" <= :filterMaksimalNominal)
@@ -216,10 +216,10 @@ export const getPengajuan = async (req, res) => {
 //         }
 //     }
 
-//     let sort = "DTM_CRT";
+//     let sort = "createdAt";
 //     switch(sortBy) {
 //         case "DATE":
-//             sort = "DTM_CRT"
+//             sort = "createdAt"
 //             break;
 //         case "NOMINAL":
 //             sort = "NOMINAL"
@@ -287,12 +287,12 @@ export const getFilteredPengajuan = async(req, res) => {
         filterMaksimalNominal
     } = req.body;
 
-    let sort = "DTM_CRT";
-    let lastColumnName = `i."DTM_CRT"`;
+    let sort = "createdAt";
+    let lastColumnName = `i."createdAt"`;
     switch(sortBy) {
         case "DATE":
-            sort = "DTM_CRT"
-            lastColumnName = `i."DTM_CRT"`
+            sort = "createdAt"
+            lastColumnName = `i."createdAt"`
             break;
         case "NOMINAL":
             sort = "NOMINAL"
@@ -324,7 +324,7 @@ export const getFilteredPengajuan = async(req, res) => {
         query += `
             SELECT
                 i."UUID_PENGAJUAN_PINJAMAN" as "UUID_PENGAJUAN",
-                i."DTM_CRT",
+                i."createdAt",
                 t."TYPE_NAME",
                 u."UUID_MS_USER",
                 u."NAMA_LENGKAP",
@@ -350,8 +350,8 @@ export const getFilteredPengajuan = async(req, res) => {
         if(isFiltered) {
             query += `
                 AND
-                (i."DTM_CRT"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
-                (i."DTM_CRT"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
+                (i."createdAt"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
+                (i."createdAt"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
                 (:filterName IS NULL OR u."NAMA_LENGKAP" ILIKE '%' || :filterName || '%') AND
                 (:filterMinimalNominal IS NULL OR i."NOMINAL" >= :filterMinimalNominal) AND
                 (:filterMaksimalNominal IS NULL OR i."NOMINAL" <= :filterMaksimalNominal)
@@ -374,7 +374,7 @@ export const getFilteredPengajuan = async(req, res) => {
         query +=`
             SELECT
                 i."UUID_PENGAJUAN_SIMPANAN" as "UUID_PENGAJUAN",
-                i."DTM_CRT",
+                i."createdAt",
                 t."TYPE_NAME",
                 u."UUID_MS_USER",
                 u."NAMA_LENGKAP",
@@ -401,8 +401,8 @@ export const getFilteredPengajuan = async(req, res) => {
         if(isFiltered) {
             query += `
                 AND
-                (i."DTM_CRT"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
-                (i."DTM_CRT"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
+                (i."createdAt"::DATE >= :filterFromDate OR :filterFromDate IS NULL) AND 
+                (i."createdAt"::DATE <= :filterToDate OR :filterToDate IS NULL) AND
                 (:filterName IS NULL OR u."NAMA_LENGKAP" ILIKE '%' || :filterName || '%') AND
                 (:filterMinimalNominal IS NULL OR i."NOMINAL" >= :filterMinimalNominal) AND
                 (:filterMaksimalNominal IS NULL OR i."NOMINAL" <= :filterMaksimalNominal)
@@ -727,4 +727,52 @@ export const getActivePengajuanSimpananAnggota = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error fetching data", error: error.message }); 
     }
+}
+
+export const createMandatoryPengajuan = async(req, res) => {
+    try {
+        const dtmNow = new Date();
+        const monthNow = dtmNow.getMonth() + 1;
+        const yearNow = dtmNow.getFullYear();
+        const [bulkSimpanan, metadataSimpanan] = await db.query(
+            `
+                SELECT
+                u."UUID_MS_USER",
+                t."UUID_TYPE_SIMPANAN" as "UUID_MS_TYPE_SIMPANAN",
+                s."UUID_STATUS_SIMPANAN" as "UUID_MS_STATUS_SIMPANAN",
+                t."DEFAULT_NOMINAL" as "NOMINAL",
+                :dtmNow as "DTM_APPROVED" 
+                FROM "MS_USER" u
+                JOIN "MS_TYPE_SIMPANAN" t on t."IS_MANDATORY" = 1 
+                JOIN "MS_STATUS_SIMPANAN" s on s."STATUS_CODE" = 'APPROVED' 
+                JOIN "MS_JOB" j on u."UUID_MS_JOB" = j."UUID_MS_JOB"
+                WHERE
+                    j."JOB_CODE" = 'ANGGOTA' AND
+                    (
+                        u."UUID_MS_USER" NOT IN (
+                                                    SELECT "UUID_MS_USER" 
+                                                    FROM "TR_PENGAJUAN_SIMPANAN" 
+                                                    WHERE
+                                                        t."TYPE_NAME" = 'Simpanan Pokok' OR
+                                                        (
+                                                            t."TYPE_NAME" != 'Simpanan Pokok' AND
+                                                            EXTRACT(MONTH FROM "createdAt") = :monthNow
+                                                            AND
+                                                            EXTRACT(YEAR FROM "createdAt") = :yearNow)
+                                                        )
+                    )
+                ORDER BY "UUID_MS_USER" ASC, "UUID_TYPE_SIMPANAN" DESC
+            `, {
+                replacements: {
+                    monthNow: monthNow,
+                    yearNow: yearNow,
+                    dtmNow: dtmNow
+                }
+            }
+        );
+        const bulkCreatePengajuan = await TR_PENGAJUAN_SIMPANAN.bulkCreate(bulkSimpanan)
+    } catch (error) {
+        console.log(error)
+    }
+    
 }

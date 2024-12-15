@@ -1,13 +1,20 @@
 import H from "../H&F/Header.jsx"
 import F from "../H&F/Footer.jsx"
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   getCurrentLoggedInData ,
   formatDate,
   formatRupiah
 } from "../../utils/utils.js";
 import axios from "axios";
+import {
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Button,
+} from "@material-tailwind/react";
 
 const KeuanganAnggota = ({userData}) => { 
   const [dataPinjaman, setDataPinjaman] = useState([])
@@ -117,7 +124,116 @@ const KeuanganAnggota = ({userData}) => {
   )
 }
 
-function HalamanAwalSImpanPinjam() {
+const KeuanganKoperasi = ({userData}) => { 
+  const [dataPinjaman, setDataPinjaman] = useState([])
+  const [dataSimpanan, setDataSimpanan] = useState([])
+  const [keuanganPinjaman, setKeuanganPinjaman] = useState([])
+  const [keuanganSimpanan, setKeuanganSimpanan] = useState([])
+    useEffect(() => {
+      if (!isNaN(userData?.UUID_MS_USER)){
+        const fetchDataType = async () => {
+            try {
+              const now = new Date();
+              const month = now.getMonth() + 1;
+              const year = now.getFullYear();
+              const dataFilter = {
+                "id": userData?.UUID_MS_USER,
+                "month": month,
+                "year": year
+              }
+              const dataPinjaman = await axios.post(`http://localhost:5000/getActivePengajuanPinjamanAnggota`, dataFilter);
+              const dataSimpanan = await axios.post(`http://localhost:5000/getActivePengajuanSimpananAnggota`, dataFilter);
+              setDataPinjaman(dataPinjaman.data)
+              setDataSimpanan(dataSimpanan.data)
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchDataType();
+      }
+    }, [userData])
+
+    useEffect(() => {
+      if(dataPinjaman.processedData) {
+        const fetchDataPinjaman = async () => {
+          try {
+            const details = dataPinjaman.processedData.map((item) => {
+              if (item) {
+                return (
+                    <div className="flex justify-between">
+                      <p className="text-lg">{item.TYPE_NAME}</p>
+                      <p className="text-lg">{"Rp " + formatRupiah(String(item.ANGSURAN))}</p>
+                    </div>
+                  );
+              } else {
+                return
+              }
+            });
+            setKeuanganPinjaman(details);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      
+        fetchDataPinjaman();
+      }
+
+      if(dataSimpanan.processedData) {
+        const fetchDataSimpanan = async () => {
+          try {
+            const details = dataSimpanan.processedData.map((item) => {
+              if (item) {
+                return (
+                    <div className="flex justify-between">
+                      <p className="text-lg">{item.TYPE_NAME}</p>
+                      <p className="text-lg">{"Rp " + formatRupiah(String(item.total_nominal))}</p>
+                    </div>
+                  );
+              } else {
+                return
+              }
+            });
+            setKeuanganSimpanan(details);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      
+        fetchDataSimpanan();
+      }
+    }, [dataSimpanan, dataSimpanan])
+
+  return (
+    <div className="col-span-1 row-span-3 bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between">
+    <div>
+      <div className="text-xl font-semibold text-gray-700 mb-2 text-center">Keuangan Koperasi Bulan ini</div>
+      <h1 className="text-5xl font-bold text-red-800 mb-4 text-center">{"Rp " + formatRupiah(String(dataSimpanan.TOTAL_SIMPANAN + dataPinjaman.TOTAL_ANGSURAN))}</h1>
+    </div>
+    {/* TOTAL SIMPANAN */}
+    <div className="mt-8">
+      <div className="flex font-bold justify-between">
+        <p className="text-lg">Total Simpanan</p>
+        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(dataSimpanan.TOTAL_SIMPANAN))}</p>
+      </div>
+
+      {keuanganSimpanan}
+
+      {/* TOTAL PINJAMAN */}
+      <div className="flex font-bold mt-4 justify-between">
+        <p className="text-lg">Total Pinjaman</p>
+        <p className="text-lg text-red-800">{"Rp " + formatRupiah(String(dataPinjaman.TOTAL_ANGSURAN))}</p>
+      </div>
+
+      {keuanganPinjaman}
+
+    </div>
+  </div>
+  )
+}
+
+function HalamanAwalSimpanPinjam() {
+  const navigate = useNavigate();
   const userData = getCurrentLoggedInData();
     return (
       <>
@@ -130,7 +246,7 @@ function HalamanAwalSImpanPinjam() {
             <div className="grid grid-cols-2 grid-rows-3 gap-4 max-w-7xl w-full p-12 h-full" style={{width:"1300px"}}>
               <div className="col-span-1 row-span-1 bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center text-center">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Total Tabungan Koperasi</h2>
-                <h1 className="text-5xl font-bold text-green-600 mb-4">Rp 2.399.832.200,00</h1>
+                <h1 className="text-5xl font-bold text-green-600 mb-4">Rp 399.832.200,00</h1>
               </div>
 
               <div className="col-span-1 row-span-4">
@@ -150,6 +266,10 @@ function HalamanAwalSImpanPinjam() {
                       <div className="bg-black bg-opacity-30 px-4 py-4 rounded-lg mx-auto">
                         <div className="text-left text-white">
                           <div className="flex mb-2">
+                          <p className="text-lg w-48">Peran</p>
+                          <p className="text-lg ml-4">: {userData?.MS_JOB.JOB_CODE}</p>
+                          </div>
+                          <div className="flex mb-2">
                           <p className="text-lg w-48">Unit Kerja</p>
                           <p className="text-lg ml-4">: Sekolah</p>
                           </div>
@@ -163,44 +283,54 @@ function HalamanAwalSImpanPinjam() {
                           </div>
                           <div className="flex mb-2">
                           <p className="text-lg w-48">Tanggal Bergabung</p>
-                          <p className="text-lg ml-4">: {formatDate(userData?.DTM_CRT)}</p>
+                          <p className="text-lg ml-4">: {formatDate(userData?.createdAt)}</p>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <div className="flex justify-between gap-4">
-                      <div className="flex flex-col items-center gap-4 w-full justify-center">
-                        <span className="text-lg font-semibold">Ajukan Pengajuan</span>
-                        <div className="flex justify-between gap-4 w-full">
-                          <Link to='/FormPengajuanPinjaman' className="w-full">
-                          <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
-                            Pinjaman
-                          </button>
-                          </Link>
-                          <Link to='/FormPengajuanSimpanan' className="w-full">
-                          <button className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
-                            Simpanan
-                          </button>
-                          </Link>
-                        </div>
-                      </div>
-                      
+                    {userData?.MS_JOB.JOB_CODE == "ANGGOTA" && (
+                      <Menu>
+                        <MenuHandler>
+                          <button
+                            className="w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold"
+                          >Ajukan Pengajuan</button>
+                        </MenuHandler>
+                        <MenuList
+                          className=""
+                        >
+                          <MenuItem
+                            className="w-full hover:bg-gray-200 py-2"
+                            onClick={() => navigate('/FormPengajuanPinjaman')}
+                          >Ajukan Pinjaman</MenuItem>
+                          <MenuItem
+                            className="w-full hover:bg-gray-200 py-2"
+                            onClick={() => navigate('/FormPengajuanSimpanan')}
+                          >Ajukan Simpanan</MenuItem>
+                        </MenuList>
+                      </Menu>
+                    )}
                       
                       <Link to='/ListPengajuan' className="w-full">
-                      <button className="h-full w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold">
-                        Lihat Pengajuan
+                      <button 
+                      className="h-full w-full py-2 bg-white text-gray-700 rounded-lg shadow hover:bg-gray-100 transition-colors font-semibold"
+                      onClick={() => navigate('/ListPengajuan')}>
+                        Lihat Pengajuan {userData?.MS_JOB.JOB_CODE == "ANGGOTA" && (<>Saya</>)} {userData?.MS_JOB.JOB_CODE == "PENGURUS" && (<>Semua Anggota</>)}
                       </button>
                       </Link>
                     </div>
-                    <a href="#" className="block mt-4 text-center text-blue-500 underline">
-                      Baca Syarat & Ketentuan Pengajuan
-                    </a>
+                    {userData?.MS_JOB.JOB_CODE == "ANGGOTA" && (
+                      <a href="#" className="block mt-4 text-center text-blue-500 underline">
+                        Baca Syarat & Ketentuan Pengajuan
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <KeuanganAnggota userData={userData}/>
+              {userData?.MS_JOB.JOB_CODE == "ANGGOTA" && (<KeuanganAnggota userData={userData}/>)}
+              {userData?.MS_JOB.JOB_CODE == "PENGURUS" && (<KeuanganKoperasi userData={userData}/>)}
               
             </div>
           </div>
@@ -214,4 +344,4 @@ function HalamanAwalSImpanPinjam() {
     );
 }
 
-export default HalamanAwalSImpanPinjam
+export default HalamanAwalSimpanPinjam
