@@ -195,13 +195,13 @@ const Information = () => {
 
           nama: obj.user.NAMA_LENGKAP,
           alamat: obj.user.ALAMAT,
-          tnglbergabung: formatDate(obj.user.DTM_CRT),
+          tnglbergabung: formatDate(obj.user.createdAt),
           notelp: obj.user.NOMOR_TELP,
           unitkerja: obj.user.UNIT_KERJA,
           noanggota: obj.user.NOMOR_ANGGOTA,
 
           nominal: obj.NOMINAL,
-          tanggal: formatDate(obj.DTM_CRT),
+          tanggal: formatDate(obj.createdAt),
           tipe: obj.type.TYPE_NAME,
           tenor: obj.TENOR,
           bunga: obj.INTEREST_RATE,

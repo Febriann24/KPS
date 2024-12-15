@@ -325,7 +325,7 @@ export const getOneUser = async (req, res) => {
                 "EMAIL",
                 "TANGGAL_LAHIR",
                 "ALAMAT",
-                "DTM_CRT"
+                "createdAt"
             ]
         });
         res.status(200).json(data)
