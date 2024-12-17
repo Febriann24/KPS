@@ -26,6 +26,7 @@ import GeneralSettings from './component/UserAdmin/GeneralSettings'
 import ConfigCMS from './component/UserAdmin/ConfigCMS.jsx';
 import ListBerita from './component/UserAdmin/ListBerita.jsx';
 import ListUserAdmin from './component/UserAdmin/LIstUserAdmin.jsx';
+import ModalUpdateSetting from './component/UserAdmin/ModalEditGenset.jsx';
 
 import axios from 'axios';
 import {
@@ -68,6 +69,11 @@ function App() {
             <Route exact path="/HubungiKami" element = {<HubKam/>} /> 
             <Route exact path="/Login" element = {<LogIn/>} /> 
             <Route exact path='/Register' element={<Register/>} />
+            <Route exact path='/generalsettings' element = {<GeneralSettings/>} />
+            <Route exact path='/cmsconfig' element = {<ConfigCMS/>} />
+            <Route exact path='/accountmanagement' element = {<ListUserAdmin/>} />
+            <Route exact path='/newsmanagement' element = {<ListBerita/>} />
+            <Route exact path='/modalupdate' element = {<ModalUpdateSetting/>} />
           </Routes>
             {userID  && (
             <Routes>
@@ -85,11 +91,6 @@ function App() {
               <Route exact path='/showBerita/:id' element ={<ShowBerita/>} />
               <Route exact path='/editBerita/:id' element ={<EditBerita/>} />
               <Route exact path='/ListPengajuan' element = {<ListPengajuan/>} />
-              <Route exact path='/generalsettings' element = {<GeneralSettings/>} />
-              <Route exact path='/cmsconfig' element = {<ConfigCMS/>} />
-              <Route exact path='/accountmanagement' element = {<ListUserAdmin/>} />
-              <Route exact path='/newsmanagement' element = {<ListBerita/>} />
-
             </Routes>
             )}
         </Router>

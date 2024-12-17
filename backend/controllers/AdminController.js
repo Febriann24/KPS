@@ -1,6 +1,5 @@
 import db from "../config/database.js"
 import MsGeneralSetting from "../models/MS_GENERALSETTING.js";
-import GeneralSettings from "../../src/component/UserAdmin/GeneralSettings.jsx";
 import MS_USER from "../models/MS_USER.js"
 import Sequelize from "sequelize";
 import { Op } from "sequelize";
@@ -13,69 +12,62 @@ export const getAllGenset = async (req,res) => {
         console.log(e);
     }
 }
-export const dummy = async (req, res) => {
-    const { id, month, year } = req.body;
+
+export const getOneGenset = async(req,res) => {
     try {
-        const statusPinjaman = await MS_STATUS_PINJAMAN.findOne({ where: { STATUS_CODE: "APPROVED" } });
-        const uuid_status = statusPinjaman.UUID_STATUS_PINJAMAN;
-
-        let query = `
-            SELECT
-            p."UUID_PENGAJUAN_PINJAMAN",
-            p."REASON",
-            p."NOMINAL",
-            s."UUID_STATUS_PINJAMAN",
-            s."STATUS_CODE",
-            t."UUID_TYPE_PINJAMAN",
-            t."TYPE_NAME",
-            p."TENOR",
-            p."INTEREST_RATE",
-            u."UUID_MS_USER",
-            u."NAMA_LENGKAP"
-            FROM "TR_PENGAJUAN_PINJAMAN" p
-            JOIN "MS_STATUS_PINJAMAN" s on p."UUID_MS_STATUS_PINJAMAN" = s."UUID_STATUS_PINJAMAN"
-            JOIN "MS_TYPE_PINJAMAN" t on p."UUID_MS_TYPE_PINJAMAN" = t."UUID_TYPE_PINJAMAN"
-            JOIN "MS_USER" u on p."UUID_MS_USER" = u."UUID_MS_USER"
-            WHERE p."UUID_MS_STATUS_PINJAMAN" = :uuid_status
-            AND p."DTM_APPROVED" is not NULL
-            AND :month in (
-            SELECT month
-            FROM generate_series(
-                EXTRACT(MONTH FROM p."DTM_APPROVED") + (EXTRACT(YEAR FROM p."DTM_APPROVED") - :year) * 12,
-                EXTRACT(MONTH FROM p."DTM_APPROVED") + t."TENOR" - 1 + (EXTRACT(YEAR FROM p."DTM_APPROVED") - :year) * 12
-            ) as month ) 
-        `;
-
-        const replacements = { uuid_status, month, year }
-
-        if (id) {
-            query += ' AND p."UUID_MS_USER" = :id';
-            replacements.id = id;
-        }
-
-        const [data, metadata] = await db.query(query, {
-            replacements: replacements
-        })
-
-        let totalAngsuran = 0;
-
-        const processedData = data.map(row => {
-            const nominal = parseFloat(row.NOMINAL);
-            const bunga = parseFloat(row.INTEREST_RATE);
-            const bulan = row.TENOR;
-
-            const angsuran = countAngsuran(nominal, bunga, bulan);
-
-            totalAngsuran += parseFloat(angsuran);
-
-            return {
-                ...row,
-                ANGSURAN: angsuran
+        const response = await MsGeneralSetting.findOne({
+            where:{
+                UUID_SETTING: req.params.id
             }
         });
+        res.status(200).json(response);
+    }catch(e){
+        console.log(e);
+    }
+}
 
-        res.status(200).json({processedData, TOTAL_ANGSURAN: totalAngsuran})
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching data", error: error.message }); 
+export const updateGenset = async (req,res) => {
+    try{
+        const response = await MsGeneralSetting.update(
+            req.body,
+            {where:{UUID_SETTING: req.params.id}} 
+        );
+        res.status(200).json(response);
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const getGensetFiltered = async (req,res) => {
+    const { searchByValue, searchQueryValue, advancedFilters } = req.body;
+
+    try{
+        let stringQuery = `SELECT * FROM "MS_GENERALSETTING" WHERE 1 = 1`;
+        let replacements = {};
+    
+        if (searchQueryValue) {
+          stringQuery += ` AND "${searchByValue}" ILIKE :searchQueryValue`;
+          replacements.searchQueryValue = `%${searchQueryValue}%`;
+        }
+    
+        if (advancedFilters && Object.keys(advancedFilters).length > 0) {
+          Object.keys(advancedFilters).forEach(key => {
+            if (advancedFilters[key]) {
+                if (key === 'IS_ACTIVE') {
+                    replacements[key] = parseInt(advancedFilters[key], 10);
+                } else {
+                    replacements[key] = advancedFilters[key];
+                }
+              stringQuery += ` AND "${key}" = :${key}`;
+            }
+          });
+        }
+
+        const [results] = await db.query(stringQuery, {
+            replacements,
+        });
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
     }
 }
