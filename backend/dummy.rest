@@ -106,10 +106,10 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "KPKA",
         "TYPE_DESC": "Kredit Pelayanan Khusus Anggota",
-        "TENOR":1,
-        "INTEREST_RATE": 5,
-        "MINIMUM_PINJAMAN": 500000,
-        "MAXIMUM_PINJAMAN": 10000000
+        "TENOR":3,
+        "INTEREST_RATE": 1.5,
+        "MINIMUM_PINJAMAN": 1000000,
+        "MAXIMUM_PINJAMAN": 20000000
     },
     {    
         "IS_ACTIVE": 1,
@@ -117,10 +117,10 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "UKSP",
         "TYPE_DESC": "Usaha Kredit Simpan Pinjam",
-        "TENOR": 3,
-        "INTEREST_RATE": 5,
-        "MINIMUM_PINJAMAN": 10000001,
-        "MAXIMUM_PINJAMAN": 100000000
+        "TENOR": 5,
+        "INTEREST_RATE": 1.5,
+        "MINIMUM_PINJAMAN": 10000000,
+        "MAXIMUM_PINJAMAN": 80000000
     },
     {    
         "IS_ACTIVE": 1,
@@ -128,10 +128,10 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "UKTP",
         "TYPE_DESC": "Usaha Kredit Tunjangan Profesi",
-        "TENOR": 5,
-        "INTEREST_RATE": 5,
-        "MINIMUM_PINJAMAN": 100000001,
-        "MAXIMUM_PINJAMAN": 1000000000
+        "TENOR": 7,
+        "INTEREST_RATE": 1.5,
+        "MINIMUM_PINJAMAN": 5000000,
+        "MAXIMUM_PINJAMAN": 50000000
     }
 ]
 
@@ -146,7 +146,7 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "Simpanan Sukarela",
         "TYPE_DESC": "Simpanan tidak wajib setiap anggota.",
-        "INTEREST_RATE": 5,
+        "INTEREST_RATE": 0.6,
         "MINIMUM_SIMPANAN": 500000,
         "MAXIMUM_SIMPANAN": 10000000,
         "IS_MANDATORY": 0,
@@ -158,48 +158,9 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "Simpanan Wajib",
         "TYPE_DESC": "Simpanan wajib setiap anggota.",
-        "INTEREST_RATE": 5,
+        "INTEREST_RATE": 0.6,
         "IS_MANDATORY": 1,
         "DEFAULT_NOMINAL": 50000,
         "IS_AUTO_APPROVE": 1
     }
 ]
-
-### Create TR_PENGAJUAN_PINJAMAN dummy 1
-POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
-Content-Type: application/json
-
-{
-    "UUID_MS_USER": 1,
-    "UUID_MS_STATUS_PINJAMAN": 1,
-    "UUID_MS_TYPE_PINJAMAN": 1,
-    "USR_CRT": "admin",
-    "NOMINAL": 850000,
-    "REASON": "Kepingin aja pinjem gituh.."
-}
-
-### Create TR_PENGAJUAN_PINJAMAN dummy 2
-POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
-Content-Type: application/json
-
-{
-    "UUID_MS_USER": 2,  
-    "UUID_MS_STATUS_PINJAMAN": 1,
-    "UUID_MS_TYPE_PINJAMAN": 3,
-    "USR_CRT": "admin",
-    "NOMINAL": 3000000,
-    "REASON": "Lorem Ipsum Ahh description, i like my cheese drippy bruh, ohio looksmaxxing sigma boutta bust! gyatt look at shawty like im kai cenat, livvy dunne be like skibidi rizz."
-}
-
-### Create TR_PENGAJUAN_PINJAMAN dummy 3
-POST http://localhost:5000/TR_PENGAJUAN_PINJAMAN/createPengajuanPinjaman
-Content-Type: application/json
-
-{
-    "UUID_MS_USER": 3,  
-    "UUID_MS_STATUS_PINJAMAN": 1,
-    "UUID_MS_TYPE_PINJAMAN": 2,
-    "USR_CRT": "admin",
-    "NOMINAL": 15000000,
-    "REASON": "OGH MAI GAD TESTING"
-}

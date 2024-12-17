@@ -51,7 +51,7 @@ const MS_TYPE_SIMPANAN = db.define("MS_TYPE_SIMPANAN", {
         allowNull: true
     },
     INTEREST_RATE: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false
     },
     IS_MANDATORY: {

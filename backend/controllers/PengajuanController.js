@@ -753,13 +753,10 @@ export const createMandatoryPengajuan = async(req, res) => {
                                                     SELECT "UUID_MS_USER" 
                                                     FROM "TR_PENGAJUAN_SIMPANAN" 
                                                     WHERE
-                                                        t."TYPE_NAME" = 'Simpanan Pokok' OR
-                                                        (
-                                                            t."TYPE_NAME" != 'Simpanan Pokok' AND
-                                                            EXTRACT(MONTH FROM "createdAt") = :monthNow
-                                                            AND
-                                                            EXTRACT(YEAR FROM "createdAt") = :yearNow)
-                                                        )
+                                                        t."TYPE_NAME" != 'Simpanan Pokok' AND
+                                                        EXTRACT(MONTH FROM "createdAt") = :monthNow
+                                                        AND
+                                                        EXTRACT(YEAR FROM "createdAt") = :yearNow)
                     )
                 ORDER BY "UUID_MS_USER" ASC, "UUID_TYPE_SIMPANAN" DESC
             `, {
