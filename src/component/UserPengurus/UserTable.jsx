@@ -7,14 +7,20 @@ import {
   formatRupiah
 } from '../../utils/utils';
 import { BackButton } from '../../utils/components';
+import { useNavigate } from 'react-router-dom';
 
 const UserTable = () => {
   const { id } = useParams();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const role = localStorage.getItem('UUID_MS_JOB');
 
   useEffect(() => {
+    if (role === '1') {  
+      navigate('/'); 
+  } else{
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/userTable/${id}`);
@@ -41,6 +47,7 @@ const UserTable = () => {
       setError('Invalid user ID');
       setLoading(false);
     }
+  }
   }, [id]);
 
   if (loading) {

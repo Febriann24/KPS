@@ -18,8 +18,12 @@ const EditBerita = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showConfirmation, setShowConfirmation] = useState(false); // state for showing the popup
+    const role = localStorage.getItem('UUID_MS_JOB');
 
     useEffect(() => {
+        if (role === '1') {  
+            navigate('/'); 
+        } else{
         const fetchBerita = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/showBerita/${id}`);
@@ -38,6 +42,7 @@ const EditBerita = () => {
         };
 
         fetchBerita();
+    }
     }, [id]);
 
     const convertToBase64 = (file) => {

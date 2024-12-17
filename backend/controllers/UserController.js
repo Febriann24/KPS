@@ -171,7 +171,7 @@ export const UserDataById = async (req, res) => {
   
 
 export const Register = async (req, res) => {
-    const { name, email, password, confPassword, noTelp, role, alamat, tanggalLahir  } = req.body;
+    const { name, email, password, confPassword, noTelp, role, alamat, tanggalLahir, unitKerja, noAnggota  } = req.body;
  
     if (password !== confPassword) {    
         return res.status(400).json({ message: "Passwords do not match with confirm password!" });    
@@ -194,6 +194,8 @@ export const Register = async (req, res) => {
             NOMOR_TELP: noTelp,
             ALAMAT: alamat,
             TANGGAL_LAHIR: tanggalLahir,
+            UNIT_KERJA: unitKerja,
+            NOMOR_ANGGOTA: noAnggota,
             UUID_MS_JOB: job.UUID_MS_JOB
         });
         

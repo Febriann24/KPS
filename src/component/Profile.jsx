@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import H from "./H&F/Header";
 import F from "./H&F/Footer";  
-import foto from './Foto/Koperasi_Logo.png';
+import foto from './Foto/Koperasi_profile.png';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode }  from 'jwt-decode';
 import axios from 'axios';
@@ -16,10 +16,25 @@ export default function Profile() {
     const [phone, setPhone] = useState('');
     const [alamat, setAlamat] = useState('');
     const [lahir, setLahir] = useState('');
+    const [unitKerja, setUnitKerja] = useState('');
+    const [noAnggota, setNoAnggota] = useState('');
     const [expire, setExpire] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        refreshToken();
+      const token = localStorage.getItem('accessToken');
+      console.log(token); // Debugging untuk memastikan token terdeteksi
+      if (token) {
+        setIsLoggedIn(true); // Menandakan pengguna sudah login
+      } else {
+        setIsLoggedIn(false); // Pengguna belum login
+        navigate('/'); // Redirect ke halaman login
+      }
+    }, [navigate]);
+    
+
+    useEffect(() => {
+      refreshToken();
     }, []);
 
     const refreshToken = async () => {
@@ -36,6 +51,8 @@ export default function Profile() {
             setAlamat(decoded.alamat);
             setLahir(decoded.tanggalLahir);
             setExpire(decoded.exp);
+            setNoAnggota(decoded.noAnggota);
+            setUnitKerja(decoded.unitKerja);
         } catch (error) {
             if(error.response){
                 navigate("/");
@@ -47,7 +64,7 @@ export default function Profile() {
       try {
         await axios.delete("http://localhost:5000/logout");
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('uuid_ms_job');
+        localStorage.removeItem('UUID_MS_JOB');
         navigate("/");
       } catch (error) {
         console.log(error);
@@ -62,9 +79,8 @@ export default function Profile() {
         <div className="hidden md:flex md:w-1/2 h-full items-center justify-center">
           <img 
             src={foto} 
-            className="w-[600px] h-[660px] object-cover rounded-lg shadow-lg mt-16" 
+            className="w-[600px] h-[850px] object-cover rounded-lg shadow-lg mt-16" 
             alt="Koperasi Logo" 
-            style={{ position: 'static' }}
           />
         </div>
 
@@ -107,6 +123,22 @@ export default function Profile() {
                 <div className="flex-grow bg-white rounded-lg shadow px-4 py-2">
                   <p className="text-gray-700 font-medium">Alamat</p>
                   <p>{alamat}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <span className="text-lg">🏢</span>
+                <div className="flex-grow bg-white rounded-lg shadow px-4 py-2">
+                  <p className="text-gray-700 font-medium">Unit Kerja</p>
+                  <p>{unitKerja}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <span className="text-lg">🔢</span>
+                <div className="flex-grow bg-white rounded-lg shadow px-4 py-2">
+                  <p className="text-gray-700 font-medium">Nomor Anggota</p>
+                  <p>{noAnggota}</p>
                 </div>
               </div>
 
