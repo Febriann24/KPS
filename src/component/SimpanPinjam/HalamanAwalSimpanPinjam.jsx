@@ -246,7 +246,7 @@ function HalamanAwalSimpanPinjam() {
             <div className="grid grid-cols-2 grid-rows-3 gap-4 max-w-7xl w-full p-12 h-full" style={{width:"1300px"}}>
               <div className="col-span-1 row-span-1 bg-white shadow-lg rounded-lg p-6 flex flex-col items-center justify-center text-center">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Total Tabungan Koperasi</h2>
-                <h1 className="text-5xl font-bold text-green-600 mb-4">Rp 399.832.200,00</h1>
+                <h1 className="text-5xl font-bold text-green-600 mb-4">Rp 399.832.200</h1>
               </div>
 
               <div className="col-span-1 row-span-4">

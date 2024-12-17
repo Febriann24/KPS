@@ -36,6 +36,21 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:5000/createPengajuan/PINJAMAN
+Content-Type: application/json
+
+{
+    "INTEREST_RATE": 1.5,
+    "NOMINAL": 1500000,
+    "REASON": "Ingin melakukan pinjaman sebesar satu setengah juta untuk keperluan rumah",
+    "TENOR": 3,
+    "USR_CRT": "anggota1@gmail.com",
+    "UUID_MS_STATUS_PINJAMAN": 1,
+    "UUID_MS_TYPE_PINJAMAN": "1",
+    "UUID_MS_USER": "1"
+}
+
+###
 GET http://localhost:5000/getStatus
 ###
 GET http://localhost:5000/MS_TYPE_PINJAMAN/getTypePinjaman

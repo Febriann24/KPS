@@ -102,6 +102,7 @@ function FormPengajuanPinjaman() {
       "TENOR": formData.tenor,
       "INTEREST_RATE": formData.bunga
     }
+    console.log('Form Submitted:', dataSubmit);
     try {
       const response = await axios.post('http://localhost:5000/createPengajuan/PINJAMAN', dataSubmit);
       console.log('Form Submitted:', dataSubmit);

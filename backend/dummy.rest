@@ -150,7 +150,7 @@ Content-Type: application/json
         "MINIMUM_SIMPANAN": 500000,
         "MAXIMUM_SIMPANAN": 10000000,
         "IS_MANDATORY": 0,
-        "IS_AUTO_APPROVE": 1
+        "IS_AUTO_APPROVE": 0
     },
     {    
         "IS_ACTIVE": 1,
@@ -158,6 +158,17 @@ Content-Type: application/json
         "USR_CRT": "admin",
         "TYPE_NAME": "Simpanan Wajib",
         "TYPE_DESC": "Simpanan wajib setiap anggota.",
+        "INTEREST_RATE": 0.6,
+        "IS_MANDATORY": 1,
+        "DEFAULT_NOMINAL": 100000,
+        "IS_AUTO_APPROVE": 1
+    },
+    {    
+        "IS_ACTIVE": 1,
+        "IS_DELETED": 0,
+        "USR_CRT": "admin",
+        "TYPE_NAME": "Simpanan Pokok",
+        "TYPE_DESC": "Simpanan pokok setiap anggota.",
         "INTEREST_RATE": 0.6,
         "IS_MANDATORY": 1,
         "DEFAULT_NOMINAL": 50000,
