@@ -6,8 +6,18 @@ import { Op } from "sequelize";
 
 export const getAllGenset = async (req,res) => {
     try{
-        const response = await MsGeneralSetting.findAll();
-        res.status(200).json(response);
+        const { limit, offset  } = req.query;
+
+        const response = await MsGeneralSetting.findAndCountAll({
+            limit: parseInt(limit,10),
+            offset: parseInt(offset,10),
+        });
+
+        res.status(200).json({
+            body: response.rows,
+            totalCount: response.count,
+            totalPages: Math.ceil(response.count / limit),
+        });
     }catch(e){
         console.log(e);
     }
@@ -39,7 +49,7 @@ export const updateGenset = async (req,res) => {
 }
 
 export const getGensetFiltered = async (req,res) => {
-    const { searchByValue, searchQueryValue, advancedFilters } = req.body;
+    const { searchByValue, searchQueryValue, advancedFilters, limit, offset } = req.body;
 
     try{
         let stringQuery = `SELECT * FROM "MS_GENERALSETTING" WHERE 1 = 1`;
@@ -63,10 +73,22 @@ export const getGensetFiltered = async (req,res) => {
           });
         }
 
+        stringQuery += ` LIMIT :limit OFFSET :offset`;
+        replacements.limit = parseInt(limit);
+        replacements.offset = offset;
+
         const [results] = await db.query(stringQuery, {
             replacements,
         });
-        res.status(200).json(results);
+
+        let stringQueryCount = `SELECT COUNT(*) FROM "MS_GENERALSETTING" WHERE 1 = 1`;
+        const [countResult] = await db.query(stringQueryCount, { replacements });
+        const totalCount = countResult[0].count;
+
+        res.status(200).json({            
+            body: results,
+            totalCount: countResult,
+            totalPages: Math.ceil(totalCount / limit),})
     }catch(e){
         console.log(e);
     }

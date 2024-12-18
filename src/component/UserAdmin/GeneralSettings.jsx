@@ -14,7 +14,7 @@ import {
 
 const GeneralSettings = () => {
 
-  const [datas, setData] = useState({});
+  const [datas, setData] = useState([]);
   const [searchBy, setSearchBy] = useState('GS_CODE');
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpened, setIsFilterOpened] = useState(false);
@@ -22,40 +22,105 @@ const GeneralSettings = () => {
   const [advancedFilterData, setAdvancedFilterData] = useState({});
   const [selectedGenset, setSelectedGenset] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [isInit, setIsInit] = useState(true);
   const [hasMore, setHasMore] = useState(true);
-  
-  useEffect(() => {
-    initGensetList();
-  }, [selectedGenset]);
 
-  const initGensetList = async () => {
+  useEffect(() => {
+    if (Object.keys(advancedFilterData).length > 0) {
+      setPage(1); 
+      handleSearch(1); 
+    }
+  }, [advancedFilterData]);
+
+  useEffect(() => {
+    if (searchQuery.trim() || Object.keys(advancedFilterData).length > 0) {
+        handleSearch(page);
+    } else {
+        initGensetList(page);
+    }
+}, [page, selectedGenset]);
+
+  const initGensetList = async (pageNumber) => {
+    setIsLoading(true);
     try{
-      const response = await axios.get('http://localhost:5000/getAllGenset');
-      setData(response.data);
+      const limit = 10;
+      const offset = (pageNumber-1) * limit;
+
+      const response = await axios.get('http://localhost:5000/getAllGenset',{
+        params:{
+          limit,
+          offset
+        }
+      });
+      console.log("current page:", pageNumber);
+      if(pageNumber+1 > response.data.totalPages ){
+        setHasMore(false);
+      }else{
+        setHasMore(true);
+      }
+
+      setData((prevData) => pageNumber === 1 ? response.data.body : [...prevData, ...response.data.body]);
     } catch(e){
-      console.log(e);
+      console.log(e)
+    }finally{
+      setIsLoading(false);
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (pageNumber) => {
     try{
-    const reqBody = {};
-
-    if (searchBy) {
-      reqBody.searchByValue = searchBy;
-    }
-    if (searchQuery) {
-      reqBody.searchQueryValue = searchQuery;
-    }
-    if (Object.keys(advancedFilterData).length > 0) {
-      reqBody.advancedFilters = advancedFilterData;
-    }
+      if(isInit){
+        setData([]);
+        setIsInit(false);
+      }
+      console.log("page:",pageNumber);
+      setIsLoading(true);
+      const reqBody = {};
+      const limit = 10;
+      
+      if (searchBy) {
+        reqBody.searchByValue = searchBy;
+      }
+      if (searchQuery) {
+        reqBody.searchQueryValue = searchQuery;
+      }
+      if (Object.keys(advancedFilterData).length > 0) {
+        reqBody.advancedFilters = advancedFilterData;
+      }
+      reqBody.limit=limit;
+      reqBody.offset=(pageNumber-1)*limit;
       const response = await axios.post('http://localhost:5000/getGensetFiltered', reqBody);
-      setData(response.data);
+      console.log("current page:", pageNumber, "total pages:", response.data.totalPages);
+      if(pageNumber+1 > response.data.totalPages ){
+        setHasMore(false);
+        console.log("finish loading");
+      }else{
+        console.log("more to come");
+        setHasMore(true);
+      }
+      setData((prevData) => pageNumber === 1 ? response.data.body : [...prevData, ...response.data.body]);
     }catch(e){
       console.log(e);
+    }finally{
+      setIsLoading(false);
     }
   };
+
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), delay);
+    };
+  };
+  
+  const handleScroll = debounce((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollHeight - scrollTop === clientHeight && !isLoading && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, 300);
 
   return (
     <div className="bg-[#F1F1F1]">
@@ -63,7 +128,7 @@ const GeneralSettings = () => {
       <div className="flex">
         <Sidebar />
         {/* MAIN CONTENT */}
-        <div className="flex flex-col w-full p-5 mx-[50px]">
+        <div className="flex flex-col w-full p-5 mx-[50px] h-screen">
           {/* SEARCH BUTTONS */}
           <div className="relative">
             <div className="rounded-md flex items-center justify-between bg-[#F1F1F1] p-5">
@@ -89,7 +154,11 @@ const GeneralSettings = () => {
                 </div>
                 <button 
                   className="bg-[#74ccc3] shadow-[1px_3px_1px_rgba(0,0,0,0.1)] text-white rounded p-2 w-[40px] h-[39px]"
-                  onClick={handleSearch}
+                  onClick={()=>{
+                    handleSearch(1);
+                    setIsInit(true);
+                    setPage(1);
+                  }}
                 >
                   <MagnifyingGlassIcon className="w-full h-full" />
                 </button>
@@ -97,7 +166,7 @@ const GeneralSettings = () => {
               <div className="flex items-center">
                 <button 
                 className="bg-gray-700 text-white px-4 py-2 rounded-md ml-4 w-[100px] h-[40px] flex items-center"
-                onClick={(e) => setIsFilterOpened(true)}>
+                onClick={() => setIsFilterOpened(true)}>
                   Filter
                   <AdjustmentsHorizontalIcon className="ml-1 h-full" />
                 </button>
@@ -113,38 +182,43 @@ const GeneralSettings = () => {
             <div className = "flex item-center justify-between">
               <span className="rounded-tl-lg bg-[#36616e] flex px-2 pt-2 item-center text-[#ffffff]">Active Filters:</span>
               <div className="rounded-tr-lg p-2 flex items-center justify-center flex-1 bg-gradient-to-r from-[#36616e] to-[#c6d4e7] space-x-3">
-              {advancedFilterData && Object.keys(advancedFilterData).length > 0 ? (
-                Object.entries(advancedFilterData)
-                .filter(([key, value]) => value)
-                .map(([key, value], index) => (
-                  <span key={index} className="bg-[#77bbb4] shadow-md text-white rounded-full px-6 py-1 text-sm">
-                  {key}: {value}
-                </span>
-                ))
-              ) : (
-                <span>No filters selected</span>
-              )}
+                {Object.keys(advancedFilterData).length > 0 && Object.entries(advancedFilterData)
+                  .filter(([key, value]) => value !== "" && value !== undefined)  // This ensures no empty filters are shown
+                  .map(([key, value], index) => (
+                    <span key={index} className="bg-[#77bbb4] shadow-md text-white rounded-full px-6 py-1 text-sm">
+                      {key}: {value}
+                    </span>
+                  ))}
+
+                {/* Show this text if no filters are selected */}
+                {Object.keys(advancedFilterData).length === 0 || 
+                (Object.keys(advancedFilterData).length > 1 && advancedFilterData.IS_ACTIVE === undefined && advancedFilterData.DATA_TYPE === undefined) ? (
+                  <span>No filters selected</span>
+                ) : null}
               </div>
             </div>
         
             {/* SEARCH TABLE */}
-            <div className="bg-gray-100 p-5">
-              <table className="min-w-full bg-white rounded-lg shadow-md">
-                <thead className>
+            <div className="bg-[#FAFAFAFF] flex-1 shadow-lg overflow-y-auto max-h-[calc(100vh-200px)]"
+            onScroll={handleScroll}>
+              <table className="min-w-full bg-white rounded-lg shadow-md w-full table-fixed">
+                <thead className="sticky top-0 z-10">
                   <tr className="bg-gray-200 text-gray-700">
-                    <th className="px-6 py-3 text-left font-extrabold border">Nama <span className="inline-block">&#8595;</span></th>
+                    <th className="w-[60px] px-6 py-3 text-left font-extrabold border">No.</th>
+                    <th className="px-6 py-3 text-left font-extrabold border">Nama</th>
                     <th className="px-6 py-3 text-left font-extrabold border">Deskripsi</th>
-                    <th className="px-6 py-3 text-left font-extrabold border">Kode <span className="inline-block">&#8595;</span></th>
+                    <th className="px-6 py-3 text-left font-extrabold border">Kode</th>
                     <th className="px-6 py-3 text-left font-extrabold border">Data Type</th>
                     <th className="px-6 py-3 text-left font-extrabold border">Active</th>
                     <th className="px-6 py-3 text-left font-extrabold border">Value</th>
                     <th className="px-6 py-3 border"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="max-h-[300px]">
                   {datas.length > 0 ? (
                     datas.map((data,index) => (
                         <tr key={data.UUID_SETTING} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                        <td className="px-6 py-4 border">{index+1}</td>
                         <td className="px-6 py-4 border">{data.GS_NAME}</td>
                         <td className="px-6 py-4 border">{data.GS_DESC}</td>
                         <td className="px-6 py-4 border">{data.GS_CODE}</td>
@@ -164,7 +238,7 @@ const GeneralSettings = () => {
                     ))
                   ) : (
                       <tr>
-                        <td colSpan={7} className="px-6 py-4 border text-red-500 font-bold text-lg text-center">No Genset Found</td>
+                        <td colSpan={8} className="px-6 py-4 border text-red-500 font-bold text-lg text-center">No Genset Found</td>
                       </tr>
                   )}
                 </tbody>
@@ -173,10 +247,10 @@ const GeneralSettings = () => {
 
             {/* LOAD MORE */}
             {isLoading && 
-              <div className="flex items-center justify-center w-full bg-gray-100 p-1">
-                <p>Loading Data...</p>
-              </div>
-            }
+                <div className="flex items-center justify-center w-full bg-gray-100 p-1">
+                  <p className="font-extrabold">Loading Data...</p>
+                </div>
+              }
 
             {/* FILTER MODAL BOX */}
             {isFilterOpened && (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-function ModalEditGenset({ setIsEditModalOpened, setSelectedGenset, selectedGenset }) {
+function ModalEditGenset({ setIsEditModalOpened, setSelectedGenset, selectedGenset, setIsInit }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [code, setCode] = useState("");
@@ -41,6 +41,7 @@ function ModalEditGenset({ setIsEditModalOpened, setSelectedGenset, selectedGens
     }
     setIsEditModalOpened(false);
     setSelectedGenset(null);
+    // setIsInit(true);
   };
 
   return (
@@ -73,7 +74,7 @@ function ModalEditGenset({ setIsEditModalOpened, setSelectedGenset, selectedGens
             <label className="mx-2">Code</label>
             <input
               type="text"
-              value={code}
+              value={selectedGenset.GS_CODE}
               onChange={(e) => setCode(e.target.value)}
               className="border border-gray-200 py-2 rounded-md px-3"
               placeholder="Enter Code"
