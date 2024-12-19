@@ -6,6 +6,8 @@ import MS_TYPE_SIMPANAN from "../models/MS_TYPE_SIMPANAN.js";
 import MS_STATUS_SIMPANAN from "../models/MS_STATUS_SIMPANAN.js";
 import MS_USER from "../models/MS_USER.js"
 import MS_TYPE_PINJAMAN from "../models/MS_TYPE_PINJAMAN.js";
+import TrHistoryDataPinjaman from "../models/TR_HISTORY_DATA_PINJAMAN.js";
+import TrHistoryDataSimpanan from "../models/TR_HISTORY_DATA_SIMPANAN.js";
 import { countAngsuran } from "../../src/utils/utils.js";
 import Sequelize from "sequelize";
 import { Op } from "sequelize";
@@ -15,7 +17,7 @@ const getPengajuanIncludeAttribute = (PENGAJUAN) => {
         {
             model: MS_USER,
             as: 'user',
-            attributes: ['NAMA_LENGKAP', 'ALAMAT', 'createdAt', 'NOMOR_TELP']
+            attributes: ['NAMA_LENGKAP', 'ALAMAT', 'createdAt', 'NOMOR_TELP', "UUID_MS_USER"]
         },
     ];
 
@@ -559,33 +561,50 @@ export const updateStatusPengajuan = async (req, res) => {
         let pengajuanModel;
         let filter;
         let uuidStatus;
+        let attr;
+        let currentStatus;
+        let sameStatus;
         switch(PENGAJUAN) {
             case "PINJAMAN":
                 statusModel = MS_STATUS_PINJAMAN
                 uuidStatus = await statusModel.findOne({ where: { STATUS_CODE: status } });
                 updateField = { UUID_MS_STATUS_PINJAMAN: uuidStatus.UUID_STATUS_PINJAMAN }
                 pengajuanModel = TR_PENGAJUAN_PINJAMAN
+                attr = ["UUID_MS_STATUS_PINJAMAN"]
                 filter = { UUID_PENGAJUAN_PINJAMAN: id }
+                currentStatus = await pengajuanModel.findOne({
+                    where: filter,
+                    attributes: attr
+                })
+                if(currentStatus.UUID_MS_STATUS_PINJAMAN == uuidStatus.UUID_STATUS_PINJAMAN) sameStatus = true;
                 break;
             case "SIMPANAN":
                 statusModel = MS_STATUS_SIMPANAN
                 uuidStatus = await statusModel.findOne({ where: { STATUS_CODE: status } });
                 updateField = { UUID_MS_STATUS_SIMPANAN: uuidStatus.UUID_STATUS_SIMPANAN }
                 pengajuanModel = TR_PENGAJUAN_SIMPANAN
+                attr = ["UUID_MS_STATUS_SIMPANAN"]
                 filter = { UUID_PENGAJUAN_SIMPANAN: id }
+                currentStatus = await pengajuanModel.findOne({
+                    where: filter,
+                    attributes: attr
+                })
+                if(currentStatus.UUID_MS_STATUS_SIMPANAN == uuidStatus.UUID_STATUS_SIMPANAN) sameStatus = true;
                 break;
         }
-
-        if (status == "APPROVED"){
-            updateField.DTM_APPROVED = new Date()
-        };
+        if(!sameStatus) {
+            if (status == "APPROVED") updateField.DTM_APPROVED = new Date()
+            const updatedPengajuan = await pengajuanModel.update(
+                updateField, {
+                    where: filter
+                }
+            );
+            if(status == "APPROVED") await createHistoryPengajuan({ PENGAJUAN, id });
+            res.status(201).json({ msg: sameStatus});
+        } else {
+            res.status(400).json("Status is already " + status)
+        }
         
-        const updatedPengajuan = await pengajuanModel.update(
-            updateField, {
-                where: filter
-            }
-        );
-        res.status(201).json({ msg: "Status Updated Successfully", data: updatedPengajuan });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ message: "Error creating data", error: error.message });        
@@ -770,9 +789,154 @@ export const createMandatoryPengajuan = async(req, res) => {
                 }
             }
         );
-        const bulkCreatePengajuan = await TR_PENGAJUAN_SIMPANAN.bulkCreate(bulkSimpanan)
+        const bulkCreate = await TR_PENGAJUAN_SIMPANAN.bulkCreate(bulkSimpanan)
+
+        const bungaPersenSimpanan = await MS_TYPE_SIMPANAN.findOne(
+            {
+                attributes: ["INTEREST_RATE"]
+            }
+        )
+
+        for (const item of bulkCreate) {
+
+            let currentSimpanan;
+            let historyData;
+            currentSimpanan = await getLatestHistoryCurrentSimpanan( item.UUID_MS_USER )
+            if (!currentSimpanan) {
+                currentSimpanan = item.NOMINAL
+            } else {
+                currentSimpanan = parseInt(currentSimpanan)
+                currentSimpanan += parseInt(item.NOMINAL)
+            }
+            historyData = {
+                DEPOSIT_AMOUNT: item.NOMINAL,
+                CURRENT_SIMPANAN: currentSimpanan,
+                BUNGA_SIMPANAN: currentSimpanan * bungaPersenSimpanan.INTEREST_RATE/100,
+                UUID_PENGAJUAN_SIMPANAN: item.UUID_PENGAJUAN_SIMPANAN
+            }
+            await TrHistoryDataSimpanan.create(historyData)
+        }
     } catch (error) {
         console.log(error)
     }
     
+}
+
+export const createHistoryPengajuan = async({PENGAJUAN, id}) => {
+    const pengajuanModel = {
+        "PINJAMAN": TR_PENGAJUAN_PINJAMAN,
+        "SIMPANAN": TR_PENGAJUAN_SIMPANAN
+    }
+
+    const historyModel = {
+        "PINJAMAN": TrHistoryDataPinjaman,
+        "SIMPANAN": TrHistoryDataSimpanan
+    }
+
+    let pengajuanWhere;
+    if(PENGAJUAN=="PINJAMAN") pengajuanWhere = { "UUID_PENGAJUAN_PINJAMAN":id }
+    if(PENGAJUAN=="SIMPANAN") pengajuanWhere = { "UUID_PENGAJUAN_SIMPANAN":id }
+
+    try {
+        const pengajuanData = await pengajuanModel[PENGAJUAN].findOne({
+            where: pengajuanWhere
+        })
+
+        let historyData = {}
+        let createHistory
+
+        if(pengajuanData) {
+            if(PENGAJUAN == "PINJAMAN") {
+                const dateStart = new Date(pengajuanData.DTM_APPROVED);
+                const dateEnd = new Date(dateStart)
+                dateEnd.setMonth(dateStart.getMonth() + pengajuanData.TENOR - 1)
+
+                const angsuranBersih = Math.round(pengajuanData.NOMINAL / pengajuanData.TENOR);
+                const bungaPinjaman = Math.round(pengajuanData.NOMINAL * (pengajuanData.INTEREST_RATE/100))
+                const bungaAngsuran = Math.round(bungaPinjaman / pengajuanData.TENOR);
+                historyData = {
+                    ANGSURAN_BERSIH: angsuranBersih,
+                    BUNGA_ANGSURAN: bungaAngsuran,
+                    BUNGA_PINJAMAN: bungaPinjaman,
+                    UUID_PENGAJUAN_PINJAMAN: pengajuanData.UUID_PENGAJUAN_PINJAMAN,
+                    DATE_START: dateStart,
+                    DATE_END: dateEnd
+                }
+            } else if (PENGAJUAN == "SIMPANAN") {
+                let currentSimpanan;
+                currentSimpanan = await getLatestHistoryCurrentSimpanan( pengajuanData.UUID_MS_USER )
+                if (!currentSimpanan) {
+                    currentSimpanan = pengajuanData.NOMINAL
+                } else {
+                    currentSimpanan = parseInt(currentSimpanan)
+                    currentSimpanan += parseInt(pengajuanData.NOMINAL)
+                }
+                
+                const bungaPersenSimpanan = await MS_TYPE_SIMPANAN.findOne(
+                    {
+                        attributes: ["INTEREST_RATE"]
+                    }
+                )
+
+                historyData = {
+                    DEPOSIT_AMOUNT: pengajuanData.NOMINAL,
+                    CURRENT_SIMPANAN: currentSimpanan,
+                    BUNGA_SIMPANAN: currentSimpanan * bungaPersenSimpanan.INTEREST_RATE/100,
+                    UUID_PENGAJUAN_SIMPANAN: id
+                }
+            }
+
+            createHistory = await historyModel[PENGAJUAN].create(historyData);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getCurrentSimpanan = async(userId) => {
+    try {
+        const [currentSimpanan, metadataCurrSimp] = await db.query(
+            `
+                SELECT
+                SUM(p."NOMINAL") AS "CURRENT_SIMPANAN"
+                FROM
+                "TR_PENGAJUAN_SIMPANAN" p
+                JOIN "MS_STATUS_SIMPANAN" s ON p."UUID_MS_STATUS_SIMPANAN" = s."UUID_STATUS_SIMPANAN"
+                WHERE
+                    s."STATUS_CODE" = 'APPROVED' AND
+                    p."UUID_MS_USER" = :userId
+            `, {
+                replacements: {
+                    userId: userId
+                }
+            }
+        )
+        return currentSimpanan[0].CURRENT_SIMPANAN
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getLatestHistoryCurrentSimpanan = async(userId) => {
+    try {
+        const [data, metadata] = await db.query(
+            `
+                SELECT
+                    h."CURRENT_SIMPANAN"
+                FROM "TR_HISTORY_DATA_SIMPANAN" h
+                JOIN "TR_PENGAJUAN_SIMPANAN" p ON h."UUID_PENGAJUAN_SIMPANAN" = p."UUID_PENGAJUAN_SIMPANAN"
+                WHERE
+                    p."UUID_MS_USER" = :userId
+                ORDER BY h."createdAt" DESC, p."UUID_MS_USER" DESC
+                LIMIT 1
+            `, {
+                replacements: {
+                    userId: userId
+                }
+            }
+        )
+        return data[0].CURRENT_SIMPANAN
+    } catch (error) {
+        console.log(error)
+    }
 }

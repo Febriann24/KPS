@@ -77,8 +77,8 @@ Content-Type: application/json
 
 {
     "id": 1,
-    "month": 11,
-    "year": 2024
+    "month": 2,
+    "year": 2025
 }
 
 ###
@@ -97,8 +97,17 @@ Content-Type: application/json
 
 {
     "PENGAJUAN": "SIMPANAN",
-    "id": 1,
+    "id": 2,
     "status": "APPROVED"
+}
+
+### Update STATUS Pengajuan Pinjaman TESTING
+POST http://localhost:5000/createHistoryPengajuan
+Content-Type: application/json
+
+{
+    "PENGAJUAN": "SIMPANAN",
+    "id": 37
 }
 
 ###

@@ -24,12 +24,24 @@ const TrHistoryDataPinjaman = db.define("TR_HISTORY_DATA_PINJAMAN", {
         type: DataTypes.STRING(50),
         allowNull: true
     },
-    ANGSURAN_BERBUNGA: {
+    BUNGA_ANGSURAN: {
         type: DataTypes.BIGINT,
         allowNull: true
     },
     ANGSURAN_BERSIH: {
         type: DataTypes.BIGINT,
+        allowNull: false
+    },
+    BUNGA_PINJAMAN: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
+    DATE_START: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    DATE_END: {
+        type: DataTypes.DATE,
         allowNull: false
     },
     UUID_PENGAJUAN_PINJAMAN: {
