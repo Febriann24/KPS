@@ -45,9 +45,9 @@ function App() {
         <Route exact path='/LaporanKeuangan' element = {<LaporanKeuangan/>} />
         <Route exact path='/FormBuatBerita' element = {<FormBuatBerita/>} />
         <Route exact path='/PengurusApprove' element = {<PengurusApprove/>} />
-        <Route exact path='/UserTable' element = {<UserTable/>} />
-        <Route exact path='/ShowBerita' element = {<ShowBerita/>} />
-        <Route exact path='/EditBerita' element = {<EditBerita/>} />
+        <Route exact path='/UserTable/:id' element = {<UserTable/>} />
+        <Route exact path='/ShowBerita/:id' element = {<ShowBerita/>} />
+        <Route exact path='/EditBerita/:id' element = {<EditBerita/>} />
         <Route exact path='/ListUser' element = {<ListUser/>} />
         </Routes>
       </Router>
