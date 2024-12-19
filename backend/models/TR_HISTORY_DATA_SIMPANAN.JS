@@ -24,11 +24,23 @@ const TrHistoryDataSimpanan = db.define("TR_HISTORY_DATA_SIMPANAN", {
         type: DataTypes.STRING(50),
         allowNull: true
     },
-    AMOUNT_SIMPANAN: {
+    WITHDRAW_AMOUNT: {
         type: DataTypes.BIGINT,
         allowNull: true
     },
-    SIMPANAN_BERBUNGA: {
+    DEPOSIT_AMOUNT: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    SHU_AMOUNT: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    CURRENT_SIMPANAN: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    BUNGA_SIMPANAN: {
         type: DataTypes.BIGINT,
         allowNull: false
     },
