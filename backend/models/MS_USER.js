@@ -85,7 +85,8 @@ MS_USER.hasMany(PengajuanPinjaman, {
 
 MS_USER.belongsTo(MS_JOB, {
     foreignKey: 'UUID_MS_JOB',
-    targetKey: 'UUID_MS_JOB'
+    targetKey: 'UUID_MS_JOB',
+    as: "msJob"
 });
 
 MS_USER.hasMany(TrMonthlyFinanceAnggota, {

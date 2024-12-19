@@ -25,7 +25,7 @@ import ProsesPengajuan from './component/SimpanPinjam/ProsesPengajuan'
 import GeneralSettings from './component/UserAdmin/GeneralSettings'
 import ConfigCMS from './component/UserAdmin/ConfigCMS.jsx';
 import ListBerita from './component/UserAdmin/ListBerita.jsx';
-import ListUserAdmin from './component/UserAdmin/LIstUserAdmin.jsx';
+import AccountManagement from './component/UserAdmin/AccountManagement.jsx';
 import ModalUpdateSetting from './component/UserAdmin/ModalEditGenset.jsx';
 
 import axios from 'axios';
@@ -71,7 +71,7 @@ function App() {
             <Route exact path='/Register' element={<Register/>} />
             <Route exact path='/generalsettings' element = {<GeneralSettings/>} />
             <Route exact path='/cmsconfig' element = {<ConfigCMS/>} />
-            <Route exact path='/accountmanagement' element = {<ListUserAdmin/>} />
+            <Route exact path='/accountmanagement' element = {<AccountManagement/>} />
             <Route exact path='/newsmanagement' element = {<ListBerita/>} />
             <Route exact path='/modalupdate' element = {<ModalUpdateSetting/>} />
           </Routes>
