@@ -12,11 +12,20 @@ const LaporanKeuangan = () => {
   const [endDate, setEndDate] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState('');
   const [error, setError] = useState(""); 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
   const role = localStorage.getItem('UUID_MS_JOB');
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    tipe: '',
+    pemasukan: '',
+    pengeluaran: '',
+    shu: '',
+  });
+
 
   useEffect(() => {
     if (role === '1') {  
@@ -203,6 +212,21 @@ const LaporanKeuangan = () => {
     doc.save("LaporanKeuangan.pdf");
   };
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form Data Submitted:', formData);
+    setIsModalOpen(false); // Close modal after form submission
+  };
+
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -254,12 +278,73 @@ const LaporanKeuangan = () => {
         </div>
 
         <div className="overflow-x-auto">
+            <table className="min-w-full table-auto bg-white">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="px-4 py-2 text-left">No</th>
+                  <th className="px-4 py-2 text-left">Jenis</th>
+                  <th className="px-4 py-2 text-left">Tipe</th>
+                  <th className="px-4 py-2 text-left">Nominal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length > 0 ? (
+                  filteredData.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{item.jenis}</td>
+                      <td className="px-4 py-2">{item.tipe}</td>
+                      <td className="px-4 py-2">{formatRupiah(item.nominal.toString())}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="px-4 py-2 text-center">No data available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+        <div className="flex space-x-4 mb-6">
+            <button
+              onClick={() => {
+                setModalType('pemasukan');
+                setIsModalOpen(true);
+              }}
+              className="bg-green-600 text-white p-2 rounded-md"
+            >
+              Input Pemasukan
+            </button>
+
+            <button
+              onClick={() => {
+                setModalType('pengeluaran');
+                setIsModalOpen(true);
+              }}
+              className="bg-blue-600 text-white p-2 rounded-md"
+            >
+              Input Pengeluaran
+            </button>
+
+            <button
+              onClick={() => {
+                setModalType('shu');
+                setIsModalOpen(true);
+              }}
+              className="bg-yellow-600 text-white p-2 rounded-md"
+            >
+              Input SHU
+            </button>
+          </div>
+
+        <div className="overflow-x-auto">
           <table className="min-w-full table-auto bg-white">
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left">No</th>
                 <th className="px-4 py-2 text-left">Tipe</th>
-                <th className="px-4 py-2 text-left">Uang</th>
+                <th className="px-4 py-2 text-left">Nominal</th>
               </tr>
             </thead>
             <tbody>
@@ -304,6 +389,113 @@ const LaporanKeuangan = () => {
     Export PDF
   </button>
 </div>
+
+{isModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+      <h2 className="text-xl font-semibold mb-4">
+        {modalType === 'pemasukan'
+          ? 'Create Pemasukan'
+          : modalType === 'pengeluaran'
+          ? 'Create Pengeluaran'
+          : 'Create SHU'}
+      </h2>
+      <form onSubmit={handleFormSubmit}>
+        <div className="mb-4">
+          <label
+            htmlFor="tipe"
+            className="block text-sm font-semibold mb-2"
+          >
+            Tipe
+          </label>
+          <input
+            type="text"
+            id="tipe"
+            name="tipe"
+            value={formData.tipe}
+            onChange={handleFormChange}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        {modalType === 'pemasukan' && (
+          <div className="mb-4">
+            <label
+              htmlFor="pemasukan"
+              className="block text-sm font-semibold mb-2"
+            >
+              Nominal Pemasukan
+            </label>
+            <input
+              type="number"
+              id="pemasukan"
+              name="pemasukan"
+              value={formData.pemasukan}
+              onChange={handleFormChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+        )}
+
+        {modalType === 'pengeluaran' && (
+          <div className="mb-4">
+            <label
+              htmlFor="pengeluaran"
+              className="block text-sm font-semibold mb-2"
+            >
+              Nominal Pengeluaran
+            </label>
+            <input
+              type="number"
+              id="pengeluaran"
+              name="pengeluaran"
+              value={formData.pengeluaran}
+              onChange={handleFormChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+        )}
+
+        {modalType === 'shu' && (
+          <div className="mb-4">
+            <label htmlFor="shu" className="block text-sm font-semibold mb-2">
+              Nominal SHU
+            </label>
+            <input
+              type="number"
+              id="shu"
+              name="shu"
+              value={formData.shu}
+              onChange={handleFormChange}
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+        )}
+
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white p-2 rounded-md"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-2 right-2 text-red-500 text-2xl font-bold"
+      >
+        &times;
+      </button>
+    </div>
+  </div>
+)}
+
 
       </main>
       <F />
