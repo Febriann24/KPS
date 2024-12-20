@@ -116,7 +116,7 @@ const UserTable = () => {
   
   const totalInterestPaidloan = userData.TR_PENGAJUAN_PINJAMANs?.reduce((acc, loan) => {
     const totalHistoryInterest = loan.historyPinjaman?.reduce((historyAcc, history) => {
-      const angsuranBunga = parseFloat(history.ANGSURAN_BERBUNGA) || 0;
+      const angsuranBunga = parseFloat(history.BUNGA_PINJAMAN) || 0;
       return historyAcc + angsuranBunga;
     }, 0) || 0;
   
@@ -125,7 +125,7 @@ const UserTable = () => {
 
   const totalInterestPaidsaving = userData.TR_PENGAJUAN_SIMPANANs?.reduce((acc, saving) => {
     const totalHistoryInterest = saving.historySimpanan?.reduce((historyAcc, history) => {
-      const simpananBunga = parseFloat(history.SIMPANAN_BERBUNGA) || 0;
+      const simpananBunga = parseFloat(history.BUNGA_SIMPANAN) || 0;
       return historyAcc + simpananBunga;
     }, 0) || 0;
 
@@ -133,13 +133,10 @@ const UserTable = () => {
   }, 0) || 0;
 
   const totalTabungan = userData.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
-    const statusCode = saving.status?.STATUS_CODE;
-    const typeName = saving.type?.TYPE_NAME;;
-    const nominalValue = parseFloat(saving.NOMINAL) || 0;
-    return statusCode === 'APPROVED' && typeName === 'Simpanan Sukarela' 
-      ? acc + nominalValue 
-      : acc;
+    const currentSimpanan = parseFloat(saving.historySimpanan?.[0]?.CURRENT_SIMPANAN) || 0;
+    return acc + currentSimpanan;
   }, 0);
+  
 
   const formattedtotalTabungan = formatRupiah(totalTabungan.toString());
   const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());

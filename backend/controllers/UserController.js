@@ -84,6 +84,12 @@ export const UserData = async (req, res) => {
                         as: 'type',
                         attributes: ['INTEREST_RATE', 'TYPE_NAME'],
                         required: false
+                    },
+                    {
+                        model: HistorySimpanan,
+                        as: "historySimpanan",
+                        attributes: ["BUNGA_SIMPANAN", "CURRENT_SIMPANAN"],
+                        required: false
                     }
                   ]
                 }
@@ -124,7 +130,7 @@ export const UserDataById = async (req, res) => {
               {
                 model: HistoryPinjaman,
                 as: "historyPinjaman",
-                attributes: ["ANGSURAN_BERBUNGA", "ANGSURAN_BERSIH"],
+                attributes: ["BUNGA_PINJAMAN", "ANGSURAN_BERSIH", "BUNGA_ANGSURAN"],
                 required: false
               }
             ]
@@ -150,7 +156,7 @@ export const UserDataById = async (req, res) => {
                 {
                   model: HistorySimpanan,
                   as: "historySimpanan",
-                  attributes: ["SIMPANAN_BERBUNGA", "AMOUNT_SIMPANAN"],
+                  attributes: ["BUNGA_SIMPANAN", "CURRENT_SIMPANAN"],
                   required: false
                 }
             ]
