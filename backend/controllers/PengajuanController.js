@@ -8,6 +8,8 @@ import MS_USER from "../models/MS_USER.js"
 import MS_TYPE_PINJAMAN from "../models/MS_TYPE_PINJAMAN.js";
 import TrHistoryDataPinjaman from "../models/TR_HISTORY_DATA_PINJAMAN.js";
 import TrHistoryDataSimpanan from "../models/TR_HISTORY_DATA_SIMPANAN.js";
+import TrMonthlyFinanceAnggota from "../models/TR_MONTHLY_FINANCE_ANGGOTA.js";
+import TrMonthlyFinancialStatement from "../models/TR_MONTHLY_FINANCIAL_STATEMENT.js";
 import { countAngsuran } from "../../src/utils/utils.js";
 import Sequelize from "sequelize";
 import { Op } from "sequelize";
@@ -772,14 +774,13 @@ export const createMandatoryPengajuan = async(req, res) => {
                                                     SELECT "UUID_MS_USER" 
                                                     FROM "TR_PENGAJUAN_SIMPANAN" 
                                                     WHERE
-                                                        t."TYPE_NAME" = 'Simpanan Pokok' OR
-                                                        (
-                                                            t."TYPE_NAME" != 'Simpanan Pokok' AND
-                                                            EXTRACT(MONTH FROM "createdAt") = :monthNow
-                                                            AND
-                                                            EXTRACT(YEAR FROM "createdAt") = :yearNow)
-                                                        )
-                    )
+                                                        t."TYPE_NAME" != 'Simpanan Pokok'
+                                                        AND
+                                                        EXTRACT(MONTH FROM "createdAt") = :monthNow
+                                                        AND
+                                                        EXTRACT(YEAR FROM "createdAt") = :yearNow)
+                    ) AND
+                    t."TYPE_NAME" != 'Simpanan Pokok'
                 ORDER BY "UUID_MS_USER" ASC, "UUID_TYPE_SIMPANAN" DESC
             `, {
                 replacements: {
@@ -815,7 +816,13 @@ export const createMandatoryPengajuan = async(req, res) => {
                 UUID_PENGAJUAN_SIMPANAN: item.UUID_PENGAJUAN_SIMPANAN
             }
             await TrHistoryDataSimpanan.create(historyData)
-        }
+            await MS_USER.update(
+                { CURRENT_TABUNGAN: currentSimpanan },
+                { where: { UUID_MS_USER: item.UUID_MS_USER } }
+            );
+        } 
+        const datapeng = bulkCreate.attributes
+        res.status(200).json(bulkCreate)
     } catch (error) {
         console.log(error)
     }
@@ -858,10 +865,12 @@ export const createHistoryPengajuan = async({PENGAJUAN, id}) => {
                     ANGSURAN_BERSIH: angsuranBersih,
                     BUNGA_ANGSURAN: bungaAngsuran,
                     BUNGA_PINJAMAN: bungaPinjaman,
+                    ANGSURAN_BERBUNGA: angsuranBersih + bungaAngsuran,
                     UUID_PENGAJUAN_PINJAMAN: pengajuanData.UUID_PENGAJUAN_PINJAMAN,
                     DATE_START: dateStart,
                     DATE_END: dateEnd
                 }
+                await historyModel[PENGAJUAN].create(historyData);
             } else if (PENGAJUAN == "SIMPANAN") {
                 let currentSimpanan;
                 currentSimpanan = await getLatestHistoryCurrentSimpanan( pengajuanData.UUID_MS_USER )
@@ -884,9 +893,12 @@ export const createHistoryPengajuan = async({PENGAJUAN, id}) => {
                     BUNGA_SIMPANAN: currentSimpanan * bungaPersenSimpanan.INTEREST_RATE/100,
                     UUID_PENGAJUAN_SIMPANAN: id
                 }
+                await historyModel[PENGAJUAN].create(historyData);
+                await MS_USER.update(
+                    { CURRENT_TABUNGAN: currentSimpanan },
+                    { where: { UUID_MS_USER: pengajuanData.UUID_MS_USER } }
+                );
             }
-
-            createHistory = await historyModel[PENGAJUAN].create(historyData);
         }
     } catch (error) {
         console.log(error)
@@ -935,7 +947,67 @@ export const getLatestHistoryCurrentSimpanan = async(userId) => {
                 }
             }
         )
-        return data[0].CURRENT_SIMPANAN
+        if(data) {
+            return data[0].CURRENT_SIMPANAN
+        } else {
+            return false
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const createMonthlyFinanceAnggota = async (req, res) => {
+    const now = new Date();
+    const nowMonth = now.getMonth() + 1;
+    const nowYear = now.getFullYear();
+    try {
+        const [simpananData, simpananDataMetadata] = await db.query(`
+            SELECT 
+                u."UUID_MS_USER",
+                u."WAGE",
+                COALESCE(SUM(hs."DEPOSIT_AMOUNT"), 0) AS "AMOUNT_SIMPANAN",
+                COALESCE(pp."AMOUNT_PINJAMAN", 0) AS "AMOUNT_PINJAMAN"
+            FROM 
+                "MS_USER" u
+            JOIN 
+                "MS_JOB" j ON u."UUID_MS_JOB" = j."UUID_MS_JOB"
+            LEFT JOIN 
+                "TR_PENGAJUAN_SIMPANAN" ps ON ps."UUID_MS_USER" = u."UUID_MS_USER"
+            LEFT JOIN 
+                "TR_HISTORY_DATA_SIMPANAN" hs ON hs."UUID_PENGAJUAN_SIMPANAN" = ps."UUID_PENGAJUAN_SIMPANAN"
+            LEFT JOIN 
+                (
+                    SELECT 
+                        pp."UUID_MS_USER",
+                        SUM(hp."ANGSURAN_BERBUNGA") AS "AMOUNT_PINJAMAN"
+                    FROM 
+                        "TR_PENGAJUAN_PINJAMAN" pp
+                    LEFT JOIN 
+                        "TR_HISTORY_DATA_PINJAMAN" hp ON hp."UUID_PENGAJUAN_PINJAMAN" = pp."UUID_PENGAJUAN_PINJAMAN"
+                    WHERE
+                        :nowMonth in (
+                            SELECT month
+                            FROM generate_series(
+                                EXTRACT(MONTH FROM hp."DATE_START") + (EXTRACT(YEAR FROM hp."DATE_START") - :nowYear) * 12,
+                                EXTRACT(MONTH FROM hp."DATE_END") + (EXTRACT(YEAR FROM hp."DATE_END") - :nowYear) * 12
+                            ) as month ) 
+                    GROUP BY 
+                        pp."UUID_MS_USER"
+                ) pp ON pp."UUID_MS_USER" = u."UUID_MS_USER"
+            WHERE
+                j."JOB_CODE" = 'ANGGOTA' AND
+                EXTRACT(MONTH FROM hs."createdAt") = :nowMonth
+            GROUP BY 
+                u."UUID_MS_USER", u."WAGE", pp."AMOUNT_PINJAMAN";
+        `, {
+            replacements: {
+                nowMonth: nowMonth,
+                nowYear: nowYear
+            }
+        })
+        await TrMonthlyFinanceAnggota.bulkCreate(simpananData)
     } catch (error) {
         console.log(error)
     }

@@ -28,6 +28,9 @@ Content-Type: application/json
 POST http://localhost:5000/createMandatoryPengajuan
 
 ###
+POST http://localhost:5000/createMonthlyFinanceAnggota
+
+###
 GET http://localhost:5000/getType/SIMPANAN
 Content-Type: application/json
 
@@ -97,7 +100,7 @@ Content-Type: application/json
 
 {
     "PENGAJUAN": "SIMPANAN",
-    "id": 2,
+    "id": 223,
     "status": "APPROVED"
 }
 

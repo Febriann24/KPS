@@ -32,6 +32,10 @@ const TrHistoryDataPinjaman = db.define("TR_HISTORY_DATA_PINJAMAN", {
         type: DataTypes.BIGINT,
         allowNull: false
     },
+    ANGSURAN_BERBUNGA: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
     BUNGA_PINJAMAN: {
         type: DataTypes.BIGINT,
         allowNull: false

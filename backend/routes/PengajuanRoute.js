@@ -12,6 +12,7 @@ import {
     getFilteredPengajuan,
     createMandatoryPengajuan,
     createHistoryPengajuan,
+    createMonthlyFinanceAnggota,
  } from "../controllers/PengajuanController.js";
 
 const router = express.Router();
@@ -29,6 +30,7 @@ router.post("/createPengajuan/:PENGAJUAN", createPengajuan);
 router.patch("/updateStatusPengajuan", updateStatusPengajuan);
 router.post("/createMandatoryPengajuan", createMandatoryPengajuan);
 router.post("/createHistoryPengajuan", createHistoryPengajuan);
+router.post("/createMonthlyFinanceAnggota", createMonthlyFinanceAnggota);
 
 
 export default router;
