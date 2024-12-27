@@ -31,6 +31,8 @@ const AccountManagement = () => {
     if (Object.keys(advancedFilterData).length > 0) {
       setPage(1); 
       handleSearch(1); 
+    }else{
+      initUserList(1);
     }
   }, [advancedFilterData]);
 
@@ -131,8 +133,8 @@ const AccountManagement = () => {
         {/* MAIN CONTENT */}
         <div className="flex flex-col w-full mx-[50px] h-screen">
           {/* SEARCH BUTTONS */}
-          <div className="relative bg-[#e9e9e9]">
-            <div className="rounded-md flex items-center justify-between p-5">
+          <div className="relative">
+            <div className="rounded-md flex items-center justify-between pt-5 pb-3">
               <div className="flex items-center">
                 <select
                   name="searchBy"
@@ -183,15 +185,28 @@ const AccountManagement = () => {
             </div>
             {/* {LIST FILTER} */}
             <div className = "flex item-center justify-between">
-              <span className="rounded-tl-lg bg-gradient-to-b p-1 from-[#4AA1B4] to-[#57C1A0] flex px-2 pt-2 item-center text-[#ffffff] font-bold">Active Filters:</span>
+              <span className="rounded-tl-lg bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] flex px-2 pt-2 pb-2 item-center text-[#ffffff] font-bold">Active Filters:</span>
               <div className="rounded-tr-lg py-2 flex items-center justify-center flex-1 bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] space-x-5">
                 {Object.keys(advancedFilterData).length > 0 && Object.entries(advancedFilterData)
-                  .filter(([key, value]) => value !== "" && value !== undefined)  // This ensures no empty filters are shown
-                  .map(([key, value], index) => (
-                    <span key={index} className="bg-[#63dab6] shadow-md text-white rounded-full px-6 py-1 text-sm">
-                      {key}: {value}
-                    </span>
-                  ))}
+                  .filter(([key, value]) => value !== "" && value !== undefined && value !== null)  // This ensures no empty filters are shown
+                  .map(([key, value], index) => {
+                    if (typeof value === "object" && value !== null) {
+                      return (
+                        Object.entries(value)
+                          .filter(([subKey, subValue]) => subValue !== "" && subValue !== undefined && subValue !== null)
+                          .map(([subKey, subValue], subIndex) => (
+                            <span key={`${index}-${subIndex}`} className="bg-[#63dab6] shadow-md text-white rounded-full px-6 py-1 text-sm">
+                              {subKey}: {subValue}
+                            </span>
+                          ))
+                      );
+                    }else if(value !== null && typeof value !== "object"){
+                      return (
+                        <span key={index} className="bg-[#63dab6] shadow-md text-white rounded-full px-6 py-1 text-sm">
+                          {key}: {value}
+                        </span>
+                      );
+                  }})}
               </div>
             </div>
         
@@ -208,7 +223,6 @@ const AccountManagement = () => {
                     <th className="w-[220px] px-6 py-3 text-left font-extrabold border">Email</th>
                     <th className="px-6 py-3 text-left font-extrabold border">No. Telepon</th>
                     <th className="px-6 py-3 text-left font-extrabold border">Role Akun</th>
-                    <th className="w-[150px] px-6 py-3 text-left font-extrabold border">No. Anggota</th>
                     <th className="w-[220px] px-6 py-3 border">Tgl. Pendaftaran Akun</th>
                     <th className="w-[90px] px-6 py-3 border">Aktif</th>
                     <th className="w-[90px] px-6 py-3 border"></th>
@@ -225,7 +239,6 @@ const AccountManagement = () => {
                           <td className="px-6 py-4 border break-words">{data.EMAIL}</td>
                           <td className="px-6 py-4 border">{data.NOMOR_TELP}</td>
                           <td className="px-6 py-4 border">{data.msJob.JOB_CODE}</td>
-                          <td className="px-6 py-4 border">{data.NOMOR_ANGGOTA}</td>
                           <td className="px-6 py-4 border">{formatDate(data.createdAt)}</td> 
                           <td className="px-6 py-4 border">{data.IS_ACTIVE === 1 ? "Yes" : "No"}</td>
                           <td className="px-6 py-4 border text-center" >
@@ -241,7 +254,7 @@ const AccountManagement = () => {
                     ))
                   ) : (
                       <tr>
-                        <td colSpan={8} className="px-6 py-4 border text-red-500 font-bold text-lg text-center">No User Found</td>
+                        <td colSpan={10} className="px-6 py-4 border text-red-500 font-bold text-lg text-center">No User Found</td>
                       </tr>
                   )}
                 </tbody>
@@ -257,17 +270,18 @@ const AccountManagement = () => {
 
             {/* FILTER MODAL BOX */}
             {isFilterOpened && (
-              <ModalEditAccManagement
+              <FilterModalAccManagement
               setAdvancedFilterData={setAdvancedFilterData}
               advancedFilterData={advancedFilterData}
               setIsFilterOpened={setIsFilterOpened}/>
             )}
             {/* EDiT MODAL BOX */}
             {isEditModalOpened && (
-              <FilterModalAccManagement
+              <ModalEditAccManagement
               setIsEditModalOpened={setIsEditModalOpened}
               setSelectedUser={setSelectedUser}
               selectedUser={selectedUser}
+              isEditModalOpened={isEditModalOpened}
               />
             )}
           </div>

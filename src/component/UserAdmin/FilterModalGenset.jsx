@@ -35,7 +35,7 @@ function ModalFilterGenset({ setAdvancedFilterData, setIsFilterOpened, advancedF
                 value={isActive} 
                 className="border border-gray-200 py-2 rounded-md px-3"
                 onChange={(e) => setIsActive(e.target.value)}>
-                  <option value="">All</option>
+                  <option value="">Semua</option>
                   <option value="1">Yes</option>
                   <option value="0">No</option>
                 </select>

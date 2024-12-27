@@ -2,7 +2,10 @@ import db from "../config/database.js";
 import MsGeneralSetting from "../models/MS_GENERALSETTING.js";
 import MS_USER from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
+import { Sequelize } from "sequelize";
+import bcrypt from "bcrypt";
 
+{/* MENU GENSET */}
 export const getAllGenset = async (req,res) => {
     try{
         const { limit, offset  } = req.query;
@@ -88,6 +91,24 @@ export const getGensetFiltered = async (req,res) => {
             body: results,
             totalCount: countResult,
             totalPages: Math.ceil(totalCount / limit),})
+    }catch(e){
+        console.log(e);
+    }
+}
+
+{/* MENU LIST USER */}
+
+export const getDistinctJobCode = async (req,res) => {
+    try{
+        const result = await MS_JOB.findAll({
+            attributes: [
+                [Sequelize.fn('DISTINCT', Sequelize.col('JOB_CODE')), 'JOB_CODE']
+            ],
+            where: {
+                IS_ACTIVE: 1
+            }
+        })
+        res.status(200).json(result);
     }catch(e){
         console.log(e);
     }
@@ -179,13 +200,50 @@ export const getUsersFiltered = async (req,res) => {
     
         if (advancedFilters && Object.keys(advancedFilters).length > 0) {
           Object.keys(advancedFilters).forEach(key => {
-            if (advancedFilters[key]) {
-                if (key === 'IS_ACTIVE') {
-                    replacements[key] = parseInt(advancedFilters[key], 10);
-                } else {
-                    replacements[key] = advancedFilters[key];
+            if (advancedFilters[key]) {  
+                if(key === 'TGL_LAHIR'){
+                    let startTglLahir = advancedFilters[key]?.startTglLahir;
+                    let endTglLahir = advancedFilters[key]?.endTglLahir;
+
+                    if (startTglLahir) {
+                        startTglLahir = new Date(startTglLahir);
+                        startTglLahir.setHours(0, 0, 0, 0);
+                        replacements['startTglLahir'] = startTglLahir;
+                        stringQuery += ` AND "TANGGAL_LAHIR" >= :startTglLahir`;
+                    }
+                
+                    if (endTglLahir) {
+                        endTglLahir = new Date(endTglLahir);
+                        endTglLahir.setHours(23, 59, 59, 999);
+                        replacements['endTglLahir'] = endTglLahir;
+                        stringQuery += ` AND "TANGGAL_LAHIR" <= :endTglLahir`;
+                    }
+                }else if(key === 'createdAt'){
+                    let startTglRegis = advancedFilters[key]?.startTglRegis;
+                    let endTglRegis = advancedFilters[key]?.endTglRegis;
+                    
+                    if (startTglRegis) {
+                        startTglRegis = new Date(startTglRegis);
+                        startTglRegis.setHours(0,0,0,0);
+                        replacements['startTglRegis'] = startTglRegis;
+                        stringQuery += ` AND amu."createdAt" >= :startTglRegis`;
+                    }
+            
+                    if (endTglRegis) {
+                        endTglRegis = new Date(endTglRegis);
+                        endTglRegis.setHours(23,59,59,999);
+                        replacements['endTglRegis'] = endTglRegis;
+                        stringQuery += ` AND amu."createdAt" <= :endTglRegis`;
+                    }
+                }else{
+                    if (key === 'IS_ACTIVE') {
+                        replacements[key] = parseInt(advancedFilters[key], 10);
+                        stringQuery += ` AND amu."${key}" = :${key}`;
+                    } else {
+                        replacements[key] = advancedFilters[key];
+                        stringQuery += ` AND "${key}" = :${key}`;
+                    }
                 }
-              stringQuery += ` AND "${key}" = :${key}`;
             }
           });
         }
@@ -193,7 +251,8 @@ export const getUsersFiltered = async (req,res) => {
         stringQuery += ` LIMIT :limit OFFSET :offset`;
         replacements.limit = parseInt(limit);
         replacements.offset = offset;
-
+        console.log("ini query", stringQuery);
+        console.log("Replacements:", replacements);
         const [results] = await db.query(stringQuery, {
             replacements,
         });
@@ -213,5 +272,16 @@ export const getUsersFiltered = async (req,res) => {
             totalPages: Math.ceil(totalCount / limit),})
     }catch(e){
         console.log(e);
+    }
+}
+
+const encryptString = async (string) => {
+    try {
+        const salt = await bcrypt.genSalt(); 
+        const hashPassword = await bcrypt.hash(string, salt);  
+        return hashPassword;  
+    } catch (error) {
+        console.error("Error encrypting string:", error);
+        throw new Error("Failed to encrypt string.");
     }
 }
