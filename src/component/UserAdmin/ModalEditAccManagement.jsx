@@ -5,7 +5,7 @@ import { EyeSlashIcon, EyeIcon, InformationCircleIcon } from "@heroicons/react/2
 function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selectedUser, isEditModalOpened }) {
   const [name, setName] = useState("");
   const [alamat, setAlamat] = useState("");
-  const [tglLahir, setTglLahir] = useState(null);
+  const [tglLahir, setTglLahir] = useState("");
   const [email, setEmail] = useState("");
   const [noTelp, setNoTelp] = useState("");
   const [uuidJob, setUuidJob] = useState("");
@@ -28,13 +28,10 @@ function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selecte
     setTglLahir(formattedDate);
     setEmail(selectedUser.EMAIL);
     setNoTelp(selectedUser.NOMOR_TELP);
-    setUuidJob(selectedUser.UUID_JOB);
+    setUuidJob(selectedUser.UUID_MS_JOB);
     setJobCode(selectedUser.msJob.JOB_CODE);
     setTglRegis(selectedUser.createdAt);
     setIsActive(selectedUser.IS_ACTIVE);
-
-    console.log("woi kontol", tglLahir);
-    console.log("woi kontol2", selectedUser.TANGGAL_LAHIR);
 
     initJobSelect();
   }, [selectedUser]);
@@ -80,7 +77,6 @@ function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selecte
       TANGGAL_LAHIR: (value) => !isNaN(new Date(value).getTime()) && new Date() >= new Date(value) ,
       EMAIL: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
       NOMOR_TELP: (value) => /^(08[1-9][0-9]{6,10}|0[2-9][0-9]{7,9})$/.test(value),
-      IS_ACTIVE: (value) => typeof value === "boolean",
       CONFIRM_PASSWORD: (value) => value === password,
       PASSWORD: (value) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value),
     };
@@ -110,7 +106,7 @@ function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selecte
       EMAIL: email,
       NOMOR_TELP: noTelp,
       UUID_JOB: uuidJob,
-      IS_ACTIVE: isActive,
+      IS_ACTIVE: isActive ? 1 : 0
     };
 
     if(isPasswordUpdated){
@@ -129,17 +125,16 @@ function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selecte
     if(isError){
       return;
     }
-    // return;
     const filteredReqBody = Object.fromEntries(
       Object.entries(reqbody).filter(([key, value]) => value !== "" && value !== null)
     );
     console.log(filteredReqBody);
     try {
-      await axios.put(`http://localhost:5000/updateGenset/${selectedUser.UUID_SETTING}`, filteredReqBody);
+      await axios.put(`http://localhost:5000/updateuseradm/${selectedUser.UUID_MS_USER}`, filteredReqBody);
     } catch (e) {
       console.log(e);
     }
-    setIsEditModalOpened(false);a
+    setIsEditModalOpened(false);
     setSelectedUser(null);
   };
 
@@ -301,6 +296,18 @@ function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selecte
             {formError.TANGGAL_LAHIR && <span className="text-red-500 text-xs">Tanggal lahir tidak valid.</span>}
           </div>
 
+          <div className="flex items-center pt-1">
+            <input
+              id="active-checkbox"
+              type="checkbox"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="mx-1 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label htmlFor="active-checkbox" className=" text-md">          
+              User Aktif
+            </label>
+          </div>
 
           <div className="w-full bg-gray-200 h-px my-5" />
         </form>

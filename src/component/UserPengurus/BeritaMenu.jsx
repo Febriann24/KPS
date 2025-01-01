@@ -17,6 +17,7 @@ const BeritaMenu = () => {
                 console.log("Fetched berita:", response.data);
                 setBerita(response.data);
                 setLoading(false);
+                console.log("fetched berita", berita);
             } catch (err) {
                 setError(err.message);
                 setLoading(false);

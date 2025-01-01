@@ -2,8 +2,11 @@ import db from "../config/database.js";
 import MsGeneralSetting from "../models/MS_GENERALSETTING.js";
 import MS_USER from "../models/MS_USER.js";
 import MS_JOB from "../models/MS_JOB.js";
+import Berita from "../models/TR_BERITA.js";
+import TrLobBerita from "../models/TR_LOB_BERITA.js";
 import { Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
+import { Buffer } from 'buffer'; 
 
 {/* MENU GENSET */}
 export const getAllGenset = async (req,res) => {
@@ -124,7 +127,7 @@ export const getAllUsers = async (req,res) => {
             include: [
                 {
                     model: MS_JOB, 
-                    as: 'msJob',  
+                    as: 'MS_JOB',  
                 },
               ],
         });
@@ -153,10 +156,13 @@ export const getOneUser = async(req,res) => {
 }
 
 export const updateUser = async (req,res) => {
+    const {PASSWORD, ...data} = req.body;
+    const encryptedPass = await encryptString(PASSWORD);
+    req.body= {...data, PASSWORD: encryptedPass};
     try{
-        const response = await MsGeneralSetting.update(
+        const response = await MS_USER.update(
             req.body,
-            {where:{UUID_SETTING: req.params.id}} 
+            {where:{UUID_MS_USER: req.params.id}} 
         );
         res.status(200).json(response);
     }catch(e){
@@ -285,3 +291,156 @@ const encryptString = async (string) => {
         throw new Error("Failed to encrypt string.");
     }
 }
+
+
+{/* MENU LIST BERITA */}
+
+export const getAllBerita = async (req, res) => {
+    try {
+        const response = await Berita.findAndCountAll({
+        include: [
+            {
+                model: TrLobBerita,
+                as: 'trLobBerita'
+            }
+        ],
+        where: {
+            IS_DELETED: 0 
+        }
+        });
+
+        const rowsWithEncodedLob = response.rows.map(row => {
+            const plainRow = row.get({ plain: true });
+        
+            if (plainRow.trLobBerita && Array.isArray(plainRow.trLobBerita) && plainRow.trLobBerita.length > 0) {
+                const lobEntry = plainRow.trLobBerita[0]; 
+        
+                if (lobEntry.LOB) {
+                    lobEntry.LOB = lobEntry.LOB.toString('base64');  
+                }
+            }
+        
+            return plainRow;
+        });
+
+        res.status(200).json({
+            body: rowsWithEncodedLob,
+            totalCount: response.count,
+        });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+};
+  
+export const UpdateBerita = async (req, res) => {
+
+    const transaction = await db.transaction();
+    const beritaId = req.params.id;
+    try {
+        const berita = await Berita.findOne({ where: { UUID_BERITA: beritaId }, transaction });
+        
+        if (!berita) {
+            return res.status(404).json({ message: "Berita not found" });
+        }
+    
+        let binaryData;
+        try {
+            const base64Data = req.body.fotoBerita.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+            binaryData = Buffer.from(base64Data, 'base64');
+        } catch (error) {
+            console.error('Error decoding base64 image:', error);
+            return res.status(400).json({ message: 'Invalid base64 image data' });
+        }
+    
+        const updatedData = {
+            JUDUL_BERITA: req.body.judulBerita || berita.JUDUL_BERITA,
+            ISI_BERITA: req.body.kontenBerita || berita.ISI_BERITA,
+            USER_UPD: req.body.usrUpd || berita.USER_UPD,
+            IS_DELETED: 0,
+        };
+    
+        const result = await Berita.update(updatedData, { where: { UUID_BERITA: beritaId }, transaction });
+        if (result[0] === 0) {
+            return res.status(404).json({ message: 'No rows updated in Berita.' });
+        }
+    
+        const lobUpdateData = { LOB: binaryData };
+        const lobResult = await TrLobBerita.update(lobUpdateData, { where: { UUID_BERITA: beritaId }, transaction });
+    
+        if (lobResult[0] === 0) {
+            return res.status(404).json({ message: 'No rows updated in trLobBerita.' });
+        }
+    
+        await transaction.commit();
+        res.status(200).json({ msg: 'Berita and image updated successfully' });
+    } catch (error) {
+        await transaction.rollback();
+        console.error('Error updating berita:', error);
+        res.status(500).json({ message: 'Error updating Berita', error: error.message });
+    }    
+};
+
+export const CreateBerita = async (req, res) => {
+    const { judulBerita, kontenBerita, fotoBerita, uuidMsUser } = req.body;
+
+    if (!judulBerita || !kontenBerita || !fotoBerita) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    let binaryData;
+    try {
+        const base64Data = fotoBerita.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+        binaryData = Buffer.from(base64Data, 'base64');
+    } catch (error) {
+        console.error('Error decoding base64 image:', error);
+        return res.status(400).json({ message: 'Invalid base64 image data' });
+    }
+
+    try {
+        const newBerita = await Berita.create({
+            JUDUL_BERITA: judulBerita,
+            ISI_BERITA: kontenBerita,
+            UUID_MS_USER: uuidMsUser,
+            IS_DELETED: 0
+        });
+
+        const uuidBerita = newBerita.UUID_BERITA;
+        await TrLobBerita.create({
+            LOB: binaryData,
+            UUID_BERITA: uuidBerita,
+        });
+
+        res.status(201).json({
+            message: 'Berita created successfully',
+            newBerita,
+        });
+    } catch (error) {
+        console.error('Error creating berita:', error);
+        res.status(500).json({
+            message: 'Error creating berita',
+            error: error.message,
+        });
+    }
+};
+
+
+export const DeleteBerita = async (req, res) => {
+    try {
+        const berita = await Berita.findOne({
+            where: { UUID_BERITA: req.params.id }
+        });
+        if (berita) {
+            await Berita.update(
+                { IS_DELETED: 1 },
+                { where: { UUID_BERITA: req.params.id } }
+            );
+            res.status(200).json({ msg: "Berita Deleted Successfully (Soft Delete)" });
+        } else {
+            res.status(404).json({ message: "Berita not found" });
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: "Error deleting Berita", error: error.message });
+    }
+};

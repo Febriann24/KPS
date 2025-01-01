@@ -32,9 +32,10 @@ const AccountManagement = () => {
       setPage(1); 
       handleSearch(1); 
     }else{
+      setPage(1); 
       initUserList(1);
     }
-  }, [advancedFilterData]);
+  }, [advancedFilterData, selectedUser]);
 
   useEffect(() => {
     if (searchQuery.trim() || Object.keys(advancedFilterData).length > 0) {
@@ -42,10 +43,25 @@ const AccountManagement = () => {
     } else {
         initUserList(page);
     }
-  }, [page, selectedUser]);
+  }, [page]);
+  
+  useEffect(() => {
+    const event = {
+      target: document.querySelector('#searchTable'), // the scrollable div
+      scrollTop: 0,
+      scrollHeight: 1,
+      clientHeight: 1
+    };
+    
+    handleScroll(event);
+  }, []);
 
   const initUserList = async (pageNumber) => {
     setIsLoading(true);
+    if(pageNumber===1){
+      setData([]);
+      setIsInit(false);
+    }
     try{
       const limit = 10;
       const offset = (pageNumber-1) * limit;
@@ -72,7 +88,7 @@ const AccountManagement = () => {
 
   const handleSearch = async (pageNumber) => {
     try{
-      if(isInit){
+      if(pageNumber===1){
         setData([]);
         setIsInit(false);
       }
@@ -128,7 +144,7 @@ const AccountManagement = () => {
   return (
     <div className="bg-[#F1F1F1]">
       <H />
-      <div className="flex">
+      <div className="flex flex-grow">
         <Sidebar />
         {/* MAIN CONTENT */}
         <div className="flex flex-col w-full mx-[50px] h-screen">
@@ -211,7 +227,7 @@ const AccountManagement = () => {
             </div>
         
             {/* SEARCH TABLE */}
-            <div className="bg-[#FAFAFAFF] flex-1 shadow-lg overflow-y-auto max-h-[calc(100vh-200px)]"
+            <div id = "searchTable" className="bg-[#FAFAFAFF] flex-1 shadow-lg overflow-y-auto max-h-[650px]"
             onScroll={handleScroll}>
               <table className="table-auto min-w-full bg-white rounded-lg shadow-md w-full table-fixed">
                 <thead className="sticky top-0 z-10">
@@ -238,7 +254,7 @@ const AccountManagement = () => {
                           <td className="px-6 py-4 border">{formatDate(data.TANGGAL_LAHIR)}</td> 
                           <td className="px-6 py-4 border break-words">{data.EMAIL}</td>
                           <td className="px-6 py-4 border">{data.NOMOR_TELP}</td>
-                          <td className="px-6 py-4 border">{data.msJob.JOB_CODE}</td>
+                          <td className="px-6 py-4 border">{data.MS_JOB.JOB_CODE}</td>
                           <td className="px-6 py-4 border">{formatDate(data.createdAt)}</td> 
                           <td className="px-6 py-4 border">{data.IS_ACTIVE === 1 ? "Yes" : "No"}</td>
                           <td className="px-6 py-4 border text-center" >

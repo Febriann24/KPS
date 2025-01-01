@@ -30,8 +30,11 @@ const GeneralSettings = () => {
     if (Object.keys(advancedFilterData).length > 0) {
       setPage(1); 
       handleSearch(1); 
+    }else{
+      setPage(1); 
+      initGensetList(1);
     }
-  }, [advancedFilterData]);
+  }, [advancedFilterData,  selectedGenset]);
 
   useEffect(() => {
     if (searchQuery.trim() || Object.keys(advancedFilterData).length > 0) {
@@ -39,7 +42,7 @@ const GeneralSettings = () => {
     } else {
         initGensetList(page);
     }
-}, [page, selectedGenset]);
+}, [page]);
 
   const initGensetList = async (pageNumber) => {
     setIsLoading(true);
@@ -125,7 +128,7 @@ const GeneralSettings = () => {
   return (
     <div className="bg-[#F1F1F1]">
       <H />
-      <div className="flex">
+      <div className="flex flex-grow">
         <Sidebar />
         {/* MAIN CONTENT */}
         <div className="flex flex-col w-full mx-[50px] h-screen">

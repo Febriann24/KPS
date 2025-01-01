@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize";
+import TrLobBerita from "./TR_LOB_BERITA.js";
 import db from "../config/database.js";
 
 const { DataTypes } = Sequelize;
@@ -36,7 +37,11 @@ const Berita = db.define("TR_BERITA", {
     },
     UUID_MS_USER: {
         type: DataTypes.BIGINT,
-        allowNull: true
+        allowNull: true,
+        references: {
+            model: "MS_USER",
+            key: "UUID_MS_USER"
+        }
     },
     JUDUL_BERITA: {
         type: DataTypes.STRING(30),
@@ -53,6 +58,20 @@ const Berita = db.define("TR_BERITA", {
 }, {
     freezeTableName: true
 });
+
+(async () => {
+    const { default: MS_USER } = await import('./MS_USER.js');
+    Berita.belongsTo(MS_USER, {
+        foreignKey: 'UUID_MS_USER',
+        targetKey: 'UUID_MS_USER',
+        as: 'msUser'
+    });
+
+    Berita.hasMany(TrLobBerita, {
+         foreignKey: 'UUID_BERITA',
+         as: 'trLobBerita'  
+    });
+})();
 
 
 export default Berita;

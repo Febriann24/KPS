@@ -26,7 +26,8 @@ import GeneralSettings from './component/UserAdmin/GeneralSettings'
 import ConfigCMS from './component/UserAdmin/ConfigCMS.jsx';
 import ListBerita from './component/UserAdmin/ListBerita.jsx';
 import AccountManagement from './component/UserAdmin/AccountManagement.jsx';
-import ModalUpdateSetting from './component/UserAdmin/ModalEditGenset.jsx';
+import CreateBeritaAdmin from './component/UserAdmin/CreateBeritaAdmin.jsx';
+import UpdateBeritaAdmin from './component/UserAdmin/UpdateBeritaAdmin.jsx';
 
 import axios from 'axios';
 import {
@@ -73,7 +74,8 @@ function App() {
             <Route exact path='/cmsconfig' element = {<ConfigCMS/>} />
             <Route exact path='/accountmanagement' element = {<AccountManagement/>} />
             <Route exact path='/newsmanagement' element = {<ListBerita/>} />
-            <Route exact path='/modalupdate' element = {<ModalUpdateSetting/>} />
+            <Route exact path='/createberita' element = {<CreateBeritaAdmin/>} />
+            <Route exact path='/updateberita' element = {<UpdateBeritaAdmin/>} />
           </Routes>
             {userID  && (
             <Routes>

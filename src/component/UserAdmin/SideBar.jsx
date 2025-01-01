@@ -5,13 +5,13 @@ function Sidebar() {
   const location = useLocation(); 
 
   return (
-    <div className="w-64 h-screen bg-gray-50 flex flex-col justify-start p-4 text-black shadow-[0.5px_0px_5px_rgba(0,0,0,0.3)]">
+    <div className="w-64 bg-gray-50 flex flex-col justify-start p-4 text-black shadow-[0.5px_0px_5px_rgba(0,0,0,0.3)]">
       <h2 className="text-2xl font-bold mt-3 ml-3 text-start">Pengaturan</h2>
       <ul className="mt-5 text-[17px]">
         <li
           className={`mb-4 flex items-center transition-all duration-400 p-2 rounded ${
             location.pathname === '/newsmanagement'
-              ? 'bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white'
+              ? 'bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white shadow-lg'
               : 'hover:cursor-pointer hover:text-white hover:bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0]'
           }`}
         >
@@ -23,7 +23,7 @@ function Sidebar() {
         <li
           className={`mb-4 flex items-center transition-all duration-400 p-2 rounded ${
             location.pathname === '/accountmanagement'
-              ? 'bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white'
+              ? 'bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white shadow-lg'
               : 'hover:cursor-pointer hover:text-white hover:bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0]'
           }`}
         >
@@ -35,7 +35,7 @@ function Sidebar() {
         <li
           className={`mb-4 flex items-center transition-all duration-400 p-2 rounded ${
             location.pathname === '/generalsettings'
-              ? 'bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white'
+              ? 'bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] text-white shadow-lg'
               : 'hover:cursor-pointer hover:text-white hover:bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0]'
           }`}
         >
