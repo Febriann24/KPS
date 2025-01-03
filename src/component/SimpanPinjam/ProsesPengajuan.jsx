@@ -146,7 +146,7 @@ const PengajuanButton = ({ id, status, pengajuan, userId }) => {
           </button>
         </div>
       )
-    } else if (status=='ACTIVE' && userData?.UUID_MS_USER == userId) {
+    } else if (status=='ACTIcccccccccccccccccccVE' && userData?.UUID_MS_USER == userId) {
       return (
         <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
           <div className='w-full' />

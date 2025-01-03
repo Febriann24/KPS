@@ -9,17 +9,8 @@ const TR_PENGAJUAN_SIMPANAN = db.define("TR_PENGAJUAN_SIMPANAN", {
         autoIncrement: true,
         primaryKey: true
     },
-    DTM_CRT: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: true
-    },
     USR_CRT: {
         type: DataTypes.STRING(50),
-        allowNull: true
-    },
-    DTM_UPD: {
-        type: DataTypes.DATE,
         allowNull: true
     },
     USR_UPD: {
@@ -49,10 +40,6 @@ const TR_PENGAJUAN_SIMPANAN = db.define("TR_PENGAJUAN_SIMPANAN", {
             model: "MS_USER",
             key: "UUID_MS_USER"
         }
-    },
-    NO_KONTRAK: {
-        allowNull:true,
-        type: DataTypes.STRING,
     },
     NOMINAL: {
         allowNull:false,

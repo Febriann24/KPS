@@ -17,17 +17,8 @@ const MS_TYPE_SIMPANAN = db.define("MS_TYPE_PINJAMAN", {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    DTM_CRT: {
-        type: DataTypes.DATE,
-        allowNull: true,
-        defaultValue: DataTypes.NOW
-    },
     USR_CRT: {
         type: DataTypes.STRING(50),
-        allowNull: true
-    },
-    DTM_UPD: {
-        type: DataTypes.DATE,
         allowNull: true
     },
     USR_UPD: {

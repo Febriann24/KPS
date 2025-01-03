@@ -80,8 +80,8 @@ Content-Type: application/json
 
 {
     "id": 1,
-    "month": 2,
-    "year": 2025
+    "month": 12,
+    "year": 2024
 }
 
 ###
@@ -90,7 +90,7 @@ Content-Type: application/json
 
 {
     "id": 1,
-    "month": 11,
+    "month": 12,
     "year": 2024
 }
 
@@ -99,8 +99,8 @@ PATCH http://localhost:5000/updateStatusPengajuan
 Content-Type: application/json
 
 {
-    "PENGAJUAN": "SIMPANAN",
-    "id": 223,
+    "PENGAJUAN": "PINJAMAN",
+    "id": 1,
     "status": "APPROVED"
 }
 
@@ -109,8 +109,8 @@ POST http://localhost:5000/createHistoryPengajuan
 Content-Type: application/json
 
 {
-    "PENGAJUAN": "SIMPANAN",
-    "id": 37
+    "PENGAJUAN": "PINJAMAN",
+    "id": 1
 }
 
 ###

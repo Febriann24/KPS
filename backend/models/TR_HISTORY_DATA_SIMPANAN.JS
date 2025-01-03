@@ -7,17 +7,8 @@ const TrHistoryDataSimpanan = db.define("TR_HISTORY_DATA_SIMPANAN", {
         autoIncrement: true,
         primaryKey: true
     },
-    DTM_CRT: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: true
-    },
     USR_CRT: {
         type: DataTypes.STRING(50),
-        allowNull: true
-    },
-    DTM_UPD: {
-        type: DataTypes.DATE,
         allowNull: true
     },
     USR_UPD: {
