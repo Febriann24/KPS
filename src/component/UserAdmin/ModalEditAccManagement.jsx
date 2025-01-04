@@ -29,7 +29,7 @@ function ModalEditAccManagement({ setIsEditModalOpened, setSelectedUser, selecte
     setEmail(selectedUser.EMAIL);
     setNoTelp(selectedUser.NOMOR_TELP);
     setUuidJob(selectedUser.UUID_MS_JOB);
-    setJobCode(selectedUser.msJob.JOB_CODE);
+    setJobCode(selectedUser.MS_JOB.JOB_CODE);
     setTglRegis(selectedUser.createdAt);
     setIsActive(selectedUser.IS_ACTIVE);
 

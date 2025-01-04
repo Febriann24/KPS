@@ -95,7 +95,7 @@ function UpdateBeritaAdmin() {
       <H />
       <div className="flex justify-center mt-10 px-4">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5 pl-10">
-          <h2 className="text-2xl font-semibold text-center mb-6">Formulir Tambah Berita</h2>
+          <h2 className="text-2xl font-semibold text-center mb-6">Formulir Edit Berita</h2>
           <BackButton nav="/newsmanagement"/>
           <div className="bg-gray-200 p-10 rounded-lg shadow-md">
             <form onSubmit={handleSubmitClick} id="form-tambah-berita" className="grid grid-cols-1 gap-6">

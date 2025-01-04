@@ -155,20 +155,31 @@ export const getOneUser = async(req,res) => {
     }
 }
 
-export const updateUser = async (req,res) => {
-    const {PASSWORD, ...data} = req.body;
-    const encryptedPass = await encryptString(PASSWORD);
-    req.body= {...data, PASSWORD: encryptedPass};
-    try{
-        const response = await MS_USER.update(
-            req.body,
-            {where:{UUID_MS_USER: req.params.id}} 
-        );
-        res.status(200).json(response);
-    }catch(e){
-        console.log(e);
+export const updateUser = async (req, res) => {
+    const { PASSWORD, ...data } = req.body;
+
+    let encryptedPass = null;
+    if (PASSWORD) {
+        try {
+            encryptedPass = await encryptString(PASSWORD);
+        } catch (error) {
+            console.error("Error encrypting password:", error);
+            return res.status(500).json({ message: "Failed to encrypt password." });
+        }
     }
-}
+
+    const updateData = encryptedPass ? { ...data, PASSWORD: encryptedPass } : data;
+
+    try {
+        const response = await MS_USER.update(updateData, {
+            where: { UUID_MS_USER: req.params.id },
+        });
+        res.status(200).json(response);
+    } catch (e) {
+        console.error("Error updating user:", e);
+        res.status(500).json({ message: "Failed to update user." });
+    }
+};
 
 
 const transformFilteredUserData = (data) => {
