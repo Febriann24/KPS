@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
+import TrLobBerita from "../models/TR_LOB_BERITA.js"; // Import TR_LOB_BERITA
 
 const { DataTypes } = Sequelize;
 
@@ -45,15 +46,17 @@ const Berita = db.define("TR_BERITA", {
     ISI_BERITA: {
         type: DataTypes.STRING(2000),
         allowNull: true
-    },
-    FOTO_BERITA: {
-        type: DataTypes.TEXT,
-        allowNull: true
     }
 }, {
     freezeTableName: true
 });
 
+// Define association with TR_LOB_BERITA
+Berita.hasOne(TrLobBerita, {
+    foreignKey: 'UUID_BERITA',
+    sourceKey: 'UUID_BERITA',
+    as: 'lobBerita'
+});
 
 export default Berita;
 
