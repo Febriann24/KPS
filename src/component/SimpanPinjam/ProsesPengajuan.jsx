@@ -4,6 +4,7 @@ import F from '../H&F/Footer';
 import foto from '../Foto/Koperasi_Logo.png';
 import { 
   Link, 
+  useNavigate,
   useParams
 } from "react-router-dom";
 import axios from 'axios';
@@ -18,7 +19,6 @@ import {
 import {
   BackButton
 } from '../../utils/components'
-import { useNavigate } from 'react-router-dom';
 import { 
   Back_icon,
   Done_icon,
@@ -433,6 +433,20 @@ const Information = () => {
 
 
 const ProsesPengajuan = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+
+      useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        console.log(token); // Debugging untuk memastikan token terdeteksi
+        if (token) {
+          setIsLoggedIn(true); // Menandakan pengguna sudah login
+        } else {
+          setIsLoggedIn(false); // Pengguna belum login
+          navigate('/'); // Redirect ke halaman login
+        }
+      }, [navigate]);
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="w-full">

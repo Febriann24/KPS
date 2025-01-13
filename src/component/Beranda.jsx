@@ -63,12 +63,16 @@ function Beranda() {
             <div style={{ backgroundImage: `url(${gmbr4})` }} className="mt-[10px]  bg-center bg-no-repeat bg-cover h-[480px] ">
                 <span className="grid grid-cols-2">
                     <div className="grid justify-start grid-rows-2">
-                        <h1 className="ml-[200px] mt-[100px] text-4xl">Tentang Kami</h1>
-                        <h2 className="ml-[200px] mt-[-30px] text-lg text-justify w-[600px]">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad animi ex dicta, ipsum quaerat reiciendis modi, 
-                        nobis perspiciatis doloremque iure earum aspernatur! Minima cum ullam suscipit asperiores nisi, veniam, magnam 
-                        laborum iusto recusandae harum eligendi necessitatibus. Accusamus quam commodi molestiae autem magni quasi nam 
-                        dignissimos nisi, reiciendis consectetur sint! Aspernatur consequuntur ipsam nisi nobis impedit, accusamus, 
-                    </h2>
+                        <h1 className="ml-[200px] mt-[100px] text-4xl font-bold ">Tentang Kami</h1>
+                        <h2 className="ml-[200px] mt-[-50px] text-lg text-justify w-[600px]">
+                        Koperasi Konsumen KPRI "Wiyata Mandala" atau disebut dengan KPRI Wiyata Mandala didirikan
+                        pada tahun 1997. Koperasi Konsumen KPRI "Wiyata Mandala" merupakan koperasi yang bergerak 
+                        di bidang simpan pinjam, Tabungan Koperasi "Takop", UKM Mart, dan lain-lain. Koperasi Pegawal 
+                        Republik Indonesia "KPRI" yang beranggotakan pegawai Negeri khususnya guru sekolah dasar SD, 
+                        guru SMP , Guru SMU Guru MAN yang ada di kecamatan Kronjo Mekar baru koperasi Konsumen KPRI 
+                        "Wiyata Mandala " mempunyai kegiatan utama yakni menyediakan penyimpanan dan pinjaman bagi para
+                        anggotanya.
+                        </h2>
                     </div>
                     <img src={gmbr5} className="grid justify-end w-[600px] h-[300px] mt-[90px] ml-[165px] shadow-lg rounded-2xl"/>
                 </span>
@@ -77,9 +81,9 @@ function Beranda() {
                 <div style={{ backgroundImage: `url(${gmbr6})` }} className="w-[520px] bg-no-repeat bg-cover h-[1439px] ml-[10px]">
                     <h1 className="ml-[150px] mt-[525px] text-4xl">Produk Kami</h1>
                 </div>
-                <div className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] w-[1357px] ml-[-409px] ">
 
-                        <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
+                <div className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] w-[1357px] ml-[-409px] ">
+                    <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
                            <img
                                src={gmbrSP}
@@ -88,7 +92,7 @@ function Beranda() {
                            />
                        </div>
                        <div className="p-6">
-                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
                             <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan Pokok
                             </h4>
@@ -103,11 +107,10 @@ function Beranda() {
                             </div>
                         </div>
                     </div> 
-
-                <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
-                       
+                    
+                    <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[400px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
                        <div className="p-6">
-                        <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
+                            <div className="mb-4 rounded-full bg-teal-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">On-Going</div>
                             <h4 className="mb-2 text-slate-800 text-2xl font-semibold">
                                 Simpanan Wajib
                             </h4>
@@ -120,14 +123,14 @@ function Beranda() {
                                     Pelajari Lebih Lanjut <ArrowRightIcon className="ml-2"/>
                                 </a>
                             </div>
-                        </div>
-                        <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
-                           <img
-                               src={gmbrSW}
-                               alt="card-image"
-                               class=" w-full rounded-md md:rounded-lg object-cover"
-                           />
-                       </div>
+                            </div>
+                            <div className="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                            <img
+                                src={gmbrSW}
+                                alt="card-image"
+                                class=" w-full rounded-md md:rounded-lg object-cover"
+                            />
+                            </div>
                     </div> 
 
                 <div className="relative flex flex-col md:flex-row w-[800px] h-[265px] mt-[20px] ml-[150px] bg-white shadow-sm border border-slate-200 bg-opacity-50 rounded-[40px] ">
@@ -205,9 +208,8 @@ function Beranda() {
                             </div>
                         </div>
                     </div>       
-                </div> 
+                </div>
             </div>
-
         </div>
         <F/>
         </>

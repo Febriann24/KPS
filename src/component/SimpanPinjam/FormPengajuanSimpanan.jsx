@@ -17,6 +17,17 @@ import axios from "axios";
 function FormPengajuanSimpanan() {
  const navigate = useNavigate(); // Create navigate function for navigation
  const userData = getCurrentLoggedInData();
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+     useEffect(() => {
+       const token = localStorage.getItem('accessToken');
+       console.log(token); // Debugging untuk memastikan token terdeteksi
+       if (token) {
+         setIsLoggedIn(true); // Menandakan pengguna sudah login
+       } else {
+         setIsLoggedIn(false); // Pengguna belum login
+         navigate('/'); // Redirect ke halaman login
+       }
+     }, [navigate]);
  const [formData, setFormData] = useState({
   maksimalSimpanan: '0',
   minimalSimpanan: '0',

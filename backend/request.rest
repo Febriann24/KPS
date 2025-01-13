@@ -110,15 +110,17 @@ DELETE http://localhost:5000/users
 GET http://localhost:5000/MS_USER
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJpYXQiOjE3MzAyOTI5MjQsImV4cCI6MTczMDI5Mjk1NH0.tFiSsXirYIZl8OkklFBV4phWG9HgpSmMZXK97hMtPUc
 ###
-POST http://localhost:5000/MS_USER
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "EMAIL": "admin@gmail.com",
-    "PASSWORD": "pakquin",
-    "NAMA_LENGKAP": "Hamood Habibi",
-    "ROLE": "Anggota",
-    "NOMOR_TELP": "08123456789"
+    "email": "Nikolas@gmail.com",
+    "password": "12345",
+    "confPassword": "12345",
+    "name": "Niko",
+    "role": "PENGURUS",
+    "noTelp": "08123456789",
+    "alamat": "Jl. Kebon Jeruk No. 1"
 }
 
 ###

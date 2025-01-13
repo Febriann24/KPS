@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import H from "./H&F/Header";
 import F from "./H&F/Footer";  
 import foto from './Foto/Koperasi_profile.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode }  from 'jwt-decode';
 import axios from 'axios';
 
@@ -39,7 +39,7 @@ export default function Profile() {
 
     const refreshToken = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/token");
+            const response = await axios.get("http://localhost:5000/users");
             localStorage.setItem('accessToken', response.data.accessToken);
             // setToken(response.data.accessToken);
 
@@ -59,6 +59,34 @@ export default function Profile() {
             }
         }
     }
+
+  //   const handleUpdate = async () => {
+  //     try {
+  //         const response = await axios.put(`http://localhost:5000/users/${id}`, {
+  //             name,
+  //             email,
+  //             password,
+  //             confPassword: confirmPassword,
+  //             noTelp,
+  //             alamat,
+  //             role
+  //         });
+
+  //         alert(response.data.msg);
+
+  //         // Perbarui state user setelah update berhasil
+  //         setUser(prevUser => ({
+  //           ...prevUser, // Mengambil nilai sebelumnya untuk menjaga data lain yang tidak berubah
+  //           name,
+  //           email,
+  //           noTelp,
+  //           alamat,
+  //           role
+  //         }));
+  //     } catch (error) {
+  //         alert(error.response?.data?.msg || "Terjadi kesalahan saat memperbarui profil.");
+  //     }
+  // };
 
     const Logout  = async () => {
       try {
@@ -83,7 +111,6 @@ export default function Profile() {
             alt="Koperasi Logo" 
           />
         </div>
-
         <div className="flex-grow md:w-1/2 p-8 md:p-16 flex items-center justify-center bg-white">
           <div className="w-full max-w-lg p-6 rounded-lg shadow-lg bg-gray-200">
             <div className="flex flex-col items-center mb-6">
@@ -152,13 +179,13 @@ export default function Profile() {
             </div>
 
             <div className="mt-6  text-center">
-                {/* <button className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition">
-                EDIT
-                </button> */}
+                <button className="bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition">
+                <Link to="/edtprf">EDIT</Link>
+                </button>
 
                 <button
                 onClick={Logout}
-                className="bg-rose-500 text-white rounded-lg ml-[10px] px-4 py-2 mt-4 "
+                className="bg-white text-black rounded-lg ml-[10px] px-4 py-2 mt-4 "
                 >
                 Logout
                 </button>

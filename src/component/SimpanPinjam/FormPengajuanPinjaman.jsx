@@ -17,6 +17,17 @@ import axios from "axios";
 
 function FormPengajuanPinjaman() {
  const navigate = useNavigate(); // Create navigate function for navigation
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+     useEffect(() => {
+       const token = localStorage.getItem('accessToken');
+       console.log(token); // Debugging untuk memastikan token terdeteksi
+       if (token) {
+         setIsLoggedIn(true); // Menandakan pengguna sudah login
+       } else {
+         setIsLoggedIn(false); // Pengguna belum login
+         navigate('/'); // Redirect ke halaman login
+       }
+     }, [navigate]);
  const userData = getCurrentLoggedInData();
  const [formData, setFormData] = useState({
   maksimalPinjaman: '0',

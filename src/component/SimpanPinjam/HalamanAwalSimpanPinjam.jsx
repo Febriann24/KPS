@@ -233,7 +233,20 @@ const KeuanganKoperasi = ({userData}) => {
 }
 
 function HalamanAwalSimpanPinjam() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+
+      useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        console.log(token); // Debugging untuk memastikan token terdeteksi
+        if (token) {
+          setIsLoggedIn(true); // Menandakan pengguna sudah login
+        } else {
+          setIsLoggedIn(false); // Pengguna belum login
+          navigate('/'); // Redirect ke halaman login
+        }
+      }, [navigate]);
   const userData = getCurrentLoggedInData();
     return (
       <>

@@ -12,6 +12,7 @@ import FormBuatBerita from './component/UserPengurus/FormBuatBerita';
 import PengurusApprove from './component/UserPengurus/PengurusApprove';
 import UserTable from './component/UserPengurus/UserTable';
 import Profile from './component/Profile';
+import EditProfile from './component/EditProfile'      
 import BeritaMenu from './component/UserPengurus/BeritaMenu';
 import ShowBerita from './component/UserPengurus/ShowBerita';
 import EditBerita from './component/UserPengurus/EditBerita';
@@ -33,11 +34,12 @@ function App() {
         <Route exact path="/Login" element = {<LogIn/>} /> 
         <Route exact path='/Register' element={<Register/>} />
         <Route exact path='/Profile' element = {<Profile/>} />
+        <Route exact path='/edtprf' element = {<EditProfile/>} />
 
         <Route exact path='/FormPengajuanPinjaman' element = {<FormPengajuanPinjaman/>} />
         <Route exact path='/FormPengajuanSimpanan' element = {<FormPengajuanSimpanan/>} />
         <Route exact path='/ListPengajuan' element = {<ListPengajuan/>} />
-        <Route exact path='/ProsesPengajuan' element = {<ProsesPengajuan/>} />
+        <Route exact path='/ProsesPengajuan/:pengajuan/:id' element = {<ProsesPengajuan/>} />
         <Route exact path='/HalamanAwalSimpanPinjam' element={<HalamanAwalSimpanPinjam/>} />
        
 
@@ -45,9 +47,9 @@ function App() {
         <Route exact path='/LaporanKeuangan' element = {<LaporanKeuangan/>} />
         <Route exact path='/FormBuatBerita' element = {<FormBuatBerita/>} />
         <Route exact path='/PengurusApprove' element = {<PengurusApprove/>} />
-        <Route exact path='/UserTable' element = {<UserTable/>} />
-        <Route exact path='/ShowBerita' element = {<ShowBerita/>} />
-        <Route exact path='/EditBerita' element = {<EditBerita/>} />
+        <Route exact path='/UserTable/:id' element = {<UserTable/>} />
+        <Route exact path='/ShowBerita/:id' element = {<ShowBerita/>} />
+        <Route exact path='/EditBerita/:id' element = {<EditBerita/>} />
         <Route exact path='/ListUser' element = {<ListUser/>} />
         </Routes>
       </Router>

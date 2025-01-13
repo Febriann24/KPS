@@ -196,7 +196,8 @@ export const Register = async (req, res) => {
             TANGGAL_LAHIR: tanggalLahir,
             UNIT_KERJA: unitKerja,
             NOMOR_ANGGOTA: noAnggota,
-            UUID_MS_JOB: job.UUID_MS_JOB
+            UUID_MS_JOB: job.UUID_MS_JOB,
+            IS_ACTIVE: 0
         });
         
         res.json({ msg: "Register Success" });
@@ -210,40 +211,95 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
     try {
-        const user = await Users.findAll({
+        // Cari user berdasarkan email
+        const user = await Users.findOne({
             where: { EMAIL: req.body.email },
-            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'PASSWORD', 'UUID_MS_JOB', 'NOMOR_TELP', 'ALAMAT', 'TANGGAL_LAHIR']
+            attributes: ['UUID_MS_USER', 'NAMA_LENGKAP', 'EMAIL', 'PASSWORD', 'UUID_MS_JOB', 'NOMOR_TELP', 'ALAMAT', 'TANGGAL_LAHIR', 'IS_ACTIVE']
         });
 
-        const match  = await bcrypt.compare(req.body.password, user[0].PASSWORD);
-        if(!match) return res.status(400).json({ msg: "Wrong Password" });
+        // Jika user tidak ditemukan
+        if (!user) {
+            return res.status(404).json({ message: "Email tidak ditemukan" });
+        }
 
-        const userId = user[0].UUID_MS_USER;
-        const name = user[0].NAMA_LENGKAP;
-        const email = user[0].EMAIL;
-        const role = user[0].UUID_MS_JOB;
+        // Periksa apakah user aktif
+        if (user.IS_ACTIVE === 0) {
+            return res.status(403).json({ message: "Akun anda belum terverifikasi" });
+        }
+
+        // Validasi password
+        const match = await bcrypt.compare(req.body.password, user.PASSWORD);
+        if (!match) {
+            return res.status(400).json({ msg: "Salah Password" });
+        }
+
+        // Generate token
+        const userId = user.UUID_MS_USER;
+        const name = user.NAMA_LENGKAP;
+        const email = user.EMAIL;
+        const role = user.UUID_MS_JOB;
 
         const accesstoken = jwt.sign({ userId, name, email, role }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: '20s'
-        })
-        const refreshToken = jwt.sign({ userId, name, email, role  }, process.env.REFRESH_TOKEN_SECRET, {
+        });
+        const refreshToken = jwt.sign({ userId, name, email, role }, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '1d'
-        })
+        });
+
+        // Update refresh token di database
         await Users.update({ refresh_token: refreshToken }, {
             where: {
                 UUID_MS_USER: userId
             }
         });
+
+        // Simpan refresh token di cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000
-        })
+        });
 
         res.json({ accesstoken, role });
     } catch (error) {
-        res.status(404).json({ message: "Email not found" });
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
+
+export const updateUser = async (req, res) => {
+    const user = await Users.findOne({
+        where: {
+            UUID_MS_USER: req.params.id
+        }
+    });
+    if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+
+    const { name, email, noTelp, alamat, role } = req.body;
+
+    const job = await MS_JOB.findOne({ where: { JOB_CODE: role } });
+    if (!job) {
+        return res.status(400).json({ message: "Role tidak ditemukan di database." });
+    }
+
+    try {
+        await Users.update({
+            NAMA_LENGKAP: name,
+            EMAIL: email,
+            NOMOR_TELP: noTelp,
+            ALAMAT: alamat,
+            UUID_MS_JOB: job.UUID_MS_JOB
+        }, {
+            where: {
+                UUID_MS_USER: user.UUID_MS_USER
+            }
+        });
+
+        res.status(201).json({ msg: "Data User Berhasil Ter-Update" });
+    } catch (error) {
+        res.status(400).json({ msg: error.message });
+    }
+};
+
 
 export const Logout = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
@@ -256,7 +312,7 @@ export const Logout = async (req, res) => {
         });
         if (!user[0]) return res.sendStatus(204);
         const userId = user[0].UUID_MS_USER;
-        await Users.update({ refresh_token: null }, {
+        await Users.update({ refresh_token: null}, {
             where: {
                 UUID_MS_USER: userId
             }

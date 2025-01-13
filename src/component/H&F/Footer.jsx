@@ -20,12 +20,6 @@ function Footer(){
                             <li>
                                 <a href="/HubungiKami" className="hover:underline me-4 md:me-6">Hubungi Kami</a>
                             </li>
-                            <li>
-                                <a href="/SimpanPinjam" className="hover:underline me-4 md:me-6">Simpan Pinjam</a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:underline me-4 md:me-6">Pengurus</a>
-                            </li>
                         </ul>
                     </div>
                     <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />

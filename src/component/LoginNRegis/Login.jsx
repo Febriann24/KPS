@@ -11,6 +11,15 @@ function Login() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState('');
 
+//   const getUser = async () => {
+//     const response = await axios.get("http://localhost:5000/users", {
+//       headers: {
+//         Authorization: `Bearer ${token}`
+//       }
+//   });
+//   console.log(response.data);
+// }
+
 
   const Auth = async (e) => {
     e.preventDefault();
@@ -45,9 +54,6 @@ function Login() {
     }
     }
 };
-
-
-  
   
   return (
     <>
@@ -81,7 +87,9 @@ function Login() {
                 </div>
 
                 <div className="!mt-[28px] mb-[10px]">
-                  <button type="submit" className="w-full py-3 px-4 tracking-wider text-sm rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none">
+                  <button 
+                  // onSubmit={getUser}
+                   type="submit" className="w-full py-3 px-4 tracking-wider text-sm rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none">
                     Submit
                   </button>
                   {msg && <p className="text-red-500 text-sm mt-2">{msg}</p>}

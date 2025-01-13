@@ -556,6 +556,21 @@ const ListPengajuan = () => {
   const [filters, setFilters] = useState({})
   const [isFetchMore, setIsFetchMore] = useState(false)
 
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    console.log(token); // Debugging untuk memastikan token terdeteksi
+    if (token) {
+      setIsLoggedIn(true); // Menandakan pengguna sudah login
+    } else {
+      setIsLoggedIn(false); // Pengguna belum login
+      navigate('/'); // Redirect ke halaman login
+    }
+  }, [navigate]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="w-full">
