@@ -112,7 +112,7 @@ function Header() {
 
     return (
         <>
-            <header className='flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
+            <header className='flex shadow-md py-4 px-4 sm:px-10 bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
       <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
         <Link to= "/" href="javascript:void(0)">
           <img src={foto} alt="logo" class='w-22' />
@@ -143,7 +143,7 @@ function Header() {
                 to='/' 
                 className={({ isActive }) => 
                   isActive ? 'hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]' 
-                           : 'hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'
+                           : 'hover:text-[#007bff] text-white block font-semibold text-[15px]'
                 }
               >
                 Beranda
@@ -154,7 +154,7 @@ function Header() {
                 to='/TentangKami' 
                 className={({ isActive }) => 
                   isActive ? 'hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]' 
-                           : 'hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'
+                           : 'hover:text-[#007bff] text-white block font-semibold text-[15px]'
                 }
               >
                 Tentang Kami
@@ -165,7 +165,7 @@ function Header() {
                 to='/Produk' 
                 className={({ isActive }) => 
                   isActive ? 'hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]' 
-                           : 'hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'
+                           : 'hover:text-[#007bff] text-white block font-semibold text-[15px]'
                 }
               >
                 Produk
@@ -176,7 +176,7 @@ function Header() {
                 to='/HubungiKami' 
                 className={({ isActive }) => 
                   isActive ? 'hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]' 
-                           : 'hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'
+                           : 'hover:text-[#007bff] text-white block font-semibold text-[15px]'
                 }
               >
                 Hubungi Kami
@@ -185,7 +185,7 @@ function Header() {
 
             {(role === "1" || role === "2" || role === "3") && isLoggedIn && (
                 <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'><a href='javascript:void(0)'
-                class='hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'><Link to='/HalamanAwalSimpanPinjam'>Simpan Pinjam</Link></a>
+                class='hover:text-[#007bff] text-white block font-semibold text-[15px]'><Link to='/HalamanAwalSimpanPinjam'>Simpan Pinjam</Link></a>
                 </li>
             )}
             {(role === "2" || role === "3") && isLoggedIn && (
@@ -194,7 +194,7 @@ function Header() {
                         <button 
                             type="button" 
                             id="dropdownToggle"
-                            class="flex  items-center text-gray-500 font-semibold  outline-none text-[15px] hover:text-[#007bff]">
+                            class="flex  items-center text-white font-semibold  outline-none text-[15px] hover:text-[#007bff]">
                                 Pengurus
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 hover:fill-[#007bff] fill-gray-400 inline ml-3" viewBox="0 0 24 24">
                             <path fill-rule="evenodd"d="M11.99997 18.1669a2.38 2.38 0 0 1-1.68266-.69733l-9.52-9.52a2.38 2.38 0 1 1 3.36532-3.36532l7.83734 7.83734 7.83734-7.83734a2.38 2.38 0 1 1 3.36532 3.36532l-9.52 9.52a2.38 2.38 0 0 1-1.68266.69734z"
