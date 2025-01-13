@@ -18,7 +18,44 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { EffectCoverflow, Pagination, Navigation, Autoplay } from 'swiper/modules';
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const getImageSrc = (lobBerita) => {
+    if (lobBerita && lobBerita.LOB && lobBerita.LOB.startsWith("data:image/")) {
+        return lobBerita.LOB;
+    }
+    return "http://localhost:5000/uploads/" + lobBerita;
+};
+
 function Beranda() {
+    const [berita, setBerita] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchBerita = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/berita');
+                setBerita(response.data);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchBerita();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
     return (
         <>
 
@@ -207,9 +244,36 @@ function Beranda() {
                                 </a>
                             </div>
                         </div>
-                    </div>       
+                    </div>   
                 </div>
             </div>
+            <div className="container mx-auto px-4 py-8">
+                    <h2 className="text-2xl font-bold mb-4">Berita Terkini</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {berita.map((item) => (
+                            <div key={item.UUID_BERITA} className="bg-white rounded-md shadow-md overflow-hidden">
+                                <img
+                                        src={getImageSrc(item.lobBerita)}
+                                        alt={item.JUDUL_BERITA}
+                                        className="w-full h-48 object-cover cursor-pointer"
+                                />
+                                <div className="p-4">
+                                    <h3 className="text-lg font-semibold">{item.JUDUL_BERITA}</h3>
+                                    <p className="text-sm text-gray-600">
+                                        {new Date(item.DTM_CRT).toLocaleDateString()}
+                                    </p>
+                                    <p className="text-gray-700">{item.ISI_BERITA.substring(0, 100)}...</p>
+                                    <a
+                                        href={`/showBerita/${item.UUID_BERITA}`}
+                                        className="text-blue-500 hover:underline"
+                                    >
+                                        Selengkapnya
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>    
         </div>
         <F/>
         </>

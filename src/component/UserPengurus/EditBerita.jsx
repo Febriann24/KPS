@@ -17,7 +17,7 @@ const EditBerita = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showConfirmation, setShowConfirmation] = useState(false); // state for showing the popup
+    const [showConfirmation, setShowConfirmation] = useState(false);
     const role = localStorage.getItem('UUID_MS_JOB');
 
     useEffect(() => {

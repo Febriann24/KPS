@@ -8,8 +8,8 @@ const BeritaMenu = () => {
     const [berita, setBerita] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showModal, setShowModal] = useState(false); // state to show confirmation modal
-    const [beritaToDelete, setBeritaToDelete] = useState(null); // store the berita to delete
+    const [showModal, setShowModal] = useState(false);
+    const [beritaToDelete, setBeritaToDelete] = useState(null);
     const navigate = useNavigate();
     const role = localStorage.getItem('UUID_MS_JOB');
 
@@ -35,30 +35,29 @@ const BeritaMenu = () => {
     }, [role, navigate]);
 
     const getImageSrc = (lobBerita) => {
-        // Check if lobBerita contains base64 image data
         if (lobBerita && lobBerita.LOB && lobBerita.LOB.startsWith("data:image/")) {
-            return lobBerita.LOB; // Return the base64 image if it's valid
+            return lobBerita.LOB;
         }
-        return "http://localhost:5000/uploads/" + lobBerita; // Fallback to default path if no base64 image
+        return "http://localhost:5000/uploads/" + lobBerita;
     };
     
     const deleteBerita = async (id) => {
         try {
             await axios.delete(`http://localhost:5000/deleteBerita/${id}`);
             setBerita(berita.filter((item) => item.UUID_BERITA !== id));
-            setShowModal(false); // Close the modal after deletion
+            setShowModal(false);
         } catch (err) {
             setError(err.message);
         }
     };
 
     const handleDeleteClick = (id) => {
-        setBeritaToDelete(id); // Set the berita ID to delete
-        setShowModal(true); // Show the confirmation modal
+        setBeritaToDelete(id);
+        setShowModal(true);l
     };
 
     const handleCancelDelete = () => {
-        setShowModal(false); // Close the modal without deleting
+        setShowModal(false);
     };
 
     if (loading) {
