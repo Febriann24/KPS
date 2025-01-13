@@ -29,8 +29,8 @@ import {
 const ProfileInfomation = ({data}) => {
   const profileFields = [
     { label: 'Tanggal Bergabung', value: data.tnglbergabung },
-    { label: 'Unit Kerja', value: "Sekolah" },
-    { label: 'Nomor Anggota', value: "A175238" },
+    { label: 'Unit Kerja', value: data.unitkerja },
+    { label: 'Nomor Anggota', value: data.noanggota },
     { label: 'Nomor Telepon', value: data.notelp },
     { label: 'Total Tabungan', value: data.totalTabungan || '0' }, // Default to 'N/A' if missing
   ];

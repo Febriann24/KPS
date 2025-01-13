@@ -100,8 +100,8 @@ Content-Type: application/json
 
 {
     "PENGAJUAN": "PINJAMAN",
-    "id": 1,
-    "status": "APPROVED"
+    "id": 7,
+    "status": "ACTIVE"
 }
 
 ### Update STATUS Pengajuan Pinjaman TESTING

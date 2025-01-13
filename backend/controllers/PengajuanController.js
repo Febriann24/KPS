@@ -19,7 +19,7 @@ const getPengajuanIncludeAttribute = (PENGAJUAN) => {
         {
             model: MS_USER,
             as: 'user',
-            attributes: ['NAMA_LENGKAP', 'ALAMAT', 'createdAt', 'NOMOR_TELP', "UUID_MS_USER"]
+            attributes: ['NAMA_LENGKAP', 'ALAMAT', 'createdAt', 'NOMOR_TELP', "UUID_MS_USER", "UNIT_KERJA", "NOMOR_ANGGOTA"]
         },
     ];
 
@@ -774,7 +774,7 @@ export const createMandatoryPengajuan = async(req, res) => {
                                                     SELECT "UUID_MS_USER" 
                                                     FROM "TR_PENGAJUAN_SIMPANAN" 
                                                     WHERE
-                                                        t."TYPE_NAME" != 'Simpanan Pokok'
+                                                        "UUID_MS_TYPE_SIMPANAN" = '2'
                                                         AND
                                                         EXTRACT(MONTH FROM "createdAt") = :monthNow
                                                         AND
