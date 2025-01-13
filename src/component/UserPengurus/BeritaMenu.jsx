@@ -34,13 +34,14 @@ const BeritaMenu = () => {
     }
     }, [role, navigate]);
 
-    const getImageSrc = (fotoBerita) => {
-        if (fotoBerita.startsWith("data:image/")) {
-            return fotoBerita;
+    const getImageSrc = (lobBerita) => {
+        // Check if lobBerita contains base64 image data
+        if (lobBerita && lobBerita.LOB && lobBerita.LOB.startsWith("data:image/")) {
+            return lobBerita.LOB; // Return the base64 image if it's valid
         }
-        return "http://localhost:5000/uploads/" + fotoBerita;
+        return "http://localhost:5000/uploads/" + lobBerita; // Fallback to default path if no base64 image
     };
-
+    
     const deleteBerita = async (id) => {
         try {
             await axios.delete(`http://localhost:5000/deleteBerita/${id}`);
@@ -82,7 +83,7 @@ const BeritaMenu = () => {
                             <div key={item.UUID_BERITA} className="bg-white rounded-md overflow-hidden shadow-md">
                                 <div className="image-container">
                                     <img
-                                        src={getImageSrc(item.FOTO_BERITA)} 
+                                        src={getImageSrc(item.lobBerita)}
                                         alt={item.JUDUL_BERITA}
                                         className="w-full h-48 object-cover cursor-pointer"
                                     />

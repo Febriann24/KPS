@@ -125,13 +125,10 @@ const DataTable = ({ data, onSort }) => {
             }, 0);
 
             const totalTabungan = row.TR_PENGAJUAN_SIMPANANs.reduce((acc, saving) => {
-              const statusCode = saving.status?.STATUS_CODE;
-              const typeName = saving.type?.TYPE_NAME;;
-              const nominalValue = parseFloat(saving.NOMINAL) || 0;
-              return statusCode === 'APPROVED' && typeName === 'Simpanan Sukarela' 
-                ? acc + nominalValue 
-                : acc;
+              const currentSimpanan = parseFloat(saving.historySimpanan?.[0]?.CURRENT_SIMPANAN) || 0;
+              return acc + currentSimpanan;
             }, 0);
+            
 
             const formattedTotalLoanAmount = formatRupiah(totalLoanAmount.toString());
             const formattedTotalSavingAmount = formatRupiah(totalSavingAmount.toString());

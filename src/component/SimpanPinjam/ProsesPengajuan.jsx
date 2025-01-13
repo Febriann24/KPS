@@ -29,8 +29,8 @@ import {
 const ProfileInfomation = ({data}) => {
   const profileFields = [
     { label: 'Tanggal Bergabung', value: data.tnglbergabung },
-    { label: 'Unit Kerja', value: data.unitkerja },
-    { label: 'Nomor Anggota', value: data.noanggota },
+    { label: 'Unit Kerja', value: "Sekolah" },
+    { label: 'Nomor Anggota', value: "A175238" },
     { label: 'Nomor Telepon', value: data.notelp },
     { label: 'Total Tabungan', value: data.totalTabungan || '0' }, // Default to 'N/A' if missing
   ];
@@ -107,25 +107,24 @@ const PengajuanInformation = ({data}) => {
 }
 
 const handleChangeStatus = async (id, pengajuan, newStatus, userData) => {
-  if(userData?.UUID_MS_USER && userData?.MS_JOB.JOB_CODE == "PENGURUS"){
+  if(userData?.UUID_MS_USER && userData?.MS_JOB.JOB_CODE == "PENGURUS" || newStatus=="ABORTED"){
     try {
-      console.log(id, pengajuan, newStatus)
-    const response = await axios.patch("http://localhost:5000/updateStatusPengajuan", {
-      "PENGAJUAN": pengajuan,
-      "id": id,
-      "status": newStatus
-    });
-    window.location.reload();
+      await axios.patch("http://localhost:5000/updateStatusPengajuan", {
+        "PENGAJUAN": pengajuan,
+        "id": id,
+        "status": newStatus
+      })
+      window.location.reload();
     } catch (error) {
       console.log("error found: ", error);
     }
   }
 }
 
-const PengajuanButton = ({ id, status, pengajuan }) => {
+const PengajuanButton = ({ id, status, pengajuan, userId }) => {
   const userData = getCurrentLoggedInData();
   if(userData?.UUID_MS_USER) {
-    if (status === 'ACTIVE' && userData?.MS_JOB.JOB_CODE == "PENGURUS") {
+    if (status == 'ACTIVE' && userData?.MS_JOB.JOB_CODE == "PENGURUS") {
       return (
         <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
           <button 
@@ -147,7 +146,7 @@ const PengajuanButton = ({ id, status, pengajuan }) => {
           </button>
         </div>
       )
-    } else {
+    } else if (status=='ACTIVE' && userData?.UUID_MS_USER == userId) {
       return (
         <div className='items-center grid grid-cols-[1fr_1fr_1fr] gap-4 mx-4'>
           <div className='w-full' />
@@ -155,10 +154,12 @@ const PengajuanButton = ({ id, status, pengajuan }) => {
           <div className='w-full' />
     
           <button 
-          className="bg-teal-500 text-white 
+          className="bg-red-500 text-white 
           px-6 py-2 rounded flex-grow mr-1 w-full shadow-xl
-          hover:shadow-sm hover:bg-teal-400 transition-all duration-300">
-            Cetak Dokumen
+          hover:shadow-sm hover:bg-red-400 transition-all duration-300"
+          onClick={() => handleChangeStatus(id, pengajuan, 'ABORTED', userData)}
+          >
+            BATAL
           </button>
         </div>
       )
@@ -167,7 +168,7 @@ const PengajuanButton = ({ id, status, pengajuan }) => {
   }
 }
 
-const Information = () => {
+const Information = ({ userData }) => {
   const { id, pengajuan } = useParams();
   const [data, setData] = useState({})
   const [showPinModal, setShowPinModal] = useState(false);
@@ -185,7 +186,9 @@ const Information = () => {
           UUID_PENGAJUAN_PINJAMAN: (pengajuan=="PINJAMAN"? id : ""),
           UUID_PENGAJUAN_SIMPANAN: (pengajuan=="SIMPANAN"? id : "")
         });
-        console.log(response)
+        if(userData.UUID_MS_USER != response.data[0].user.UUID_MS_USER && userData.MS_JOB.JOB_CODE != "PENGURUS") {
+          return
+        }
 
         const obj = response.data[0]
         const formattedData = {
@@ -214,8 +217,9 @@ const Information = () => {
         console.log("Error fetching data: " + error)
       }
     };
+    
     fetchDataPengajuan();
-  }, [id])
+  }, [id, userData])
 
   const Desc = ({progress}) => {
     let msg1 = '';
@@ -422,7 +426,7 @@ const Information = () => {
               <PengajuanInformation data={data} />
             </div>
             <div className='my-6'>
-              <PengajuanButton status={data.status_code} id={data.id} pengajuan={data.pengajuan} />
+              <PengajuanButton status={data.status_code} id={data.id} pengajuan={data.pengajuan} userId={data.id} />
             </div>
           </div>
         </div>
@@ -447,22 +451,26 @@ const ProsesPengajuan = () => {
           navigate('/'); // Redirect ke halaman login
         }
       }, [navigate]);
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      <div className="w-full">
-        <H />
-      </div>
+  const userData = getCurrentLoggedInData();
+  if (userData) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-100">
+        <div className="w-full">
+          <H />
+        </div>
 
-      <div className='container mx-auto my-4 p-4 justify-center h-auto'>
-        <BackButton nav="/ListPengajuan"/>
-        <Information />
-      </div>
+        <div className='container mx-auto my-4 p-4 justify-center h-auto'>
+          <BackButton nav="/ListPengajuan"/>
+          <Information userData={userData}/>
+        </div>
 
-      <div className="w-full">
-        <F />
+        <div className="w-full">
+          <F />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+  
 };
 
 export default ProsesPengajuan;

@@ -66,7 +66,7 @@ const PengajuanPinjaman = db.define("TR_PENGAJUAN_PINJAMAN", {
         allowNull: true
     },
     INTEREST_RATE: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true
     },
 }, {

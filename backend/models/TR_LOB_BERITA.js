@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../config/database.js";
 
-const TrLobBerita = db.define("TR_LOB_BERITA", { 
+const TrLobBerita = db.define("TR_LOB_BERITA", {
     UUID_LOB_BERITA: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
@@ -10,7 +10,7 @@ const TrLobBerita = db.define("TR_LOB_BERITA", {
     DTM_CRT: {
         type: DataTypes.DATE,
         allowNull: true,
-        defaultValue: DataTypes.NOW 
+        defaultValue: DataTypes.NOW
     },
     USR_CRT: {
         type: DataTypes.STRING(50),
@@ -25,7 +25,7 @@ const TrLobBerita = db.define("TR_LOB_BERITA", {
         allowNull: true
     },
     LOB: {
-        type: DataTypes.BLOB,
+        type: DataTypes.TEXT,
         allowNull: true
     },
     UUID_BERITA: {
@@ -37,15 +37,17 @@ const TrLobBerita = db.define("TR_LOB_BERITA", {
         }
     }
 }, {
-    freezeTableName: true 
+    freezeTableName: true
 });
 
 (async () => {
-    const {default: TR_BERITA} = await import('./TR_BERITA.js');
-    TrLobBerita.belongsTo(TR_BERITA, {
-        foreignKey: "UUID_MS_USER"
+    const { default: Berita } = await import('./TR_BERITA.js');
+    TrLobBerita.belongsTo(Berita, {
+        foreignKey: 'UUID_BERITA',
+        targetKey: 'UUID_BERITA',
+        as: 'lobBerita'
     });
-})
+})();
 
 export default TrLobBerita;
 

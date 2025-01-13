@@ -114,9 +114,22 @@ function FormPengajuanPinjaman() {
       "INTEREST_RATE": formData.bunga
     }
     try {
+      const nowDate = new Date();
+      const ActiveAngsuran = await axios.post('http://localhost:5000/getActivePengajuanPinjamanAnggota', {
+        "id": userData.UUID_MS_USER,
+        "month": nowDate.getMonth() + 1,
+        "year": nowDate.getFullYear()
+      })
       const response = await axios.post('http://localhost:5000/createPengajuan/PINJAMAN', dataSubmit);
       console.log('Form Submitted:', dataSubmit);
       navigate(`/ProsesPengajuan/PINJAMAN/${response.data.UUID_PENGAJUAN_PINJAMAN}`);
+      // if(ActiveAngsuran.data.processedData.length <= 0) {
+      //   const response = await axios.post('http://localhost:5000/createPengajuan/PINJAMAN', dataSubmit);
+      //   console.log('Form Submitted:', dataSubmit);
+      //   navigate(`/ProsesPengajuan/PINJAMAN/${response.data.UUID_PENGAJUAN_PINJAMAN}`);
+      // } else {
+      //   alert("Tidak bisa melakukan pengajuan pinjaman karena ada angsuran yang sedang aktif!")
+      // }
     } catch (error) {
       console.log('Error submitting form:', error);
       alert(error.response ? error.response.data.message : 'An unexpected error occurred.');

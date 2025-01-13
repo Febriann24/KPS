@@ -108,7 +108,7 @@ function FormPengajuanSimpanan() {
     try {
       const response = await axios.post('http://localhost:5000/createPengajuan/SIMPANAN', dataSubmit);
       if (formData.autoApprove == "1") {
-        const autoApprove = await axios.patch("http://localhost:5000/updateStatusPengajuan", {
+        await axios.patch("http://localhost:5000/updateStatusPengajuan", {
           "PENGAJUAN": "SIMPANAN",
           "id": response.data.UUID_PENGAJUAN_SIMPANAN,
           "status": "APPROVED"

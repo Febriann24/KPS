@@ -12,24 +12,35 @@ const ShowBerita = () => {
     const navigate = useNavigate();
     const role = localStorage.getItem('UUID_MS_JOB');
 
+    // Function to get the image source, checking if it's base64
+    const getImageSrc = (lobBerita) => {
+        // Check if lobBerita contains base64 image data
+        if (lobBerita && lobBerita.LOB && lobBerita.LOB.startsWith("data:image/")) {
+            return lobBerita.LOB; // Return the base64 image if it's valid
+        }
+        return "http://localhost:5000/uploads/" + lobBerita; // Fallback to default path if no base64 image
+    };
+
     useEffect(() => {
         if (role === '1') { 
             navigate('/'); 
         } else {
-        const fetchBerita = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/showBerita/${id}`);
-                setBerita(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setLoading(false);
-            }
-        };
-
-        fetchBerita();
-    }
+            const fetchBerita = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:5000/showBerita/${id}`);
+                    console.log(response.data); // Check the structure of response
+                    setBerita(response.data);
+                    setLoading(false);
+                } catch (err) {
+                    setError(err.message);
+                    setLoading(false);
+                }
+            };
+   
+            fetchBerita();
+        }
     }, [id]);
+   
 
     if (loading) {
         return <div>Loading...</div>;
@@ -54,10 +65,10 @@ const ShowBerita = () => {
                             Written on {new Date(berita.DTM_CRT).toLocaleDateString()} by
                         </div>
                         <div className="flex justify-center mb-4">
-                            {berita.FOTO_BERITA && (
+                            {berita.lobBerita && (
                                 <img 
                                     className="rounded-md max-w-full h-auto"
-                                    src={berita.FOTO_BERITA}
+                                    src={getImageSrc(berita.lobBerita)} // Use lobBerita for image
                                     alt={berita.JUDUL_BERITA} 
                                 />
                             )}

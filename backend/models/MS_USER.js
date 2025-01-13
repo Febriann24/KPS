@@ -70,10 +70,18 @@ const MS_USER = db.define("MS_USER", {
         type: DataTypes.INTEGER, 
         allowNull: true
     },
+    WAGE: {
+        type: DataTypes.BIGINT, 
+        allowNull: true
+    },
+    CURRENT_TABUNGAN: {
+        type: DataTypes.BIGINT, 
+        allowNull: true
+    },
     UUID_MS_JOB: {
         type: DataTypes.BIGINT,  // Sesuaikan tipe data dengan yang ada di MS_JOB
         allowNull: false,
-    },   
+    },
     refresh_token: {
         type: DataTypes.STRING,
     }      
