@@ -41,11 +41,10 @@ const TrLobBerita = db.define("TR_LOB_BERITA", {
 });
 
 (async () => {
-    const { default: Berita } = await import('./TR_BERITA.js');
-    TrLobBerita.belongsTo(Berita, {
-        foreignKey: 'UUID_BERITA',
-        targetKey: 'UUID_BERITA',
-        as: 'lobBerita'
+    const {default: TR_BERITA} = await import('./TR_BERITA.js');
+    TrLobBerita.belongsTo(TR_BERITA, {
+        foreignKey: "UUID_MS_USER",
+        as: "trBerita"
     });
 })();
 

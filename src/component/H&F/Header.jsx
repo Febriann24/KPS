@@ -4,6 +4,7 @@ import foto from '../Foto/Koperasi_Logo.png';
 import React, { useState, useEffect, useNavigate } from 'react';
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import '../../index.css';
 function Header() {
 
 
