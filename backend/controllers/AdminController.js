@@ -188,7 +188,7 @@ const transformFilteredUserData = (data) => {
   
       return {
         ...user,
-        msJob: {
+        MS_JOB: {
           JOB_CODE: jobCode,
           UUID_MS_JOB: uuidJob
         }

@@ -67,6 +67,7 @@ export default function ListBerita(){
     const handleAddBerita = async () => {
         if(countBerita >= countBeritaLimit){
             setIsShowError(true);
+            setError('Jumlah berita sudah mencapai batas maksimal');
             return;
         }
         navigate('/createberita')

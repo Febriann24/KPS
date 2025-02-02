@@ -160,8 +160,8 @@ const AccountManagement = () => {
                 >
                   <option value="NAMA_LENGKAP">Nama</option>
                   <option value="EMAIL">Email</option>
-                  <option value="NO_ANGGOTA">No. Anggota</option>
                   <option value="NO_TELP">No. Telp</option>
+                  <option value="ALAMAT">Alamat</option>
                 </select>
                 <div className="shadow-[1px_3px_1px_rgba(0,0,0,0.1)] bg-white rounded-lg p-[5px] h-full mx-4">
                   <input

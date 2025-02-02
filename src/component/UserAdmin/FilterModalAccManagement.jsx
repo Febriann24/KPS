@@ -37,6 +37,20 @@ function FilterModalAccManagement({ setAdvancedFilterData, setIsFilterOpened, ad
   };
 
   const saveFilterHandler = () => {
+
+    if(startTglLahir && endTglLahir){
+      if(startTglLahir > endTglLahir){
+        alert("Tanggal lahir tidak valid");
+        return;
+      }
+    }
+    if(startTglRegis && endTglRegis){
+      if(startTglRegis > endTglRegis){
+        alert("Tanggal registrasi tidak valid");
+        return;
+      }
+    }
+    
     setAdvancedFilterData({
       IS_ACTIVE: isActive,
       JOB_CODE: jobCode,
