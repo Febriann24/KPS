@@ -1,7 +1,6 @@
 import { Sequelize } from "sequelize";
 import TrLobBerita from "./TR_LOB_BERITA.js";
 import db from "../config/database.js";
-import TrLobBerita from "../models/TR_LOB_BERITA.js"; // Import TR_LOB_BERITA
 
 const { DataTypes } = Sequelize;
 

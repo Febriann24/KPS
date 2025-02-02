@@ -10,7 +10,6 @@ import PengajuanRoute from "./routes/PengajuanRoute.js";
 import BeritaRoute from "./routes/BeritaRoute.js";
 import KeuanganRoute from "./routes/KeuanganRoute.js";
 import JobRoute from "./routes/JobRoute.js";
-import db from "./config/database.js";
 import Scheduler from "./scheduler.js";
 import AdminRoute from  "./routes/AdminRoute.js";
 
