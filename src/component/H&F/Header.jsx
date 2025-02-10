@@ -147,7 +147,7 @@ function Header() {
                 className={({ isActive }) => 
                   isActive
                     ? 'border-b-4 text-white block font-semibold text-[15px] px-3 py-2 rounded-md'
-                    : 'hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
+                    : 'text-white hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
                 }
               >
                 Beranda
@@ -155,15 +155,15 @@ function Header() {
             </li>
             <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
             <NavLink
-  to='/TentangKami'
-  className={({ isActive }) =>
-    isActive
-      ? 'border-b-4 text-white block font-semibold text-[15px] px-3 py-2 rounded-md'
-      : 'hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
-  }
->
-  Tentang Kami
-</NavLink>
+              to='/TentangKami'
+              className={({ isActive }) =>
+                isActive
+                  ? 'border-b-4 text-white block font-semibold text-[15px] px-3 py-2 rounded-md'
+                  : 'text-white hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
+              }
+          >
+            Tentang Kami
+          </NavLink>
 
             </li>
             <li className='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
@@ -171,7 +171,7 @@ function Header() {
                 to='/Produk' 
                 className={({ isActive }) => 
                   isActive  ? 'border-b-4 text-white block font-semibold text-[15px] px-3 py-2 rounded-md'
-                            : 'hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
+                            : 'text-white hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
                 }
               >
                 Produk
@@ -182,7 +182,7 @@ function Header() {
                 to='/HubungiKami' 
                 className={({ isActive }) => 
                   isActive  ? 'border-b-4 text-white block font-semibold text-[15px] px-3 py-2 rounded-md'
-                            : 'hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
+                            : 'text-white hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
                 }
               >
                 Hubungi Kami
@@ -195,7 +195,7 @@ function Header() {
                 className={({ isActive }) =>
                   isActive
                     ? 'border-b-4 text-white block font-semibold text-[15px] px-3 py-2 rounded-md'
-                    : 'hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
+                    : 'text-white hover:bg-white hover:text-gray-800 block font-semibold text-[15px] px-3 py-2 rounded-md transition duration-300'
                 }
               >
                 Simpan Pinjam
@@ -207,7 +207,7 @@ function Header() {
       <button
         type="button"
         onClick={toggleDropdown}
-        className="flex items-center text-gray-800 font-semibold outline-none text-[15px] hover:bg-white hover:text-gray-800 px-3 py-2 rounded-md transition duration-300"
+        className="flex items-center text-white font-semibold outline-none text-[15px] hover:bg-white hover:text-gray-800 px-3 py-2 rounded-md transition duration-300"
       >
         Pengurus
         <svg

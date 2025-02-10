@@ -40,7 +40,7 @@ const Berita = db.define("TR_BERITA", {
         allowNull: true
     },
     JUDUL_BERITA: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(100),
         allowNull: true
     },
     ISI_BERITA: {

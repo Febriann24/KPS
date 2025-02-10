@@ -112,8 +112,8 @@ const EditBerita = () => {
         <div>
             <H />
             <div className="flex justify-center mt-10">
-                <div className="w-full sm:w-2/3 md:w-2/3 lg:w-1/2 xl:w-2/3 px-4">
-                    <h2 className="text-2xl font-semibold text-center mb-6">Edit Berita</h2>
+            <div className="w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 2xl:w-2/5 pl-10">
+                <h2 className="text-2xl font-semibold text-center mb-6">Edit Berita</h2>
                     <BackButton nav="/BeritaMenu"/>
                     <div className="bg-gray-200 p-6 sm:p-8 rounded-lg shadow-md">
                         <form onSubmit={handleSubmit} className="space-y-6">
