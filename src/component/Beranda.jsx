@@ -247,33 +247,66 @@ function Beranda() {
                     </div>   
                 </div>
             </div>
-            <div className="container mx-auto px-4 py-8">
-                    <h2 className="text-2xl font-bold mb-4">Berita Terkini</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {berita.map((item) => (
-                            <div key={item.UUID_BERITA} className="bg-white rounded-md shadow-md overflow-hidden">
-                                <img
-                                        src={getImageSrc(item.lobBerita)}
-                                        alt={item.JUDUL_BERITA}
-                                        className="w-full h-48 object-cover cursor-pointer"
-                                />
-                                <div className="p-4">
-                                    <h3 className="text-lg font-semibold">{item.JUDUL_BERITA}</h3>
-                                    <p className="text-sm text-gray-600">
-                                        {new Date(item.DTM_CRT).toLocaleDateString()}
-                                    </p>
-                                    <p className="text-gray-700">{item.ISI_BERITA.substring(0, 100)}...</p>
-                                    <a
-                                        href={`/showBerita/${item.UUID_BERITA}`}
-                                        className="text-blue-500 hover:underline"
-                                    >
-                                        Selengkapnya
-                                    </a>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>    
+            <div className="container mx-auto px-4 py-16 mt-20">
+  {/* Section Title */}
+  <div className="flex items-center justify-between mb-10">
+    <h2 className="text-3xl font-bold text-slate-800">
+      Berita Terkini
+    </h2>
+    <a
+      href="/BeritaMenu"
+      className="text-teal-600 font-semibold hover:underline"
+    >
+      Lihat Semua →
+    </a>
+  </div>
+
+  {/* News Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+    {berita.map((item) => (
+      <div
+        key={item.UUID_BERITA}
+        className="group bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+      >
+        {/* Image with overlay */}
+        <div className="relative h-56 overflow-hidden">
+          <img
+            src={getImageSrc(item.lobBerita)}
+            alt={item.JUDUL_BERITA}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 cursor-pointer"
+          />
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+          {/* Date */}
+          <span className="absolute top-4 left-4 bg-teal-600 text-white text-xs px-3 py-1 rounded-full">
+            {new Date(item.DTM_CRT).toLocaleDateString()}
+          </span>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          <h3 className="text-xl font-semibold text-slate-800 mb-3 line-clamp-2">
+            {item.JUDUL_BERITA}
+          </h3>
+
+          <p className="text-slate-600 text-sm mb-6 line-clamp-3">
+            {item.ISI_BERITA}
+          </p>
+
+          <a
+            href={`/showBerita/${item.UUID_BERITA}`}
+            className="inline-flex items-center text-teal-600 font-semibold hover:underline"
+          >
+            Baca Selengkapnya →
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
         </div>
         <F/>
         </>

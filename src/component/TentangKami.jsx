@@ -33,45 +33,49 @@ function TentangKami() {
                 </h1>
             </div>
         </div>
-        <div className=" grid grid-cols-2">
-            <div className="bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] ml-[10px] w-[1453px] h-[560px] rounded-[24px]">
-            <div className="mx-[50px] text-[20px] mt-[20px] flex flex-col items-center space-y-[20px]">
-    <div className="text-[32px] font-bold">
+       <div className="flex gap-6 px-6">
+  {/* LEFT CARD */}
+  <div className="flex-[3] bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] h-[560px] rounded-[24px]">
+    <div className="px-[50px] text-[20px] mt-[20px] flex flex-col space-y-[20px]">
+      <div className="text-[32px] font-bold text-center">
         Tujuan Koperasi Wiyata Mandala
-    </div>
-    <div className="text-justify max-w-[915px]">
-        <p>
-            1. Meningkatnya kualitas tata kelola organisasi dengan mensinergikan fungsi perencanaan, 
-            pelaksanaan, dan pengawasan melalui pemanfaatan kelengkapan organisasi, SDM, sarana prasarana, 
-            dan anggaran.
-        </p>
-    </div>
-    <div className="text-justify max-w-[915px]">
-        <p>
-            2. Meningkatkan kualitas usaha koperasi dengan memaksimalkan usaha simpan pinjam, penyedia barang dan jasa, 
-            serta usaha lainnya.
-        </p>
-    </div>
-    <div className="text-justify max-w-[915px]">
-        <p>
-            3. Tumbuh kembangnya kepercayaan anggota melalui pengelola koperasi yang profesional dan akuntabel.
-        </p>
-    </div>
-    <div className="text-justify max-w-[1000px] ml-[-150px]">
-        <p>
-            4. Meningkatkan kualitas pelayanan anggota dengan memberikan layanan yang prima.
-        </p>
-    </div>
-    <div className="text-justify max-w-[915px]">
-        <p>
-            5. Meningkatkan kualitas kesejahteraan anggota melalui pemenuhan kebutuhan anggota yang adil dan proporsional.
-        </p>
-    </div>
-</div>
+      </div>
 
-            </div>
-            <img className="ml-[524px] h-[560px] w-[424px]" src={No2}/>
-        </div>
+      <p className="text-justify">
+        1. Meningkatnya kualitas tata kelola organisasi dengan mensinergikan fungsi
+        perencanaan, pelaksanaan, dan pengawasan melalui pemanfaatan kelengkapan
+        organisasi, SDM, sarana prasarana, dan anggaran.
+      </p>
+
+      <p className="text-justify">
+        2. Meningkatkan kualitas usaha koperasi dengan memaksimalkan usaha simpan pinjam,
+        penyedia barang dan jasa, serta usaha lainnya.
+      </p>
+
+      <p className="text-justify">
+        3. Tumbuh kembangnya kepercayaan anggota melalui pengelola koperasi yang
+        profesional dan akuntabel.
+      </p>
+
+      <p className="text-justify">
+        4. Meningkatkan kualitas pelayanan anggota dengan memberikan layanan yang prima.
+      </p>
+
+      <p className="text-justify">
+        5. Meningkatkan kualitas kesejahteraan anggota melalui pemenuhan kebutuhan anggota
+        yang adil dan proporsional.
+      </p>
+    </div>
+  </div>
+
+  <div className="flex-[2] h-[560px]">
+    <img
+      src={No2}
+      className="w-full h-full object-cover rounded-[24px]"
+      alt="Koperasi"
+    />
+  </div>
+</div>
 
         <div className="grid grid-cols-2 justify-items-stretch bg-cover w-full h-[750px] mt-[10px]"
         style={{ backgroundImage: `url(${No3})` }}>
@@ -113,23 +117,19 @@ function TentangKami() {
             <img src={No4} className="rounded-xl w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto grid justify-self-center transition-transform duration-300 hover:scale-105" alt="Koperasi Wiyata Mandala"
             />
             <div className="text-justify text-base bg-gradient-to-b from-[#4AA1B4] to-[#57C1A0] rounded-xl w-4/5 mx-auto p-8 mt-[-100px] grid justify-center">
-                <p className="mb-4 mt-[100px] max-w-4xl w-full">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe vel voluptatum 
-                    vitae dolorum similique molestias tempora dicta ducimus, sit ea autem laudantium 
-                    ullam, repellendus inventore doloremque! Ut veritatis modi aut illum nostrum, maxime 
-                    distinctio voluptatibus eligendi, possimus dolor nemo tenetur magni, accusamus atque. 
-                    Deserunt possimus quod architecto tempora, deleniti totam.
-                </p>
-                <p className="max-w-4xl w-full">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Porro alias sapiente
-                    eveniet soluta, quos quas doloribus! Quia assumenda eum exercitationem id autem
-                    eligendi pariatur, deserunt sunt nostrum rem suscipit aliquid vitae recusandae,
-                    labore est unde, a dolores? Nihil quidem optio ab minima assumenda aliquam dolore
-                    voluptatibus ut voluptas porro fugit aspernatur, praesentium labore consequatur?
-                    Ex, vel esse, sapiente dicta necessitatibus tempore repellendus itaque eum amet,
-                    iure reiciendis voluptas accusamus. Minus quod aperiam id tenetur modi nesciunt
-                    rem dolorum eligendi dignissimos.
-                </p>
+                        <p className="mb-4 mt-[100px] max-w-4xl w-full">
+                                Pada tanggal 16 Desember 2024, kami berkesempatan mengunjungi Koperasi Wiyata Mandala
+                                di Kecamatan Kronjo – Mekar Baru. Kunjungan ini bertujuan untuk melihat secara langsung
+                                aktivitas operasional koperasi, bertemu dengan pengurus, dan mempelajari layanan simpan
+                                pinjam serta program untuk anggota koperasi.
+                            </p>
+                            <p className="max-w-4xl w-full">
+                                Selama kunjungan, kami mendapatkan sambutan hangat dari para pengurus koperasi. Kami
+                                juga melihat bagaimana koperasi melayani anggota dengan profesional, mulai dari proses
+                                pengajuan pinjaman, penyimpanan tabungan, hingga penyediaan kebutuhan barang bagi anggota.
+                                Pengalaman ini memberikan wawasan yang berharga tentang pengelolaan koperasi yang efektif
+                                dan pentingnya peran koperasi dalam meningkatkan kesejahteraan anggotanya.
+                            </p>
             </div>
         </div>
         <F/>
