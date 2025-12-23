@@ -46,7 +46,7 @@ const MS_USER = db.define("MS_USER", {
         allowNull: false
     },
     PASSWORD: {
-        type: DataTypes.STRING(255), // Password akan di-hash
+        type: DataTypes.STRING(1000), // Password akan di-hash
         allowNull: false
     },
     NAMA_LENGKAP: {

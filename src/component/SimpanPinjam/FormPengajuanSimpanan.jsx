@@ -97,13 +97,12 @@ function FormPengajuanSimpanan() {
       return;  // Stop form submission if validation fails
     }
   
-    const dataSubmit = 
-    {
-      "UUID_MS_USER": userData?.UUID_MS_USER,
-      "UUID_MS_STATUS_SIMPANAN": 1,
-      "UUID_MS_TYPE_SIMPANAN": formData.typeSimpananID,
-      "USR_CRT": userData?.EMAIL,
-      "NOMINAL": deformatRupiah(formData.nominalSimpanan)
+    const dataSubmit = {
+      UUID_MS_USER: Number(userData?.UUID_MS_USER),
+      UUID_MS_STATUS_SIMPANAN: 1,
+      UUID_MS_TYPE_SIMPANAN: Number(formData.typeSimpananID),
+      USR_CRT: userData?.EMAIL,
+      NOMINAL: Number(deformatRupiah(formData.nominalSimpanan))
     }
     try {
       const response = await axios.post('http://localhost:5000/createPengajuan/SIMPANAN', dataSubmit);
@@ -124,17 +123,17 @@ function FormPengajuanSimpanan() {
 
  const isSubmitable = () => {
   const invalidFields = {};
-  const checkNominal = !isBetween(
-      parseInt(deformatRupiah(formData.nominalSimpanan)),
-      parseInt(deformatRupiah(formData.minimalSimpanan)),
-      parseInt(deformatRupiah(formData.maksimalSimpanan))
-    )
-  if (formData.typeSimpanan === '') invalidFields.typeSimpanan = true;
-  if ((formData.nominalSimpanan.trim() === '0') || checkNominal) invalidFields.nominalSimpanan = true;
-  if (formData.setuju === false) invalidFields.setuju = true;
 
-  return invalidFields; // Return the invalid fields
-  };
+  const nominal = parseInt(deformatRupiah(formData.nominalSimpanan)) || 0;
+  const minimal = parseInt(deformatRupiah(formData.minimalSimpanan)) || 0;
+  const maksimal = parseInt(deformatRupiah(formData.maksimalSimpanan)) || Infinity;
+
+  if (!formData.typeSimpanan) invalidFields.typeSimpanan = true;
+  if (nominal <= 0 || !isBetween(nominal, minimal, maksimal)) invalidFields.nominalSimpanan = true;
+  if (!formData.setuju) invalidFields.setuju = true;
+
+  return invalidFields;
+};
 
  return (
   <>

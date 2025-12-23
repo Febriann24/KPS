@@ -102,17 +102,17 @@ function FormPengajuanPinjaman() {
       return;  // Stop form submission if validation fails
     }
   
-    const dataSubmit = 
-    {
-      "UUID_MS_USER": userData?.UUID_MS_USER,
-      "UUID_MS_STATUS_PINJAMAN": 1,
-      "UUID_MS_TYPE_PINJAMAN": formData.typePinjamanID,
-      "USR_CRT": userData?.EMAIL,
-      "NOMINAL": deformatRupiah(formData.nominalPinjaman),
-      "REASON": formData.keperluanPinjaman,
-      "TENOR": formData.tenor,
-      "INTEREST_RATE": formData.bunga
-    }
+    const dataSubmit = {
+      UUID_MS_USER: Number(userData?.UUID_MS_USER),
+      UUID_MS_STATUS_PINJAMAN: 1, // already numeric
+      UUID_MS_TYPE_PINJAMAN: Number(formData.typePinjamanID),
+      USR_CRT: userData?.EMAIL,
+      NOMINAL: Number(deformatRupiah(formData.nominalPinjaman)),
+      REASON: formData.keperluanPinjaman,
+      TENOR: formData.tenor ? Number(formData.tenor) : null,
+      INTEREST_RATE: formData.bunga ? parseFloat(formData.bunga) : null
+    };
+
     try {
       const nowDate = new Date();
       const ActiveAngsuran = await axios.post('http://localhost:5000/getActivePengajuanPinjamanAnggota', {
