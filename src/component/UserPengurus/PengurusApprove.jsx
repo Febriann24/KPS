@@ -22,15 +22,17 @@ const PengurusApprove = () => {
         return null; 
       }
 
-    const fetchApprovals = async () => {
-        try {
-            const response = await axios.get("http://localhost:5000/approval");
-            setApprovals(response.data);
-            setSearchResults(response.data);
-        } catch (error) {
-            console.error("Error fetching approvals:", error);
-        }
-    };
+const fetchApprovals = async () => {
+    try {
+        const response = await axios.get("http://localhost:5000/approval");
+        const activeUsers = response.data.filter(user => user.IS_DELETED !== 1); // filter out deleted
+        setApprovals(activeUsers);
+        setSearchResults(activeUsers);
+    } catch (error) {
+        console.error("Error fetching approvals:", error);
+    }
+};
+
 
     const handleApprove = async () => {
         try {
