@@ -179,22 +179,27 @@ const ListUser = () => {
 
 
   useEffect(() => {
-    if (role === '1') {  
-      navigate('/'); 
+  if (role === '1') {  
+    navigate('/'); 
   } else {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/user");
-        console.log(response.data);
-        setData(response.data);
-        setOriginalData(response.data);
+
+        // Filter out deleted users
+        const activeUsers = response.data.filter(user => user.IS_DELETED !== 1);
+
+        console.log(activeUsers);
+        setData(activeUsers);
+        setOriginalData(activeUsers);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }
-  }, []);
+}, []);
+
 
   const handleSearch = () => {
     if (filterCriteria.selectedOption === "semua") {
